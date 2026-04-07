@@ -53,18 +53,18 @@ jobs:
       - name: Envia app.tgz al servidor
         uses: appleboy/scp-action@v0.1.7
         with:
-          host: ${{ secrets.bSSH_HOST }}
-          username: ${{ secrets.bSSH_USER }}
-          password: ${{ secrets.bSSH_PASS }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
           port: ${{ secrets.SSH_PORT }}
           source: 'app.tgz'
           target: ${{ secrets.bDOCUMENT_ROOT }}
       - name: Es connecta per ssh per fer el desplegament
         uses: appleboy/ssh-action@v1.0.3
         with:
-          host: ${{ secrets.bSSH_HOST }}
-          username: ${{ secrets.bSSH_USER }}
-          password: ${{ secrets.bSSH_PASS }}
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASS }}
           port: ${{ secrets.SSH_PORT }}
           script: |
             echo "Descomprimint el fitxer app.tgz"
