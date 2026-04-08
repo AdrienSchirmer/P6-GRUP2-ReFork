@@ -58,7 +58,7 @@ jobs:
           password: ${{ secrets.SSH_PASS }}
           port: ${{ secrets.SSH_PORT }}
           source: 'app.tgz'
-          target: ${{ secrets.bDOCUMENT_ROOT }}
+          target: ${{ secrets.DOCUMENT_ROOT }}
           debug: true
       - name: Es connecta per ssh per fer el desplegament
         uses: appleboy/ssh-action@v1.0.3
@@ -69,7 +69,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             echo "Descomprimint el fitxer app.tgz"
-            cd ${{ secrets.bDOCUMENT_ROOT }}
+            cd ${{ secrets.DOCUMENT_ROOT }}
             tar -xzf app.tgz
 
             echo "Recrear storage si no existeix"
@@ -88,9 +88,9 @@ jobs:
             sed -i "s/DB_CONNECTION=mysql/DB_CONNECTION=${{ secrets.DB_CONNECTION }}/g" .env
             sed -i "s/DB_HOST=mysql/DB_HOST=${{ secrets.DB_HOST }}/g" .env
             sed -i "s/DB_PORT=3306/DB_PORT=${{ secrets.DB_PORT }}/g" .env
-            sed -i "s/DB_DATABASE=laravel/DB_DATABASE=${{ secrets.BDB_DB }}/g" .env
-            sed -i "s/DB_USERNAME=sail/DB_USERNAME=${{ secrets.BDB_USERNAME }}/g" .env
-            sed -i "s/DB_PASSWORD=password/DB_PASSWORD=${{ secrets.BDB_PASSWORD }}/g" .env
+            sed -i "s/DB_DATABASE=laravel/DB_DATABASE=${{ secrets.DB_DB }}/g" .env
+            sed -i "s/DB_USERNAME=sail/DB_USERNAME=${{ secrets.DB_USERNAME }}/g" .env
+            sed -i "s/DB_PASSWORD=password/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/g" .env
             $(which php84) artisan config:clear
             $(which php84) artisan key:generate
             echo "Executar migracions, cache i altres operacions de Laravel"
