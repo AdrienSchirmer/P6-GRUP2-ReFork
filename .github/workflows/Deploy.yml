@@ -59,6 +59,7 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           source: 'app.tgz'
           target: ${{ secrets.bDOCUMENT_ROOT }}
+          debug: true
       - name: Es connecta per ssh per fer el desplegament
         uses: appleboy/ssh-action@v1.0.3
         with:
