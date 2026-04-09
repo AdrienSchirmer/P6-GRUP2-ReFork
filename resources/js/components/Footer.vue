@@ -39,7 +39,7 @@
                         </li>
                         <li>
                             <a href="#" class="hover:underline">Terms &amp; Conditions</a>
-                        </li>
+                        </li>AppearanceTabs
                     </ul>
                 </div>
             </div>
