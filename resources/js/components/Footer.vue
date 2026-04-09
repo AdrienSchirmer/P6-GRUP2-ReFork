@@ -1,7 +1,7 @@
 <script setup lang="ts"></script>
 <template>
-    <footer class="bg-[#151515] text-white">
-        <div class="mx-auto w-full max-w-7xl p-4 py-6 lg:py-8">
+    <footer class="bg-[#151515]">
+        <div class="mx-auto w-full max-w-7xl p-4 py-6 lg:py-8 text-white">
             <div class="md:flex md:justify-between">
             <div class="mb-6 md:mb-0">
                 <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
@@ -46,7 +46,7 @@
         </div>
         <hr class="my-6 border-default sm:mx-auto lg:my-8" />
         <div class="sm:flex sm:items-center sm:justify-between">
-            <span class="text-sm text-body sm:text-center">© 2023 <a href="https://flowbite.com/" class="hover:underline">Flowbite™</a>. All Rights Reserved.
+            <span class="text-sm text-body sm:text-center">Copyright © 2026 <a href="/" class="hover:underline">Farmacia Soler</a>
             </span>
             <div class="flex mt-4 sm:justify-center sm:mt-0">
                 <a href="#" class="text-body hover:text-heading">
@@ -71,6 +71,10 @@
                 </a>
             </div>
         </div>
+        
+        </div>
+        <div class="bg-[#FFFFFF] p-5">
+            <h1>Site in progess...</h1>
         </div>
     </footer>
 </template>
