@@ -1,11 +1,11 @@
 <script setup lang="ts"></script>
 <template>
-    <footer class="bg-[#FFFFFF]">
+    <footer class="bg-[#151515] text-white">
         <div class="mx-auto w-full max-w-7xl p-4 py-6 lg:py-8">
             <div class="md:flex md:justify-between">
             <div class="mb-6 md:mb-0">
                 <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
-                    <img class="w-70" src='/storage/FarmaciaSolerLogoTall.jpeg' alt="Logo">            
+                    <img class="w-70" src='/storage/FarmaciaSolerLogoTallDark.png' alt="Logo">            
                 </a>
             </div>
             <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
