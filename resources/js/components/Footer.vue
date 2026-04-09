@@ -4,9 +4,8 @@
         <div class="mx-auto w-full max-w-7xl p-4 py-6 lg:py-8">
             <div class="md:flex md:justify-between">
             <div class="mb-6 md:mb-0">
-                <a href="https://flowbite.com/" class="flex items-center">
-                    <img src="https://flowbite.com/docs/images/logo.svg" class="h-7 me-3" alt="FlowBite Logo" />
-                    <span class="text-heading self-center text-2xl font-semibold whitespace-nowrap">Flowbite</span>
+                <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
+                    <img class="w-70" src='/storage/FarmaciaSolerLogoTall.jpeg' alt="Logo">            
                 </a>
             </div>
             <div class="grid grid-cols-2 gap-8 sm:gap-6 sm:grid-cols-3">
