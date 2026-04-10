@@ -162,11 +162,27 @@
     --sidebar: hsl(240 5.9% 10%);
 }
 
+template,
+html,
+body {
+    overscroll-behavior-y: none;
+    height: 100%;
+}
+
 @layer base {
     * {
         @apply border-border outline-ring/50;
     }
     body {
         @apply bg-background text-foreground;
+    }
+    /* Per que l'usuari no pot agafar imatges */
+    img {
+        -webkit-user-drag: none;
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 }
