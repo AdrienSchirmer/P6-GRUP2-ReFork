@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('name');
             $table->integer('phone_number');
             $table->string('address');
-            $table->string('description');
-            $table->tinyInteger('status');
+            $table->longText('description');
+            $table->enum('status', ['pending', 'confirmed', 'cancelled', 'completed']);
             $table->timestamps();
         });
     }

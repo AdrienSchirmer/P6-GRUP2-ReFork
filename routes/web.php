@@ -3,7 +3,7 @@
 use App\Http\Controllers\HomePageController;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
-use App\Http\Controllers\contactans;
+use App\Http\Controllers\Contactans;
 
 // Public Routes
 Route::inertia('/', 'Welcome', [
@@ -15,6 +15,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::inertia('dashboard', 'Dashboard')->name('dashboard');
 });
 
-Route::inertia('contactans', [contactans::class, 'show'])->name('contactans');
+Route::get('/contactans', [Contactans::class, 'index'])->name('contactans');
 
 require __DIR__ . '/settings.php';
