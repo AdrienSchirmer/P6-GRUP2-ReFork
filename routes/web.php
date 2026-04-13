@@ -12,7 +12,7 @@ Route::inertia('/', 'Welcome', [
 
 // Private Routes
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+    Route::inertia('dashboard', 'Dashboard')->name('admin');
 });
 
 Route::inertia('contactans', [contactans::class, 'show'])->name('contactans');
