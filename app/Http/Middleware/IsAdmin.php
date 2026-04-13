@@ -4,11 +4,10 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
+use Symfony\Component\HttpFoundation\Response;
 
-class is_admin
+class IsAdmin
 {
     /**
      * Handle an incoming request.
@@ -17,7 +16,9 @@ class is_admin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (Auth::user()->role !== 'admin') {
+        $user = $request->user();
+
+        if (! $user || ! in_array($user->role, ['admin', 'superadmin'], true)) {
             Inertia::flash([
                 'unauthorized' => true,
                 'title' => 'Accés Denegat',
