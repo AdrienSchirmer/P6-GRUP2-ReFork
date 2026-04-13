@@ -10,11 +10,6 @@ import { Link } from '@inertiajs/vue3';
         >
             <a href="/" class="flex items-center space-x-3 rtl:space-x-reverse">
                 <img
-                    class="w-20"
-                    src="/storage/FarmaciaSolerLogo.jpg"
-                    alt="Logo"
-                />
-                <img
                     class="w-90"
                     src="/storage/FarmaciaSolerLogoLong.jpeg"
                     alt="Long Logo"
