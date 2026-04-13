@@ -3,15 +3,16 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
-class contactans extends Controller
+class Contactans extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        //
+        return Inertia::render('contactans');
     }
 
     /**
@@ -35,7 +36,7 @@ class contactans extends Controller
      */
     public function show(string $id)
     {
-        return Inertia::view('contactans');
+        //
     }
 
     /**
