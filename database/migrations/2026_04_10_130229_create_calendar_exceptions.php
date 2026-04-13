@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('assignments', function (Blueprint $table) {
+        Schema::create('calendar_exceptions', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->integer('phone_number');
-            $table->string('address');
-            $table->string('description');
-            $table->tinyInteger('status');
+            $table->datetime('day');
             $table->timestamps();
         });
     }
@@ -27,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('assignments');
+        Schema::dropIfExists('calendar_exceptions');
     }
 };
