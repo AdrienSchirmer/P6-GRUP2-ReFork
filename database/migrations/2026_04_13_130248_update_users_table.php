@@ -12,7 +12,7 @@ return new class extends Migration {
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn(['isAdmin', 'isActive', 'isPrivate']);
-            $table->enum('role', ['Admin', 'SuperAdmin'])->default('Admin');
+            $table->enum('role', ['admin', 'superAdmin'])->default('admin')->after('name');
         });
     }
 
