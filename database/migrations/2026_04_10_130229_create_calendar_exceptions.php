@@ -4,15 +4,17 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration {
+return new class extends Migration
+{
     /**
      * Run the migrations.
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['isAdmin', 'isActive', 'isPrivate']);
-            $table->enum('role', ['admin', 'superadmin'])->default('admin')->after('name');
+        Schema::create('calendar_exceptions', function (Blueprint $table) {
+            $table->id();
+            $table->datetime('day');
+            $table->timestamps();
         });
     }
 
@@ -21,6 +23,6 @@ return new class extends Migration {
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('calendar_exceptions');
     }
 };
