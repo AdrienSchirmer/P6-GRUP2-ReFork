@@ -23,7 +23,7 @@ class AssignmentsController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Assignments/Create');
     }
 
     /**
