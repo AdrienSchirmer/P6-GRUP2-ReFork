@@ -12,7 +12,7 @@ class CreateAssignmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return false; // For anyone with an account
     }
 
     /**
@@ -25,7 +25,7 @@ class CreateAssignmentRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'address' => 'required|email|max:255',
-            'phone_number' => 'required|string|max:20',
+            'phone_number' => 'required|integer',
             'description' => 'nullable|string',
         ];
     }
