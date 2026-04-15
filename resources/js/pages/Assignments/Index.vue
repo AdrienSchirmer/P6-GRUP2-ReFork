@@ -7,7 +7,12 @@ import { Form } from '@inertiajs/vue3';
 <template>
     <WebAppLayout>
         <div class="min-h-screen bg-blue-50 p-8">
-            <div class="space-y-6">
+            <div class="pb-20">
+                <h1 class="px-70 text-center font-extrabold text-4xl">En nuestra farmacia preparamos tus encargos online. Infórmate</h1>
+                <h2 class="font-bold text-2xl pt-10">Realiza tu encargo online de productos de parafarmacia y ahorra tiempo.</h2>
+                <p>Esta funcionalidad no está operativa para medicamentos. Tu farmacia te avisará cuando tu pedido esté listo para recogerlo.</p>
+            </div>
+            <div class="space-y-6 px-50">
                 <Form
                     :action="store()"
                     method="POST"
