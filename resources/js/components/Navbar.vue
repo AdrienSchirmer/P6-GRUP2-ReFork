@@ -67,19 +67,5 @@ import { computed } from 'vue';
                 </ul>
             </div>
         </div>
-        <div class="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-sticky">
-        <ul class="flex italic text-[#4D3701] flex-col p-4 md:p-0 mt-4 font-medium text-2xl border border-default rounded-base bg-neutral-secondary-soft md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-neutral-primary">
-            <Link href="/pedir-cita">
-                Pedir cita
-            </Link>
-            <Link href="#/">
-                ¿Qui Som?
-            </Link>
-            <Link href="#/">
-                Contactan’s
-            </Link>
-        </ul>
-        </div>
-    </div>
     </nav>
 </template>
