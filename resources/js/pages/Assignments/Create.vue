@@ -2,7 +2,7 @@
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { store } from '@/routes/assignments';
 import { Form } from '@inertiajs/vue3';
-import { ref } from 'vue';
+
 </script>
 <template>
     <WebAppLayout>
@@ -80,6 +80,7 @@ import { ref } from 'vue';
                         <button
                             class="rounded-2xl bg-yellow-300 p-3 text-2xl font-medium"
                             type="submit"
+                            :disabled="validating""
                         >
                             Enviar
                         </button>
