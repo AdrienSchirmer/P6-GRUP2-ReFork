@@ -23,8 +23,6 @@ class UserSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
                 'email_verified_at' => now(),
-
-
             ],
         ]);
     }
