@@ -20,6 +20,7 @@ import { ref } from 'vue';
                         >
                         <input
                             type="text"
+                            name="name"
                             class="w-full rounded-2xl border-none bg-gray-200 px-4 py-4 outline-none"
                         />
                     </div>
@@ -31,7 +32,8 @@ import { ref } from 'vue';
                                 >Adreça</label
                             >
                             <input
-                                type="text"
+                                type="email"
+                                name="address"
                                 class="w-full rounded-2xl border-none bg-gray-200 px-4 py-4 outline-none"
                             />
                         </div>
@@ -41,7 +43,8 @@ import { ref } from 'vue';
                                 >Telefón</label
                             >
                             <input
-                                type="text"
+                                type="tel"
+                                name="phone_number"
                                 class="w-full rounded-2xl border-none bg-gray-200 px-4 py-4 outline-none"
                             />
                         </div>
@@ -53,9 +56,11 @@ import { ref } from 'vue';
                         >
                         <textarea
                             rows="8"
+                            name="description"
                             class="w-full resize-none rounded-2xl border-none bg-gray-200 px-4 py-4 outline-none"
                         />
                     </div>
+                    x
 
                     <div class="flex items-center gap-3">
                         <input
