@@ -60,7 +60,6 @@ import { Form } from '@inertiajs/vue3';
                             class="w-full resize-none rounded-2xl border-none bg-gray-200 px-4 py-4 outline-none"
                         />
                     </div>
-                    x
 
                     <div class="flex items-center gap-3">
                         <input

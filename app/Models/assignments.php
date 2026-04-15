@@ -13,6 +13,7 @@ class assignments extends Model
         'address',
         'phone_number',
         'description',
+        'status', 
     ];
 
     protected function casts(): array
