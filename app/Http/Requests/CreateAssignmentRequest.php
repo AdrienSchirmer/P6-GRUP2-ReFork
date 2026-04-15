@@ -12,7 +12,7 @@ class CreateAssignmentRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true;
+        return true; // For anyone even without an account
     }
 
     /**
