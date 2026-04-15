@@ -63,6 +63,7 @@ import { Form } from '@inertiajs/vue3';
 
                     <div class="flex items-center gap-3">
                         <input
+                            required
                             type="checkbox"
                             class="h-5 w-5 cursor-pointer rounded border-gray-300 bg-gray-200 accent-gray-500"
                         />
