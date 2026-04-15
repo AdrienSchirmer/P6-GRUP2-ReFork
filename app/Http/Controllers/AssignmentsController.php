@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Actions\Assignments\CreateAssignmentAction;
+use App\Http\Requests\CreateAssignmentRequest;
+use App\Models\Link;
 
 class AssignmentsController extends Controller
 {
@@ -26,9 +29,16 @@ class AssignmentsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateAssignmentRequest $request, CreateAssignmentAction $createAssignment)
     {
-        //
+        $validated = $request->validated();
+        $assignment = $createAssignment->execute($validated);
+
+        Inertia::flash([
+            'message' => 'Ecarrec creat correctament',
+        ]);
+
+        return to_route('assignments.index');
     }
 
     /**
