@@ -2,18 +2,43 @@
 import WebAppLayout from '@/layouts/WebAppLayout.vue'
 import { ref, computed } from 'vue'
 import { ScanFace, Droplet, FlaskConical, ShieldCheck, ChevronLeft, ChevronRight } from 'lucide-vue-next'
+import { onMounted } from 'vue'
 
+const selectedService = ref<number | null>(null)
+
+onMounted(() => {
+    if (props.services.length > 0) {
+        selectedService.value = props.services[0].id
+    }
+})
+const selectedServiceObj = computed(() =>
+    props.services.find(s => s.id === selectedService.value)
+)
 defineOptions({
     layout: WebAppLayout
 })
-
-const selectedService = ref('dermo')
+const props = defineProps<{
+    services: Array<{
+        id: number
+        nom: string
+        descripció: string
+        durada: number | string
+        icon: string
+    }>
+}>()
+const iconsMap: Record<string, any> = {
+    ScanFace,
+    Droplet,
+    FlaskConical,
+    ShieldCheck
+}
 const selectedTime = ref('10:30')
 const selectedDate = ref<number | null>(3)
 
+
 // Calendar state
 const currentYear = ref(2024)
-const currentMonth = ref(9) 
+const currentMonth = ref(9)
 const monthNames = [
     'Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny',
     'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'
@@ -35,8 +60,8 @@ const calendarDays = computed(() => {
     const daysInMonth = lastDay.getDate()
 
     // getDay(): 0=Sun,1=Mon,...,6=Sat → convert to Mon-first: 0=Mon,...,6=Sun
-    let startDow = firstDay.getDay() 
-    startDow = (startDow + 6) % 7  
+    let startDow = firstDay.getDay()
+    startDow = (startDow + 6) % 7
 
     const prevMonthLastDay = new Date(year, month, 0).getDate()
 
@@ -136,67 +161,36 @@ const availableTimes = [
                             <h2 class="font-bold text-lg">Seleccionar Servei</h2>
                         </div>
 
+
                         <div class="space-y-4">
-                            <!-- Card 1 -->
-                            <div @click="selectedService = 'dermo'" :class="[
-                                'p-5 rounded-2xl cursor-pointer transition border-2',
-                                selectedService === 'dermo'
-                                    ? 'bg-[#dbeaf4] border-[#0f5f7f]'
-                                    : 'bg-[#f3f4f6] border-transparent hover:border-[#9fbcd3]'
-                            ]">
+                            <div v-for="service in props.services" :key="service.id"
+                                @click="selectedService = service.id" :class="[
+                                    'p-5 rounded-2xl cursor-pointer transition border-2',
+                                    selectedService === service.id
+                                        ? 'bg-[#dbeaf4] border-[#0f5f7f]'
+                                        : 'bg-[#f3f4f6] border-transparent hover:border-[#9fbcd3]'
+                                ]">
                                 <div class="flex justify-between items-center mb-2">
-                                    <ScanFace class="w-5 h-5 text-[#0f5f7f]" />
-                                    <span class="text-xs font-semibold text-[#8a6d1a]">30 min</span>
-                                </div>
-                                <h3 class="font-bold text-base mb-1">Dermoanàlisi Facial</h3>
-                                <p class="text-sm text-slate-600 leading-relaxed">Estudi detallat de la teva pell amb tecnologia d'última generació.</p>
-                            </div>
 
-                            <!-- Card 2 -->
-                            <div @click="selectedService = 'aigua'" :class="[
-                                'p-5 rounded-2xl cursor-pointer transition border-2',
-                                selectedService === 'aigua'
-                                    ? 'bg-[#dbeaf4] border-[#0f5f7f]'
-                                    : 'bg-[#f3f4f6] border-transparent hover:border-[#9fbcd3]'
-                            ]">
-                                <div class="flex justify-between items-center mb-2">
-                                    <Droplet class="w-5 h-5 text-[#0f5f7f]" />
-                                    <span class="text-xs font-semibold text-[#8a6d1a]">15 min</span>
-                                </div>
-                                <h3 class="font-bold text-base mb-1">Anàlisi d'aigües</h3>
-                                <p class="text-sm text-slate-600">Control de qualitat físic-químic i microbiològic per a consum.</p>
-                            </div>
+                                    <!-- ICON -->
+                                    <component :is="iconsMap[service.icon]" class="w-5 h-5 text-[#0f5f7f]" />
 
-                            <!-- Card 3 -->
-                            <div @click="selectedService = 'formula'" :class="[
-                                'p-5 rounded-2xl cursor-pointer transition border-2',
-                                selectedService === 'formula'
-                                    ? 'bg-[#dbeaf4] border-[#0f5f7f]'
-                                    : 'bg-[#f3f4f6] border-transparent hover:border-[#9fbcd3]'
-                            ]">
-                                <div class="flex justify-between items-center mb-2">
-                                    <FlaskConical class="w-5 h-5 text-[#0f5f7f]" />
-                                    <span class="text-xs font-semibold text-[#8a6d1a]">Varis</span>
+                                    <!-- DURATION -->
+                                    <span class="text-xs font-semibold text-[#8a6d1a]">
+                                        {{ service.durada }}
+                                    </span>
                                 </div>
-                                <h3 class="font-bold text-base mb-1">Fórmula Magistral</h3>
-                                <p class="text-sm text-slate-600">Medicació personalitzada segons prescripció mèdica específica.</p>
-                            </div>
 
-                            <!-- Card 4 -->
-                            <div @click="selectedService = 'seguiment'" :class="[
-                                'p-5 rounded-2xl cursor-pointer transition border-2',
-                                selectedService === 'seguiment'
-                                    ? 'bg-[#dbeaf4] border-[#0f5f7f]'
-                                    : 'bg-[#f3f4f6] border-transparent hover:border-[#9fbcd3]'
-                            ]">
-                                <div class="flex justify-between items-center mb-2">
-                                    <ShieldCheck class="w-5 h-5 text-[#0f5f7f]" />
-                                    <span class="text-xs font-semibold text-[#8a6d1a]">45 min</span>
-                                </div>
-                                <h3 class="font-bold text-base mb-1">Seguiment Farmacèutic</h3>
-                                <p class="text-sm text-slate-600">Gestió del pla de medicació per millorar l'adherència al tractament.</p>
+                                <h3 class="font-bold text-base mb-1">
+                                    {{ service.nom }}
+                                </h3>
+
+                                <p class="text-sm text-slate-600">
+                                    {{ service.descripció }}
+                                </p>
                             </div>
                         </div>
+
                     </div>
 
                     <!-- STEP 2: Date & Time -->
@@ -211,8 +205,7 @@ const availableTimes = [
                         <div class="bg-[#f3f4f6] rounded-2xl p-5 mb-6">
                             <!-- Month navigation -->
                             <div class="flex items-center justify-between mb-4">
-                                <button
-                                    @click="prevMonth"
+                                <button @click="prevMonth"
                                     class="p-1.5 rounded-lg text-slate-500 hover:bg-white hover:text-[#0f5f7f] transition"
                                     aria-label="Mes anterior">
                                     <ChevronLeft class="w-5 h-5" />
@@ -220,8 +213,7 @@ const availableTimes = [
 
                                 <span class="font-bold text-slate-800 text-sm">{{ currentMonthLabel }}</span>
 
-                                <button
-                                    @click="nextMonth"
+                                <button @click="nextMonth"
                                     class="p-1.5 rounded-lg text-slate-500 hover:bg-white hover:text-[#0f5f7f] transition"
                                     aria-label="Mes següent">
                                     <ChevronRight class="w-5 h-5" />
@@ -230,9 +222,7 @@ const availableTimes = [
 
                             <!-- Day headers -->
                             <div class="grid grid-cols-7 mb-2">
-                                <div
-                                    v-for="h in dayHeaders"
-                                    :key="h"
+                                <div v-for="h in dayHeaders" :key="h"
                                     class="text-center text-xs font-semibold text-slate-400 py-1">
                                     {{ h }}
                                 </div>
@@ -240,12 +230,8 @@ const availableTimes = [
 
                             <!-- Calendar grid -->
                             <div class="grid grid-cols-7 gap-y-1">
-                                <button
-                                    v-for="(cell, idx) in calendarDays"
-                                    :key="idx"
-                                    @click="selectDay(cell)"
-                                    :disabled="!cell.isCurrentMonth"
-                                    :class="[
+                                <button v-for="(cell, idx) in calendarDays" :key="idx" @click="selectDay(cell)"
+                                    :disabled="!cell.isCurrentMonth" :class="[
                                         'flex items-center justify-center h-8 w-full rounded-lg text-sm transition',
                                         !cell.isCurrentMonth
                                             ? 'text-slate-300 cursor-default'
@@ -259,18 +245,15 @@ const availableTimes = [
                         </div>
 
                         <!-- Available times -->
-                        <h4 class="text-xs font-bold text-slate-500 tracking-widest uppercase mb-3">Hores Disponibles</h4>
+                        <h4 class="text-xs font-bold text-slate-500 tracking-widest uppercase mb-3">Hores Disponibles
+                        </h4>
                         <div class="grid grid-cols-3 gap-2">
-                            <button
-                                v-for="time in availableTimes"
-                                :key="time"
-                                @click="selectedTime = time"
-                                :class="[
-                                    'py-2.5 px-1 rounded-xl border text-sm font-medium transition',
-                                    selectedTime === time
-                                        ? 'bg-[#dbeaf4] border-[#0f5f7f] text-[#0f5f7f] font-bold'
-                                        : 'border-gray-200 bg-white text-slate-700 hover:bg-gray-50 hover:border-[#9fbcd3]'
-                                ]">
+                            <button v-for="time in availableTimes" :key="time" @click="selectedTime = time" :class="[
+                                'py-2.5 px-1 rounded-xl border text-sm font-medium transition',
+                                selectedTime === time
+                                    ? 'bg-[#dbeaf4] border-[#0f5f7f] text-[#0f5f7f] font-bold'
+                                    : 'border-gray-200 bg-white text-slate-700 hover:bg-gray-50 hover:border-[#9fbcd3]'
+                            ]">
                                 {{ time }}
                             </button>
                         </div>
@@ -287,38 +270,44 @@ const availableTimes = [
                         <div class="space-y-5">
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Nom i Cognoms</label>
-                                <input
-                                    type="text"
+                                <input type="text"
                                     class="w-full p-4 rounded-xl bg-[#f3f4f6] border border-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0f5f7f] focus:border-transparent transition placeholder:text-slate-400 text-slate-800"
                                     placeholder="Escriu el teu nom complet" />
                             </div>
 
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Telèfon</label>
-                                <input
-                                    type="tel"
+                                <input type="tel"
                                     class="w-full p-4 rounded-xl bg-[#f3f4f6] border border-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0f5f7f] focus:border-transparent transition placeholder:text-slate-400 text-slate-800"
                                     placeholder="600 000 000" />
                             </div>
 
                             <div>
                                 <label class="block text-sm font-semibold text-slate-700 mb-2">Correu Electrònic</label>
-                                <input
-                                    type="email"
+                                <input type="email"
                                     class="w-full p-4 rounded-xl bg-[#f3f4f6] border border-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0f5f7f] focus:border-transparent transition placeholder:text-slate-400 text-slate-800"
                                     placeholder="exemple@mail.com" />
                             </div>
 
                             <!-- Summary box -->
-                            <div class="bg-[#f3f4f6] rounded-xl p-4 text-sm text-slate-600 space-y-1 border border-[#e5e7eb]">
+                            <div
+                                class="bg-[#f3f4f6] rounded-xl p-4 text-sm text-slate-600 space-y-1 border border-[#e5e7eb]">
                                 <p class="font-semibold text-slate-800 mb-2">Resum de la reserva</p>
                                 <div class="flex justify-between">
-                                    <span class="text-slate-500">Servei</span>
+                                    <span class="text-slate-500">Servei ID</span>
                                     <span class="font-medium capitalize">{{ selectedService }}</span>
                                 </div>
+
+                                <div class="flex justify-between">
+                                 <span class="text-slate-500">Servei Nom</span>
+                                    <span class="font-medium capitalize">{{ selectedServiceObj?.nom || '—' }}</span>
+                                </div>
+
+
                                 <div class="flex justify-between">
                                     <span class="text-slate-500">Data</span>
-                                    <span class="font-medium">{{ selectedDate ? `${selectedDate} ${monthNames[currentMonth]} ${currentYear}` : '—' }}</span>
+                                    <span class="font-medium">{{ selectedDate ? `${selectedDate}
+                                        ${monthNames[currentMonth]} ${currentYear}` : '—' }}</span>
                                 </div>
                                 <div class="flex justify-between">
                                     <span class="text-slate-500">Hora</span>
@@ -326,7 +315,8 @@ const availableTimes = [
                                 </div>
                             </div>
 
-                            <div class="bg-[#f5f1e6] border-l-4 border-[#8a6d1a] p-4 rounded-xl text-sm italic text-[#6b5010]">
+                            <div
+                                class="bg-[#f5f1e6] border-l-4 border-[#8a6d1a] p-4 rounded-xl text-sm italic text-[#6b5010]">
                                 Recordi portar la seva Targeta de Soci Soler per gaudir dels avantatges exclusius.
                             </div>
 
