@@ -3,7 +3,29 @@ import WebAppLayout from '@/layouts/WebAppLayout.vue'
 import { ref, computed } from 'vue'
 import { ScanFace, Droplet, FlaskConical, ShieldCheck, ChevronLeft, ChevronRight } from 'lucide-vue-next'
 import { onMounted } from 'vue'
+import { useForm } from '@inertiajs/vue3'
 
+const today = new Date()
+
+const todayYear = today.getFullYear()
+const todayMonth = today.getMonth()
+const todayDate = today.getDate()
+
+const form = useForm<{
+    service_id: number | null
+    customer_name: string
+    customer_phone: string
+    customer_email: string
+    appointment_date: string
+    start_time: string
+}>({
+    service_id: null,
+    customer_name: '',
+    customer_phone: '',
+    customer_email: '',
+    appointment_date: '',
+    start_time: '',
+})
 const selectedService = ref<number | null>(null)
 
 onMounted(() => {
@@ -26,6 +48,17 @@ const props = defineProps<{
         icon: string
     }>
 }>()
+/*******************Steps********************************/
+const step = ref(1)
+
+function nextStep() {
+    if (step.value < 3) step.value++
+}
+
+function prevStep() {
+    if (step.value > 1) step.value--
+}
+/********************************************************/
 const iconsMap: Record<string, any> = {
     ScanFace,
     Droplet,
@@ -33,12 +66,13 @@ const iconsMap: Record<string, any> = {
     ShieldCheck
 }
 const selectedTime = ref('10:30')
-const selectedDate = ref<number | null>(3)
+const selectedDate = ref<number | null>(todayDate)
+
 
 
 // Calendar state
-const currentYear = ref(2024)
-const currentMonth = ref(9)
+const currentYear = ref(todayYear)
+const currentMonth = ref(todayMonth)
 const monthNames = [
     'Gener', 'Febrer', 'Març', 'Abril', 'Maig', 'Juny',
     'Juliol', 'Agost', 'Setembre', 'Octubre', 'Novembre', 'Desembre'
@@ -108,6 +142,16 @@ function nextMonth() {
 
 function selectDay(cell: { day: number; isCurrentMonth: boolean }) {
     if (!cell.isCurrentMonth) return
+
+    const today = new Date()
+
+    const isPast =
+        currentYear.value === today.getFullYear() &&
+        currentMonth.value === today.getMonth() &&
+        cell.day < today.getDate()
+
+    if (isPast) return
+
     selectedDate.value = cell.day
 }
 
@@ -116,45 +160,72 @@ const availableTimes = [
     '12:00', '12:30', '13:00', '13:30', '16:00', '16:30',
     '17:00', '17:30', '18:00', '18:30', '19:00', '19:30',
 ]
+
+
+/*Appointments store**/
+function submitReservation() {
+    form.service_id = selectedService.value
+    form.customer_name = form.customer_name
+    form.customer_phone = form.customer_phone
+    form.customer_email = form.customer_email
+
+    form.appointment_date = selectedDate.value
+        ? `${currentYear.value}-${currentMonth.value + 1}-${selectedDate.value}`
+        : ''
+
+    form.start_time = selectedTime.value
+    form.post('/appointments')
+}
 </script>
 
 <template>
     <div class="bg-[#f3f4f6] text-slate-900">
 
         <!-- HERO -->
-        <section class="py-20">
-            <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-16 items-center">
+        <section class="py-10">
+            <div class="max-w-6xl mx-auto px-6 grid md:grid-cols-2 gap-8 items-center">
+
+           
                 <div>
                     <span
-                        class="inline-block px-4 py-1 text-xs font-semibold tracking-widest uppercase bg-[#e5e7eb] text-[#8a6d1a] rounded-full mb-6">
+                        class="inline-block px-3 py-1 text-[10px] font-semibold tracking-widest uppercase bg-[#e5e7eb] text-[#8a6d1a] rounded-full mb-3">
                         CITA PRÈVIA A FIGUERES
                     </span>
-                    <h1 class="text-5xl md:text-6xl font-extrabold text-[#0f5f7f] mb-6">
+
+                    <h1 class="text-2xl md:text-3xl font-bold text-[#0f5f7f] mb-3">
                         Demanar Cita
                     </h1>
-                    <p class="text-lg text-slate-600 leading-relaxed max-w-xl">
+
+                    <p class="text-sm text-slate-500 leading-relaxed max-w-md">
                         Reserva els nostres serveis clínics especialitzats amb la comoditat del sistema online.
                         La nostra centenària tradició a Figueres s'uneix a la tecnologia per oferir-te una atenció
                         farmacèutica d'avantguarda.
                     </p>
                 </div>
+
+              
                 <div>
-                    <div class="rounded-3xl overflow-hidden shadow-xl">
+                    <div class="relative rounded-xl overflow-hidden shadow-md h-[180px] md:h-[220px]">
                         <img class="w-full h-full object-cover"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuABratlbd2xFNslHSi_FOXZJNLl9PNcF1X_LAIqix2i1aR27eBij9L26OnzzQY-uFmeRzorlBi-E4t379X6rE77OQCdjcdJerupEzLS6zL2C8KDU8u5XLY8X6Clwy2ri6bBWb8_qnZXlQh6v2y-02vX4XCCT0RdnJqzgUnn0JUa5b15RhJIv7CiAGUUqrydkpmlwTgPtj0IvznMWiDZthB8HURhdOwnKMYp73CTzM0GzS3Ph2UcIs3huv48oJQLEFAL-2JP3sCI14"
-                            alt="pharmacy" />
+                            src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1400&auto=format&fit=crop"
+                            alt="Consulta farmacèutica" />
+
+                       
+                        <div class="absolute inset-0 bg-[#0f5f7f]/10"></div>
                     </div>
                 </div>
+
             </div>
         </section>
 
         <!-- BOOKING -->
         <section class="max-w-7xl mx-auto px-6 pb-20">
             <div class="bg-white rounded-3xl shadow-lg p-10">
-                <div class="grid lg:grid-cols-3 gap-12">
+                <div>
 
                     <!-- STEP 1: Service Selection -->
-                    <div>
+
+                    <div v-if="step === 1">
                         <div class="flex items-center gap-3 mb-8">
                             <span
                                 class="w-8 h-8 rounded-full bg-[#0f5f7f] text-white flex items-center justify-center font-bold text-sm">1</span>
@@ -162,10 +233,10 @@ const availableTimes = [
                         </div>
 
 
-                        <div class="space-y-4">
+                        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
                             <div v-for="service in props.services" :key="service.id"
                                 @click="selectedService = service.id" :class="[
-                                    'p-5 rounded-2xl cursor-pointer transition border-2',
+                                    'p-4 rounded-xl cursor-pointer transition border',
                                     selectedService === service.id
                                         ? 'bg-[#dbeaf4] border-[#0f5f7f]'
                                         : 'bg-[#f3f4f6] border-transparent hover:border-[#9fbcd3]'
@@ -194,137 +265,219 @@ const availableTimes = [
                     </div>
 
                     <!-- STEP 2: Date & Time -->
-                    <div>
+                    <div v-if="step === 2">
                         <div class="flex items-center gap-3 mb-8">
                             <span
                                 class="w-8 h-8 rounded-full bg-[#0f5f7f] text-white flex items-center justify-center font-bold text-sm">2</span>
                             <h2 class="font-bold text-lg">Data i Hora</h2>
                         </div>
 
-                        <!-- Flowbite-style Calendar -->
-                        <div class="bg-[#f3f4f6] rounded-2xl p-5 mb-6">
-                            <!-- Month navigation -->
-                            <div class="flex items-center justify-between mb-4">
-                                <button @click="prevMonth"
-                                    class="p-1.5 rounded-lg text-slate-500 hover:bg-white hover:text-[#0f5f7f] transition"
-                                    aria-label="Mes anterior">
-                                    <ChevronLeft class="w-5 h-5" />
-                                </button>
+                       
+                        <div class="grid md:grid-cols-2 gap-6 items-start">
 
-                                <span class="font-bold text-slate-800 text-sm">{{ currentMonthLabel }}</span>
+                            <!-- CALENDAR -->
+                            <div class="bg-[#f3f4f6] rounded-xl p-4">
 
-                                <button @click="nextMonth"
-                                    class="p-1.5 rounded-lg text-slate-500 hover:bg-white hover:text-[#0f5f7f] transition"
-                                    aria-label="Mes següent">
-                                    <ChevronRight class="w-5 h-5" />
-                                </button>
-                            </div>
+                                <!-- Month navigation -->
+                                <div class="flex items-center justify-between mb-3">
+                                    <button @click="prevMonth"
+                                        class="p-1.5 rounded-lg text-slate-500 hover:bg-white hover:text-[#0f5f7f] transition">
+                                        <ChevronLeft class="w-5 h-5" />
+                                    </button>
 
-                            <!-- Day headers -->
-                            <div class="grid grid-cols-7 mb-2">
-                                <div v-for="h in dayHeaders" :key="h"
-                                    class="text-center text-xs font-semibold text-slate-400 py-1">
-                                    {{ h }}
+                                    <span class="font-semibold text-slate-700 text-sm">
+                                        {{ currentMonthLabel }}
+                                    </span>
+
+                                    <button @click="nextMonth"
+                                        class="p-1.5 rounded-lg text-slate-500 hover:bg-white hover:text-[#0f5f7f] transition">
+                                        <ChevronRight class="w-5 h-5" />
+                                    </button>
                                 </div>
+
+                                <!-- Days header -->
+                                <div class="grid grid-cols-7 mb-2">
+                                    <div v-for="h in dayHeaders" :key="h"
+                                        class="text-center text-xs font-semibold text-slate-400 py-1">
+                                        {{ h }}
+                                    </div>
+                                </div>
+
+                                <!-- Calendar -->
+                                <div class="grid grid-cols-7 gap-1">
+                                    <button v-for="(cell, idx) in calendarDays" :key="idx" @click="selectDay(cell)"
+                                        :disabled="!cell.isCurrentMonth" :class="[
+                                            'flex items-center justify-center h-8 text-xs rounded-lg transition',
+                                            !cell.isCurrentMonth
+                                                ? 'text-slate-300'
+                                                : selectedDate === cell.day
+                                                    ? 'bg-[#0f5f7f] text-white font-semibold shadow-sm'
+                                                    : 'text-slate-700 hover:bg-[#dbeaf4] hover:text-[#0f5f7f]'
+                                        ]">
+                                        {{ cell.day }}
+                                    </button>
+                                </div>
+
                             </div>
 
-                            <!-- Calendar grid -->
-                            <div class="grid grid-cols-7 gap-y-1">
-                                <button v-for="(cell, idx) in calendarDays" :key="idx" @click="selectDay(cell)"
-                                    :disabled="!cell.isCurrentMonth" :class="[
-                                        'flex items-center justify-center h-8 w-full rounded-lg text-sm transition',
-                                        !cell.isCurrentMonth
-                                            ? 'text-slate-300 cursor-default'
-                                            : selectedDate === cell.day
-                                                ? 'bg-[#0f5f7f] text-white font-bold'
-                                                : 'text-slate-700 hover:bg-[#dbeaf4] hover:text-[#0f5f7f] cursor-pointer'
-                                    ]">
-                                    {{ cell.day }}
-                                </button>
-                            </div>
-                        </div>
+                            <!-- TIMES -->
+                            <div>
 
-                        <!-- Available times -->
-                        <h4 class="text-xs font-bold text-slate-500 tracking-widest uppercase mb-3">Hores Disponibles
-                        </h4>
-                        <div class="grid grid-cols-3 gap-2">
-                            <button v-for="time in availableTimes" :key="time" @click="selectedTime = time" :class="[
-                                'py-2.5 px-1 rounded-xl border text-sm font-medium transition',
-                                selectedTime === time
-                                    ? 'bg-[#dbeaf4] border-[#0f5f7f] text-[#0f5f7f] font-bold'
-                                    : 'border-gray-200 bg-white text-slate-700 hover:bg-gray-50 hover:border-[#9fbcd3]'
-                            ]">
-                                {{ time }}
-                            </button>
+                                <h4 class="text-xs font-bold text-slate-500 tracking-widest uppercase mb-3">
+                                    Hores Disponibles
+                                </h4>
+
+
+
+                                <!-- Times grid -->
+                                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                                    <button v-for="time in availableTimes" :key="time" @click="selectedTime = time"
+                                        :disabled="!selectedDate" :class="[
+                                            'py-2 rounded-lg border text-xs font-medium transition',
+                                            !selectedDate
+                                                ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                                                : selectedTime === time
+                                                    ? 'bg-[#0f5f7f] text-white border-[#0f5f7f]'
+                                                    : 'bg-white border-gray-200 text-slate-700 hover:border-[#0f5f7f]'
+                                        ]">
+                                        {{ time }}
+                                    </button>
+                                </div>
+
+
+
+                            </div>
+
                         </div>
                     </div>
 
+
                     <!-- STEP 3: Personal Data -->
-                    <div>
+                    <div v-if="step === 3">
+
                         <div class="flex items-center gap-3 mb-8">
                             <span
                                 class="w-8 h-8 rounded-full bg-[#0f5f7f] text-white flex items-center justify-center font-bold text-sm">3</span>
                             <h2 class="font-bold text-lg">Dades Personals</h2>
                         </div>
 
-                        <div class="space-y-5">
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Nom i Cognoms</label>
-                                <input type="text"
-                                    class="w-full p-4 rounded-xl bg-[#f3f4f6] border border-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0f5f7f] focus:border-transparent transition placeholder:text-slate-400 text-slate-800"
-                                    placeholder="Escriu el teu nom complet" />
-                            </div>
+                        <!-- GRID -->
+                        <div class="grid md:grid-cols-2 gap-6">
 
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Telèfon</label>
-                                <input type="tel"
-                                    class="w-full p-4 rounded-xl bg-[#f3f4f6] border border-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0f5f7f] focus:border-transparent transition placeholder:text-slate-400 text-slate-800"
-                                    placeholder="600 000 000" />
-                            </div>
+                            <!-- LEFT: FORM -->
+                            <div class="space-y-4">
 
-                            <div>
-                                <label class="block text-sm font-semibold text-slate-700 mb-2">Correu Electrònic</label>
-                                <input type="email"
-                                    class="w-full p-4 rounded-xl bg-[#f3f4f6] border border-transparent focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0f5f7f] focus:border-transparent transition placeholder:text-slate-400 text-slate-800"
-                                    placeholder="exemple@mail.com" />
-                            </div>
-
-                            <!-- Summary box -->
-                            <div
-                                class="bg-[#f3f4f6] rounded-xl p-4 text-sm text-slate-600 space-y-1 border border-[#e5e7eb]">
-                                <p class="font-semibold text-slate-800 mb-2">Resum de la reserva</p>
-                                <div class="flex justify-between">
-                                    <span class="text-slate-500">Servei ID</span>
-                                    <span class="font-medium capitalize">{{ selectedService }}</span>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-500 mb-1">
+                                        Nom i Cognoms
+                                    </label>
+                                    <input v-model="form.customer_name" type="text" required
+                                        class="w-full px-3 py-2.5 text-sm rounded-lg bg-[#f3f4f6] border border-transparent focus:bg-white focus:ring-2 focus:ring-[#0f5f7f] outline-none transition"
+                                        placeholder="Nom i Cognoms" />
+                                    <p v-if="form.errors.customer_name" class="text-red-500 text-xs mt-1">
+                                        {{ form.errors.customer_name }}
+                                    </p>
                                 </div>
 
-                                <div class="flex justify-between">
-                                 <span class="text-slate-500">Servei Nom</span>
-                                    <span class="font-medium capitalize">{{ selectedServiceObj?.nom || '—' }}</span>
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-500 mb-1">
+                                        Telèfon
+                                    </label>
+                                    <input v-model="form.customer_phone" type="tel" pattern="[0-9]{9}" maxlength="9"
+                                        required
+                                        class="w-full px-3 py-2.5 text-sm rounded-lg bg-[#f3f4f6] border border-transparent focus:bg-white focus:ring-2 focus:ring-[#0f5f7f] outline-none transition"
+                                        placeholder="600 000 000" />
+                                    <p v-if="form.errors.customer_phone" class="text-red-500 text-xs mt-1">
+                                        {{ form.errors.customer_phone }}
+                                    </p>
+
                                 </div>
 
+                                <div>
+                                    <label class="block text-xs font-semibold text-slate-500 mb-1">
+                                        Correu Electrònic
+                                    </label>
+                                    <input v-model="form.customer_email" type="email" required
+                                        class="w-full px-3 py-2.5 text-sm rounded-lg bg-[#f3f4f6] border border-transparent focus:bg-white focus:ring-2 focus:ring-[#0f5f7f] outline-none transition"
+                                        placeholder="exemple@mail.com" />
+                                    <p v-if="form.errors.customer_email" class="text-red-500 text-xs mt-1">
+                                        {{ form.errors.customer_email }}
+                                    </p>
+                                </div>
 
-                                <div class="flex justify-between">
-                                    <span class="text-slate-500">Data</span>
-                                    <span class="font-medium">{{ selectedDate ? `${selectedDate}
-                                        ${monthNames[currentMonth]} ${currentYear}` : '—' }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-slate-500">Hora</span>
-                                    <span class="font-medium">{{ selectedTime }}</span>
-                                </div>
                             </div>
 
-                            <div
-                                class="bg-[#f5f1e6] border-l-4 border-[#8a6d1a] p-4 rounded-xl text-sm italic text-[#6b5010]">
-                                Recordi portar la seva Targeta de Soci Soler per gaudir dels avantatges exclusius.
+                            <!-- RIGHT: SUMMARY -->
+                            <div class="space-y-4">
+
+                                <!-- SUMMARY CARD -->
+                                <div class="bg-[#f3f4f6] rounded-xl p-4 border border-[#e5e7eb]">
+
+                                    <p class="text-sm font-semibold text-slate-800 mb-3">
+                                        Resum de la reserva
+                                    </p>
+
+                                    <div class="space-y-2 text-sm text-slate-600">
+
+                                        <div class="flex justify-between">
+                                            <span>Servei</span>
+                                            <span class="font-medium">
+                                                {{ selectedServiceObj?.nom || '—' }}
+                                            </span>
+                                        </div>
+
+                                        <div class="flex justify-between">
+                                            <span>Data</span>
+                                            <span class="font-medium">
+                                                {{ selectedDate ? `${selectedDate} ${monthNames[currentMonth]}
+                                                ${currentYear}` : '—' }}
+                                            </span>
+                                        </div>
+
+                                        <div class="flex justify-between">
+                                            <span>Hora</span>
+                                            <span class="font-medium">
+                                                {{ selectedTime }}
+                                            </span>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+
+                                <!-- INFO BOX -->
+                                <!-----   <div
+                                    class="bg-[#f5f1e6] border-l-4 border-[#8a6d1a] p-3 rounded-lg text-xs italic text-[#6b5010]">
+                                    Recordi portar la seva Targeta de Soci Soler.
+                                </div>------>
+
+                                <!-- CONFIRM BUTTON -->
+                                <button @click="submitReservation" :disabled="form.processing" class="w-full py-3 text-sm bg-[#0f5f7f] text-white rounded-lg font-semibold 
+           hover:bg-[#0c4a63] active:scale-[0.98] transition-all shadow-md">
+                                    {{ form.processing ? 'Confirmant...' : 'Confirmar Reserva' }}
+                                </button>
+
                             </div>
 
-                            <button
-                                class="w-full py-4 bg-[#0f5f7f] text-white rounded-xl font-bold hover:bg-[#0c4a63] active:scale-[0.99] transition-all shadow-md">
-                                Confirmar Reserva
-                            </button>
                         </div>
+
+                    </div>
+
+
+                    <div class="flex justify-between items-center mt-8">
+
+
+                        <button v-if="step > 1" @click="prevStep"
+                            class="px-5 py-2.5 text-sm border border-[#0f5f7f] text-[#0f5f7f] rounded-lg font-medium hover:bg-[#e3f2f9] transition">
+                            ← Enrere
+                        </button>
+
+
+                        <button v-if="step < 3" @click="nextStep" :disabled="step === 2 && !selectedDate"
+                            class="ml-auto px-5 py-2.5 text-sm bg-[#0f5f7f] text-white rounded-lg font-medium hover:bg-[#0c4a63] disabled:opacity-50 transition">
+                            Següent →
+                        </button>
+
                     </div>
 
                 </div>
