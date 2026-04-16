@@ -11,7 +11,7 @@ import Footer from '@/components/Footer.vue';
             <div class="md:relative h-110 md:h-auto w-full md:w-1/2 overflow-hidden flex items-end">
                 <img src="farmaciaSoler.jpeg" alt="Farmacia Soler" class="object-cover object-bottom w-full h-full md:absolute rounded-l">
             </div>
-            <div class="md:w-1/2 px-8 py-16 md:py-34 flex flex-col gap-4">
+            <div class="md:w-1/2 px-8 py-8 md:py-16 flex flex-col gap-4">
                 <h2 class="text-2xl md:text-4xl text-center md:text-left font-bold">Contactan's</h2>
                 <div>
                     <h3 class="text-xl font-medium">Horari d'atenció</h3>
@@ -28,19 +28,23 @@ import Footer from '@/components/Footer.vue';
                 <div class="flex flex-col gap-1">
                     <div class="flex gap-1">
                         <Icon icon="ic:mail" width="24" height="24"></Icon>
-                        <a href="tel:+34972500299">+34972500299</a>
+                        <a href=""></a>
                     </div>
                     <div class="flex gap-1">
-                        <Icon icon="ic:outline-phone" width="24" height="24"></Icon>
-                        <a href="tel:+34972500299">+34 972 50 02 99</a>
+                        <Icon icon="ri:whatsapp-fill" width="24" height="24"></Icon>
+                        <a href="https://wa.me/34972500299?text=Hola%2C%20estoy%20interesado%20en%20">+34 972 50 02 99</a>
                     </div>
                     <div class="flex gap-1">
-                        <Icon icon="ic:outline-phone" width="24" height="24"></Icon>
-                        <a href="tel:+34972500299">+34 972 50 02 99</a>
+                        <Icon icon="ri:instagram-fill" width="24" height="24"></Icon>
+                        <a href="https://www.instagram.com/farmaciasolerfigueres/">farmaciasolerfigueres</a>
+                    </div>
+                    <div class="flex gap-1">
+                        <Icon icon="mage:tiktok-circle" width="24" height="24"></Icon>
+                        <a href="https://www.tiktok.com/@farmaciasoler">farmaciasoler</a>
                     </div>
                     <div class="flex gap-1">
                         <Icon icon="ic:twotone-facebook" width="24" height="24"></Icon>
-                        <a href="tel:+34972500299">+34972500299</a>
+                        <a href="https://es-es.facebook.com/farmaciasolerfigueres">farmaciasolerfigueres</a>
                     </div>
                 </div>
                 <p class="text-gray-700 underline italic">Carrer Nou, 22, 17600 Figueres, Girona, Spain</p>
