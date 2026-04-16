@@ -23,7 +23,7 @@ class AssignmentsController extends Controller
      */
     public function create()
     {
-        // return Inertia::render('Assignments/Create');
+        return Inertia::render('Assignments/Create');
     }
 
     /**
@@ -38,7 +38,7 @@ class AssignmentsController extends Controller
             'message' => 'Ecarrec creat correctament',
         ]);
 
-        return to_route('assignments.index');
+        return to_route('assignments.show');
     }
 
     /**
