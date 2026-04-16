@@ -3,42 +3,42 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Service;
 use Inertia\Inertia;
-use App\Actions\Assignments\CreateAssignmentAction;
-use App\Http\Requests\CreateAssignmentRequest;
-use App\Models\Link;
-
-class AssignmentsController extends Controller
+class ServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
-    {
-        return Inertia::render('Assignments/Index');
-    }
+   public function index()
+{
+    return Inertia::render('PedirCita', [
+        'services' => Service::all()->map(function ($service) {
+            return [
+                'id' => $service->id,
+                'nom' => $service->name,
+                'descripció' => $service->description,
+                'durada' => $service->duration_minutes . ' min',
+                'icon' => $service->icon,
+            ];
+        })
+    ]);
+}
 
     /**
      * Show the form for creating a new resource.
      */
     public function create()
     {
-        return Inertia::render('Assignments/Create');
+        //
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(CreateAssignmentRequest $request, CreateAssignmentAction $createAssignment)
+    public function store(Request $request)
     {
-        $validated = $request->validated();
-        $assignment = $createAssignment->execute($validated);
-
-        Inertia::flash([
-            'message' => 'Ecarrec creat correctament',
-        ]);
-
-        return to_route('assignments.show');
+        //
     }
 
     /**
