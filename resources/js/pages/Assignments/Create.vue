@@ -2,15 +2,38 @@
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { store } from '@/routes/assignments';
 import { Form } from '@inertiajs/vue3';
+import { onMounted } from 'vue';
 
+const props = defineProps<{ turnstileSiteKey: string | null }>();
+
+onMounted(() => {
+    if (!props.turnstileSiteKey || document.getElementById('cf-turnstile-api'))
+        return;
+    const s = document.createElement('script');
+    s.id = 'cf-turnstile-api';
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    s.async = true;
+    s.defer = true;
+    document.head.appendChild(s);
+});
 </script>
 <template>
     <WebAppLayout>
-        <div class="min-h-screen bg-blue-50 py-8 px-50">
+        <div class="min-h-screen bg-blue-50 px-50 py-8">
             <div class="pb-20">
-                <h1 class="px-20 text-center font-extrabold text-4xl">En nuestra farmacia preparamos tus encargos online. Infórmate</h1>
-                <h2 class="font-bold text-2xl pt-10">Realiza tu encargo online de productos de parafarmacia y ahorra tiempo.</h2>
-                <p>Esta funcionalidad no está operativa para medicamentos. Tu farmacia te avisará cuando tu pedido esté listo para recogerlo.</p>
+                <h1 class="px-20 text-center text-4xl font-extrabold">
+                    En nuestra farmacia preparamos tus encargos online.
+                    Infórmate
+                </h1>
+                <h2 class="pt-10 text-2xl font-bold">
+                    Realiza tu encargo online de productos de parafarmacia y
+                    ahorra tiempo.
+                </h2>
+                <p>
+                    Esta funcionalidad no está operativa para medicamentos. Tu
+                    farmacia te avisará cuando tu pedido esté listo para
+                    recogerlo.
+                </p>
             </div>
             <div class="space-y-6">
                 <Form
@@ -81,12 +104,26 @@ import { Form } from '@inertiajs/vue3';
                             >
                         </span>
                     </div>
+                    <div v-if="props.turnstileSiteKey" class="pt-2">
+                        <div
+                            class="cf-turnstile"
+                            :data-sitekey="props.turnstileSiteKey"
+                            data-language="es"
+                        ></div>
+                        <p
+                            v-if="errors['cf-turnstile-response']"
+                            class="mt-2 text-sm text-red-600"
+                        >
+                            {{ errors['cf-turnstile-response'] }}
+                        </p>
+                    </div>
+
                     <div>
                         <button
                             preserve-scroll
                             class="rounded-2xl bg-yellow-300 p-3 text-2xl font-medium"
                             type="submit"
-                            :disabled="validating""
+                            :disabled="validating"
                         >
                             Enviar
                         </button>

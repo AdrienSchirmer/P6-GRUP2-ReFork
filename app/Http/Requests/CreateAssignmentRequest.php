@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use App\Rules\TurnstileRule;
 
 class CreateAssignmentRequest extends FormRequest
 {
@@ -27,6 +28,7 @@ class CreateAssignmentRequest extends FormRequest
             'address' => 'required|email|max:255',
             'phone_number' => 'required|integer',
             'description' => 'nullable|string',
+            'cf-turnstile-response' => ['required', 'string', new TurnstileRule],
         ];
     }
 }
