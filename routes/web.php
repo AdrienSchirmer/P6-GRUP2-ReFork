@@ -8,6 +8,10 @@ use Inertia\Inertia;
 use App\Http\Resources\ServiceResource;
 
 
+use App\Http\Controllers\AssignmentsController;
+use App\Http\Controllers\admin_index_controller;
+
+use App\Http\Controllers\Contactans;
 
 // Public Routes
 Route::inertia('/', 'Welcome', [
@@ -20,8 +24,10 @@ Route::post('/appointments', [ServiceController::class, 'store'])
     ->name('appointments.store');
 
 // Private Routes
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::inertia('dashboard', 'Dashboard')->name('dashboard');
+Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(function () {
+    Route::get('/', [admin_index_controller::class, 'index'])->name('admindashboard');
 });
+
+Route::get('/contactans', [Contactans::class, 'index'])->name('contactans');
 
 require __DIR__ . '/settings.php';
