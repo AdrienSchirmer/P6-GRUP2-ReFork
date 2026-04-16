@@ -62,7 +62,7 @@ import { computed } from 'vue';
                     <Link href="#/"> Demanar cita </Link>
                     <Link href="/assignments/create"> Demanar encarrec </Link>
                     <Link href="#/"> ¿Qui Som? </Link>
-                    <Link href="#/"> Contactan’s </Link>
+                    <Link href="/contactans"> Contactan’s </Link>
                 </ul>
             </div>
         </div>
