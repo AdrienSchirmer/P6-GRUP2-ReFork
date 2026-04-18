@@ -59,7 +59,7 @@ import { computed } from 'vue';
                 <ul
                     class="border-default rounded-base bg-neutral-secondary-soft md:bg-neutral-primary mt-4 flex flex-col border p-4 text-2xl font-medium text-[#4D3701] italic md:mt-0 md:flex-row md:space-x-8 md:border-0 md:p-0 rtl:space-x-reverse"
                 >
-                    <Link href="#/"> Demanar cita </Link>
+                    <Link href="/pedir-cita"> Demanar cita </Link>
                     <Link href="/assignments/create"> Demanar encarrec </Link>
                     <Link href="#/"> ¿Qui Som? </Link>
                     <Link href="#/"> Contactan’s </Link>

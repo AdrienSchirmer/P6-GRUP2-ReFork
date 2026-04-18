@@ -8,7 +8,7 @@ use Inertia\Inertia;
 use App\Http\Resources\ServiceResource;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceAppointment;
-
+use Barryvdh\DomPDF\Facade\Pdf;
 class ServiceController extends Controller
 {
     /**
@@ -52,7 +52,7 @@ class ServiceController extends Controller
             'service_id' => 'required|exists:services,id',
             'customer_name' => 'required|string|max:255',
 
-            'customer_phone' => ['required','regex:/^[0-9]{9}$/'],
+            'customer_phone' => ['required', 'regex:/^[0-9]{9}$/'],
             'customer_email' => 'required|email|max:255',
             'appointment_date' => 'required|date',
             'start_time' => 'required',
@@ -69,7 +69,19 @@ class ServiceController extends Controller
             'status' => 'pending',
         ]);
 
-        return redirect()->back()->with('success', 'Reserva confirmada');
+        /*   Inertia::flash([
+            'message' => 'Reservació creada amb èxit! Rebràs una confirmació per correu electrònic aviat.',
+
+        ]);*/
+
+        return to_route('pedir-cita')->with('success', [
+            'message' => 'Reservació creada amb èxit! Rebràs una confirmació aviat.',
+            'service' => $validated['service_id'],
+            'date' => $validated['appointment_date'],
+            'time' => $validated['start_time'],
+            'name'    => $validated['customer_name'],
+            'email'   => $validated['customer_email'],
+        ]);
     }
 
     /**
@@ -102,5 +114,36 @@ class ServiceController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    public function downloadPdf(Request $request)
+    {
+        $request->validate([
+            'service' => 'required|exists:services,id',
+            'date'    => 'required|date',
+            'time'    => 'required|string',
+            'name'    => 'required|string',
+            'email'   => 'required|email',
+        ]);
+ 
+        $service = Service::findOrFail($request->service);
+ 
+        $data = [
+            'service_name' => $service->name,
+            'duration'     => $service->duration_minutes . ' min',
+            'date'         => $request->date,
+            'time'         => $request->time,
+            'name'         => $request->name,
+            'email'        => $request->email,
+            'pharmacy'     => 'Farmàcia Soler',      
+            'address'      => 'Carrer Nou, 22, 17600 Figueres, Girona', 
+            'phone'        => '972 50 02 99',        
+        ];
+ 
+        $pdf = Pdf::loadView('pdf.appointment', $data)
+            ->setPaper('a4', 'portrait');
+ 
+        $filename = 'cita-' . str_replace(' ', '-', $request->name) . '-' . $request->date . '.pdf';
+ 
+        return $pdf->download($filename);
     }
 }
