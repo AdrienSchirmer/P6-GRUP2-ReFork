@@ -22,6 +22,7 @@ Route::inertia('/', 'Welcome', [
 Route::get('/pedir-cita', [ServiceController::class, 'index'])->name('pedir-cita');
 Route::post('/appointments', [ServiceController::class, 'store'])->name('appointments.store');
 Route::get('/appointments/pdf', [ServiceController::class, 'downloadPdf'])->name('appointments.pdf');
+Route::get('/appointments/booked-times', [ServiceController::class, 'getBookedTimes']);
 // Private Routes
 Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(function () {
     Route::get('/', [admin_index_controller::class, 'index'])->name('admindashboard');

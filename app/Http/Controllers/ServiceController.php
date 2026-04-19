@@ -9,6 +9,7 @@ use App\Http\Resources\ServiceResource;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceAppointment;
 use Barryvdh\DomPDF\Facade\Pdf;
+
 class ServiceController extends Controller
 {
     /**
@@ -57,7 +58,16 @@ class ServiceController extends Controller
             'appointment_date' => 'required|date',
             'start_time' => 'required',
         ]);
+        $exists = ServiceAppointment::whereDate('appointment_date', $validated['appointment_date'])
+            ->where('service_id', $validated['service_id'])
+            ->where('start_time', $validated['start_time'])
+            ->exists();
 
+        if ($exists) {
+            return back()->withErrors([
+                'start_time' => 'Aquesta hora ja està reservada.',
+            ]);
+        }
         ServiceAppointment::create([
             'service_id' => $validated['service_id'],
             'customer_name' => $validated['customer_name'],
@@ -124,9 +134,9 @@ class ServiceController extends Controller
             'name'    => 'required|string',
             'email'   => 'required|email',
         ]);
- 
+
         $service = Service::findOrFail($request->service);
- 
+
         $data = [
             'service_name' => $service->name,
             'duration'     => $service->duration_minutes . ' min',
@@ -134,16 +144,35 @@ class ServiceController extends Controller
             'time'         => $request->time,
             'name'         => $request->name,
             'email'        => $request->email,
-            'pharmacy'     => 'Farmàcia Soler',      
-            'address'      => 'Carrer Nou, 22, 17600 Figueres, Girona', 
-            'phone'        => '972 50 02 99',        
+            'pharmacy'     => 'Farmàcia Soler',
+            'address'      => 'Carrer Nou, 22, 17600 Figueres, Girona',
+            'phone'        => '972 50 02 99',
         ];
- 
+
         $pdf = Pdf::loadView('pdf.appointment', $data)
             ->setPaper('a4', 'portrait');
- 
+
         $filename = 'cita-' . str_replace(' ', '-', $request->name) . '-' . $request->date . '.pdf';
- 
+
         return $pdf->download($filename);
+    }
+
+    public function getBookedTimes(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date',
+            'service_id' => 'required|exists:services,id',
+        ]);
+
+        $times = ServiceAppointment::whereDate('appointment_date', $request->date)
+            ->where('service_id', $request->service_id)
+            ->get()
+            ->map(function ($appointment) {
+                return \Carbon\Carbon::parse($appointment->start_time)->format('H:i');
+            })
+            ->unique()
+            ->values();
+
+        return response()->json($times);
     }
 }
