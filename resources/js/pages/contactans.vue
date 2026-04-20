@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { Icon } from "@iconify/vue";
-import Navbar from '@/components/Navbar.vue';
-import Footer from '@/components/Footer.vue';
+import WebAppLayout from '@/layouts/WebAppLayout.vue';
+import Card from '@/components/Card.vue';
 </script>
  
 <template>
-    <Navbar/>
-    <div class="bg-white py-12 px-2 md:px-24">
-        <div class="border-2 rounded justify-between text-black flex w-full flex-col md:flex-row max-h-5/2">
+    <WebAppLayout>
+    <div class="bg-[#F2FAFF] py-12 px-2 md:px-24">
+        <Card class="flex-col md:flex-row">
             <div class="md:relative h-110 md:h-auto w-full md:w-1/2 overflow-hidden flex items-end">
-                <img src="farmaciaSoler.jpeg" alt="Farmacia Soler" class="object-cover object-bottom w-full h-full md:absolute rounded-l">
+                <img src="/storage/farmaciaSolerStore.jpeg" alt="Farmacia Soler" class="object-cover object-bottom w-full h-full md:absolute rounded-l">
             </div>
             <div class="md:w-1/2 px-8 py-8 md:py-16 flex flex-col gap-4">
                 <h2 class="text-2xl md:text-4xl text-center md:text-left font-bold">Contactan's</h2>
@@ -48,9 +48,9 @@ import Footer from '@/components/Footer.vue';
                 </div>
                 <p class="text-gray-700 underline italic">Carrer Nou, 22, 17600 Figueres, Girona, Spain</p>
             </div>
-        </div>
+        </Card>
     </div>
-    <Footer/>
+    </WebAppLayout>
     <div class="sticky bottom-0 flex justify-end">
         <a class="h-15 w-15 mr-4 mb-4 bg-[#08c004] rounded-4xl flex justify-center cursor-pointer" href="https://wa.me/34658359458?text=Hola%2C%20estoy%20interesado%20en%20">
             <Icon icon="fontisto:whatsapp" width="35" height="35" class="text-white self-center"></Icon>
