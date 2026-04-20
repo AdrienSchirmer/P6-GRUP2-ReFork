@@ -105,6 +105,11 @@ return [
             // ],
         ],
 
+        'from' => [
+            'address' => env('MAIL_FROM_ADDRESS', 'soler@brandoncendrassos.cat'),
+            'name' => env('MAIL_FROM_NAME', 'Farmacia Soler'),
+        ],
+
     ],
 
     /*
