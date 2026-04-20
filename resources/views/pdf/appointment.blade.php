@@ -36,9 +36,7 @@
             gap: 16px;
         }
 
-        .header-logo {
-           
-        }
+     
         .header-text h1 {
             font-size: 18px;
             font-weight: bold;
@@ -245,7 +243,7 @@
             </td>
         </tr>
     </table>
-
+<!---
     <div class="section-label">Verificació</div>
     <div class="captcha-box">
         <div class="captcha-label">Verificació de seguretat</div>
@@ -256,7 +254,7 @@
             La verificació es realitza al formulari web abans de descarregar aquest document.
         </div>
     </div>
-
+----->
     <div class="notice">
         <strong>Recordeu:</strong> Si no podeu assistir a la cita, si us plau cancel·leu-la amb
         almenys <strong>24 hores</strong> d'antelació trucant al <strong>{{ $phone }}</strong>
