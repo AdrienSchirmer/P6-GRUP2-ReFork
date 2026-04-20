@@ -38,7 +38,7 @@ class AssignmentCreated extends Mailable
     public function content(): Content
     {
         return new Content(
-            text: 'assignment-created',
+            view: 'mail.assignment-created',
         );
     }
 
