@@ -9,6 +9,8 @@ use App\Http\Requests\CreateAssignmentRequest;
 use App\Mail\AssignmentCreated;
 use App\Models\Link;
 use Illuminate\Support\Facades\Mail;
+use App\Rules\TurnstileRule;
+
 
 class AssignmentsController extends Controller
 {
