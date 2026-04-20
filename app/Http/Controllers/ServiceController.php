@@ -75,7 +75,7 @@ class ServiceController extends Controller
             'customer_email' => $validated['customer_email'],
             'appointment_date' => $validated['appointment_date'],
             'start_time' => $validated['start_time'],
-            'end_time' => $validated['start_time'],
+            'end_time' => \Carbon\Carbon::parse($validated['start_time'])->addMinutes(Service::find($validated['service_id'])->duration_minutes)->format('H:i'),
             'status' => 'pending',
         ]);
 

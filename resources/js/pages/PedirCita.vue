@@ -9,6 +9,11 @@ import {
     ShieldCheck,
     ChevronLeft,
     ChevronRight,
+    Scissors,
+    TestTube2,
+    Apple,
+    Pill,
+    HeartPulse,
 } from 'lucide-vue-next'
 
 defineOptions({
@@ -83,10 +88,17 @@ const monthNames = [
 const dayHeaders = ['DL', 'DT', 'DC', 'DJ', 'DV', 'DS', 'DG']
 
 const iconsMap: Record<string, any> = {
-    ScanFace,
+   ScanFace,
     Droplet,
     FlaskConical,
     ShieldCheck,
+    ChevronLeft,
+    ChevronRight,
+    Scissors,
+    TestTube2,
+    Apple,
+    Pill,
+    HeartPulse,
 }
 
 const successData = computed(() => page.props.flash?.success)
@@ -300,7 +312,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                         : 'bg-[#f3f4f6] border-transparent hover:border-[#9fbcd3]'
                                 ]">
                                 <div class="flex justify-between items-center mb-2">
-                                    <component :is="iconsMap[service.icon]" class="w-5 h-5 text-[#0f5f7f]" />
+                                    <component :is="iconsMap[service.icon] || 'Plus'" class="w-5 h-5 text-[#0f5f7f]" />
                                     <span class="text-xs font-semibold text-[#8a6d1a]">
                                         {{ service.durada }}
                                     </span>
@@ -519,7 +531,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                             </div>
                         </div>
 
-                        <!-- Captcha -->
+                        <!-- Captcha 
                         <div
                             class="mb-4 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center h-[78px]">
 
@@ -528,7 +540,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                 <p class="text-[10px] text-gray-300">El meu captcha </p>
                             </div>
                         </div>
-
+-->
                         <!-- Action buttons -->
                         <div class="flex gap-3">
                             <!-- Download PDF -->
