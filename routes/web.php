@@ -27,6 +27,7 @@ Route::get('/appointments/booked-times', [ServiceController::class, 'getBookedTi
 Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(function () {
     Route::get('/', [admin_index_controller::class, 'index'])->name('admindashboard');
 });
+Route::resource('assignments', AssignmentsController::class);
 
 Route::get('/contactans', [Contactans::class, 'index'])->name('contactans');
 
