@@ -37,6 +37,7 @@ class AssignmentsController extends Controller
     {
         $validated = $request->validated();
         $assignment = $createAssignment->execute($validated);
+        // Mail::to($validated['address'])->send(new AssignmentCreated());
         Inertia::flash([
             'message' => 'Ecarrec creat correctament',
         ]);

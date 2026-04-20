@@ -3,6 +3,7 @@ import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { store } from '@/routes/assignments';
 import { Form } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
+import { ref } from 'vue';
 
 const props = defineProps<{ turnstileSiteKey: string | null }>();
 
@@ -16,6 +17,12 @@ onMounted(() => {
     s.defer = true;
     document.head.appendChild(s);
 });
+
+const formRef = ref<HTMLFormElement | null>(null);
+
+function onSuccess() {
+    formRef.value?.reset();
+}
 </script>
 <template>
     <WebAppLayout>
@@ -37,9 +44,11 @@ onMounted(() => {
             </div>
             <div class="space-y-6">
                 <Form
+                    ref="formRef"
                     :action="store()"
                     method="POST"
                     class="space-y-4"
+                    @success="onSuccess"
                     #default="{ errors, invalid, validate, validating }"
                 >
                     <div>
