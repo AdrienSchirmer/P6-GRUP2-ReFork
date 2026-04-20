@@ -10,7 +10,7 @@ import {
     ChevronLeft,
     ChevronRight,
     Scissors,
-    TestTube2,
+    TestTube,
     Apple,
     Pill,
     HeartPulse,
@@ -108,7 +108,7 @@ const iconsMap: Record<string, any> = {
     ChevronLeft,
     ChevronRight,
     Scissors,
-    TestTube2,
+    TestTube,
     Apple,
     Pill,
     HeartPulse,
@@ -784,10 +784,8 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                             </a>
 
                             <!-- Close -->
-                            <button
-                                @click="showModal = false"
-                                class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-600 transition hover:border-gray-400 hover:bg-gray-50"
-                            >
+                            <button @click="showModal = false; router.visit('/')"
+                                class="flex-1 border border-gray-300 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition">
                                 Tancar
                             </button>
                         </div>
