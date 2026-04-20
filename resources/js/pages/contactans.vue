@@ -40,18 +40,10 @@ import Footer from '@/components/Footer.vue';
                 <div class="flex flex-col gap-1">
                     <div class="flex gap-1">
                         <Icon icon="ic:mail" width="24" height="24"></Icon>
-                        <a href=""></a>
                     </div>
                     <div class="flex gap-1">
-                        <Icon
-                            icon="ri:whatsapp-fill"
-                            width="24"
-                            height="24"
-                        ></Icon>
-                        <a
-                            href="https://wa.me/34972500299?text=Hola%2C%20estoy%20interesado%20en%20"
-                            >+34 972 50 02 99</a
-                        >
+                        <Icon icon="ri:phone-fill" width="24" height="24"></Icon>
+                        <a href="tel:+34972500299">972 50 02 99</a>
                     </div>
                     <div class="flex gap-1">
                         <Icon
@@ -92,5 +84,10 @@ import Footer from '@/components/Footer.vue';
             </div>
         </div>
     </div>
-    <Footer />
+    <Footer/>
+    <div class="sticky bottom-0 flex justify-end">
+        <a class="h-15 w-15 mr-4 mb-4 bg-[#08c004] rounded-4xl flex justify-center cursor-pointer" href="https://wa.me/34658359458?text=Hola%2C%20estoy%20interesado%20en%20">
+            <Icon icon="fontisto:whatsapp" width="35" height="35" class="text-white self-center"></Icon>
+        </a>
+    </div>
 </template>

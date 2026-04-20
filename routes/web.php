@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ServiceController;
 use Laravel\Fortify\Features;
 use Inertia\Inertia;
+use App\Http\Resources\ServiceResource;
+
 
 use App\Http\Controllers\AssignmentsController;
 use App\Http\Controllers\admin_index_controller;
@@ -17,13 +19,10 @@ Route::inertia('/', 'Welcome', [
 ])->name('home');
 //pedir cita 
 //Route::get('/pedir-cita', function () { return Inertia::render('PedirCita');})->name('pedir-cita');
-Route::get('/pedir-cita', [ServiceController::class, 'index'])->name('pedir-cita');;
-Route::get('/pedir-cita', function () {
-    return Inertia::render('PedirCita');
-})->name('pedir-cita');
-Route::resource('assignments', AssignmentsController::class);
-
-
+Route::get('/pedir-cita', [ServiceController::class, 'index'])->name('pedir-cita');
+Route::post('/appointments', [ServiceController::class, 'store'])->name('appointments.store');
+Route::get('/appointments/pdf', [ServiceController::class, 'downloadPdf'])->name('appointments.pdf');
+Route::get('/appointments/booked-times', [ServiceController::class, 'getBookedTimes']);
 // Private Routes
 Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(function () {
     Route::get('/', [admin_index_controller::class, 'index'])->name('admindashboard');

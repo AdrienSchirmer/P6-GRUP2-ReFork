@@ -25,7 +25,9 @@ class AssignmentsController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Assignments/Create');
+        return Inertia::render('Assignments/Create', [
+            'turnstileSiteKey' => config('services.turnstile.site_key'),
+        ]);
     }
 
     /**
