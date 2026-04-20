@@ -9,6 +9,8 @@ use App\Http\Resources\ServiceResource;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceAppointment;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Rules\TurnstileRule;
+
 
 class ServiceController extends Controller
 {
@@ -23,6 +25,7 @@ class ServiceController extends Controller
     ]);
     */
         return Inertia::render('PedirCita', [
+            'turnstileSiteKey' => config('services.turnstile.site_key'),
             'services' => Service::all()->map(function ($service) {
                 return [
                     'id' => $service->id,
@@ -57,6 +60,7 @@ class ServiceController extends Controller
             'customer_email' => 'required|email|max:255',
             'appointment_date' => 'required|date',
             'start_time' => 'required',
+            'cf-turnstile-response' => ['required', 'string', new TurnstileRule],
         ]);
         $exists = ServiceAppointment::whereDate('appointment_date', $validated['appointment_date'])
             ->where('service_id', $validated['service_id'])
