@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Actions\Assignments\CreateAssignmentAction;
 use App\Http\Requests\CreateAssignmentRequest;
+use App\Mail\AssignmentCreated;
 use App\Models\Link;
+use Illuminate\Support\Facades\Mail;
 
 class AssignmentsController extends Controller
 {
@@ -35,12 +37,12 @@ class AssignmentsController extends Controller
     {
         $validated = $request->validated();
         $assignment = $createAssignment->execute($validated);
-
+        Mail::to($validated['address'])->send(new AssignmentCreated());
         Inertia::flash([
             'message' => 'Ecarrec creat correctament',
         ]);
 
-        return to_route('assignments.show');
+        return to_route('assignments.create');
     }
 
     /**
