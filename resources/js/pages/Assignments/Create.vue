@@ -30,7 +30,8 @@ onMounted(() => {
 
     const s = document.createElement('script');
     s.id = 'cf-turnstile-api';
-    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
+    s.src =
+        'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
     s.async = true;
     s.defer = true;
     s.onload = renderTurnstile;
@@ -45,21 +46,27 @@ function onSuccess() {
 </script>
 <template>
     <WebAppLayout>
-        <div class="min-h-screen bg-blue-50 px-50 py-8">
+        <div
+            class="min-h-screen bg-blue-50 px-4 py-6 sm:px-6 lg:px-10 xl:px-16"
+        >
             <div class="pb-10">
-                <h1 class="text-4xl font-extrabold">Encàrrecs</h1>
+                <h1 class="text-2xl font-extrabold sm:text-3xl lg:text-4xl">
+                    Encàrrecs
+                </h1>
             </div>
-            <div class="flex items-center gap-3 pb-5">
+            <div class="flex items-start gap-3 pb-5">
                 <h2
                     class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#00617E] text-3xl leading-none font-extrabold text-white italic"
                 >
                     <span class="-translate-x-px">1</span>
                 </h2>
-                <p class="text-2xl italic">Demana el que necessitis.</p>
+                <p class="text-lg italic sm:text-xl lg:text-2xl">
+                    Demana el que necessitis.
+                </p>
             </div>
-            <div class="grid grid-cols-3 gap-5">
+            <div class="grid grid-cols-1 gap-5 lg:grid-cols-3">
                 <div
-                    class="col-span-2 space-y-6 rounded-2xl bg-[#ffffff] p-5 shadow-lg"
+                    class="space-y-6 rounded-2xl bg-[#ffffff] p-4 shadow-lg sm:p-5 lg:col-span-2"
                 >
                     <Form
                         ref="formRef"
@@ -81,7 +88,7 @@ function onSuccess() {
                             />
                         </div>
 
-                        <div class="flex gap-6">
+                        <div class="flex flex-col gap-4 md:flex-row md:gap-6">
                             <div class="flex-1">
                                 <label
                                     class="mb-2 block text-lg text-gray-900 italic"
@@ -118,7 +125,7 @@ function onSuccess() {
                             />
                         </div>
 
-                        <div class="flex items-center gap-3">
+                        <div class="flex items-start gap-3">
                             <input
                                 required
                                 type="checkbox"
@@ -152,7 +159,7 @@ function onSuccess() {
                         <div>
                             <button
                                 preserve-scroll
-                                class="rounded-2xl bg-yellow-300 p-3 text-2xl font-medium"
+                                class="rounded-2xl bg-yellow-300 px-4 py-3 text-lg font-medium sm:text-xl lg:text-2xl"
                                 type="submit"
                                 :disabled="validating"
                             >
@@ -161,25 +168,27 @@ function onSuccess() {
                         </div>
                     </Form>
                 </div>
-                <div class="space-y-6 rounded-2xl bg-[#ffffff] p-5 shadow-lg">
-                    <div class="flex items-center gap-3 pb-5">
+                <div
+                    class="space-y-6 rounded-2xl bg-[#ffffff] p-4 shadow-lg sm:p-5"
+                >
+                    <div class="flex items-start gap-3 pb-5">
                         <h2
                             class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#00617E] text-3xl leading-none font-extrabold text-white italic"
                         >
                             <span class="-translate-x-px">2</span>
                         </h2>
-                        <p class="text-2xl italic">
+                        <p class="text-base italic sm:text-lg lg:text-xl">
                             Prepararem el teu encarrec lo abans possible i
                             t’enviarem un missatge quan ja estigui llest.
                         </p>
                     </div>
-                    <div class="flex items-center gap-3 pb-5">
+                    <div class="flex items-start gap-3 pb-5">
                         <h2
                             class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#00617E] text-3xl leading-none font-extrabold text-white italic"
                         >
                             <span class="-translate-x-px">3</span>
                         </h2>
-                        <p class="text-2xl italic">
+                        <p class="text-base italic sm:text-lg lg:text-xl">
                             Vina a buscar el teu encarrec i paga a la nostre
                             farmacia!
                         </p>
@@ -188,6 +197,7 @@ function onSuccess() {
                         <img
                             src="/storage/vagaro-ckWrZO5sWOQ-unsplash.jpg"
                             alt="Image"
+                            class="h-48 w-full rounded-xl object-cover sm:h-56 md:h-64"
                         />
                     </div>
                 </div>
