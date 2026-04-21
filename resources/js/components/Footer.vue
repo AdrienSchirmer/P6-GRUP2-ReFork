@@ -85,10 +85,6 @@
             </div>
             <hr class="border-default my-6 sm:mx-auto lg:my-8" />
             <div class="sm:flex sm:items-center sm:justify-between">
-                <span class="text-body text-sm sm:text-center"
-                    >Copyright © 2026
-                    <a href="/" class="hover:underline">Farmacia Soler</a>
-                </span>
                 <div class="mt-4 flex sm:mt-0 sm:justify-center">
                     <a href="#" class="text-body hover:text-heading">
                         <svg
@@ -179,8 +175,14 @@
                 </div>
             </div>
         </div>
-        <div class="bg-[#FFFFFF] p-5">
-            <h1>Site in progess...</h1>
+        <div class="flex items-center justify-center bg-[#FFFFFF] p-3">
+            <span class="text-body text-md sm:text-center"
+                >Copyright © 2026
+                <a href="/" class="hover:underline"
+                    >Farmacia Soler - Todos los derechos reservados. Diseño y
+                    desarrollo por Grup2 España</a
+                >
+            </span>
         </div>
     </footer>
 </template>
