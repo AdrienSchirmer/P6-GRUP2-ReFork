@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { ref } from 'vue';
+
+const isMobileMenuOpen = ref(false);
 </script>
 <template>
     <nav
@@ -27,11 +28,11 @@ import { computed } from 'vue';
                     Get started
                 </button>
                 <button
-                    data-collapse-toggle="navbar-sticky"
                     type="button"
                     class="text-body rounded-base hover:bg-neutral-secondary-soft hover:text-heading focus:ring-neutral-tertiary inline-flex h-10 w-10 items-center justify-center p-2 text-sm focus:ring-2 focus:outline-none md:hidden"
                     aria-controls="navbar-sticky"
-                    aria-expanded="false"
+                    :aria-expanded="isMobileMenuOpen"
+                    @click="isMobileMenuOpen = !isMobileMenuOpen"
                 >
                     <span class="sr-only">Open main menu</span>
                     <svg
@@ -53,7 +54,10 @@ import { computed } from 'vue';
                 </button>
             </div>
             <div
-                class="hidden w-full items-center justify-between md:order-1 md:flex md:w-auto"
+                :class="[
+                    isMobileMenuOpen ? 'flex' : 'hidden',
+                    'w-full items-center justify-between md:order-1 md:flex md:w-auto',
+                ]"
                 id="navbar-sticky"
             >
                 <ul
