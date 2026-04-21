@@ -31,4 +31,19 @@ class CreateAssignmentRequest extends FormRequest
             'cf-turnstile-response' => ['required', 'string', new TurnstileRule],
         ];
     }
+
+    public function messages(): array
+    {
+        return [
+            'cf-turnstile-response.required' => 'Por favor, completa la verificación de seguridad.',
+            'cf-turnstile-response.string' => 'La verificación de seguridad no es válida.',
+        ];
+    }
+
+    public function attributes(): array
+    {
+        return [
+            'cf-turnstile-response' => 'verificación de seguridad',
+        ];
+    }
 }

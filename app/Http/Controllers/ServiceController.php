@@ -61,6 +61,9 @@ class ServiceController extends Controller
             'appointment_date' => 'required|date',
             'start_time' => 'required',
             'cf-turnstile-response' => ['required', 'string', new TurnstileRule],
+
+        ],     [
+            'cf-turnstile-response.required' => 'Por favor, completa la verificación.',
         ]);
         $exists = ServiceAppointment::whereDate('appointment_date', $validated['appointment_date'])
             ->where('service_id', $validated['service_id'])

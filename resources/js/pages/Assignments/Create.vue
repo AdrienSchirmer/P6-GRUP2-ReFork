@@ -7,14 +7,33 @@ import { ref } from 'vue';
 
 const props = defineProps<{ turnstileSiteKey: string | null }>();
 
+function renderTurnstile() {
+    const el = document.querySelector('.cf-turnstile') as HTMLElement | null;
+    const t = (window as any).turnstile;
+
+    if (!el || !props.turnstileSiteKey || !t) return;
+
+    el.innerHTML = '';
+    t.render(el, {
+        sitekey: props.turnstileSiteKey,
+        language: 'es',
+    });
+}
+
 onMounted(() => {
-    if (!props.turnstileSiteKey || document.getElementById('cf-turnstile-api'))
+    if (!props.turnstileSiteKey) return;
+
+    if (document.getElementById('cf-turnstile-api')) {
+        renderTurnstile();
         return;
+    }
+
     const s = document.createElement('script');
     s.id = 'cf-turnstile-api';
-    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
     s.async = true;
     s.defer = true;
+    s.onload = renderTurnstile;
     document.head.appendChild(s);
 });
 
