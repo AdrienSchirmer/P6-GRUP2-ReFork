@@ -19,15 +19,19 @@ const breadcrumbs: BreadcrumbItem[] = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <Head title="Crear usuari" />
 
-        <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <div class="rounded-xl border border-sidebar-border/70 bg-background p-6 dark:border-sidebar-border">
-                <h1 class="text-2xl font-semibold tracking-tight">Crear usuari</h1>
+        <div class="relative flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4 md:p-6">
+            <div class="pointer-events-none absolute top-0 right-8 h-48 w-48 rounded-full bg-muted/70 blur-3xl"></div>
+            <div class="pointer-events-none absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/60 blur-3xl"></div>
+
+            <div class="relative rounded-2xl border border-sidebar-border/70 bg-gradient-to-br from-background to-muted/70 p-7 shadow-sm">
+                <p class="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Farmacia Soler</p>
+                <h1 class="mt-2 text-3xl font-semibold tracking-tight text-foreground">Crear usuari</h1>
                 <p class="mt-2 text-sm text-muted-foreground">
-                    Dona d'alta un nou usuari administrador.
+                    Dona d'alta un nou perfil amb rol d'admin o superadmin.
                 </p>
             </div>
 
-            <div class="rounded-xl border border-sidebar-border/70 bg-background p-6 dark:border-sidebar-border">
+            <div class="relative rounded-2xl border border-sidebar-border/70 bg-background/95 p-6 shadow-sm">
                 <Form
                     v-bind="usersStore.form()"
                     :reset-on-success="['password', 'password_confirmation']"
@@ -65,7 +69,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                             id="role"
                             name="role"
                             required
-                            class="w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm shadow-xs"
+                            class="w-full rounded-xl border border-sidebar-border/80 bg-background px-3 py-2 text-sm shadow-xs transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
                         >
                             <option value="admin" selected>Admin</option>
                             <option value="superadmin">Superadmin</option>
@@ -101,7 +105,11 @@ const breadcrumbs: BreadcrumbItem[] = [
                         <Button as-child type="button" variant="outline">
                             <Link :href="usersIndex().url">Cancel·lar</Link>
                         </Button>
-                        <Button type="submit" :disabled="processing">
+                        <Button
+                            type="submit"
+                            :disabled="processing"
+                            class="bg-primary text-primary-foreground hover:bg-primary/90"
+                        >
                             {{ processing ? 'Creant...' : 'Crear usuari' }}
                         </Button>
                     </div>

@@ -73,42 +73,64 @@ const goNext = () => {
 const resetPage = () => {
     currentPage.value = 1;
 };
+
+const roleBadgeClass = (role?: string | null) => {
+    if (role === 'superadmin') {
+        return 'border-zinc-300 bg-zinc-100 text-zinc-800';
+    }
+
+    if (role === 'admin') {
+        return 'border-zinc-300 bg-zinc-50 text-zinc-700';
+    }
+
+    return 'border-sidebar-border/80 bg-muted text-muted-foreground';
+};
+
+const roleLabel = (role?: string | null) => {
+    if (role === 'superadmin') return 'Superadmin';
+    if (role === 'admin') return 'Admin';
+    return '—';
+};
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
         <Head title="Administració d'usuaris" />
 
-        <div class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-            <div class="rounded-xl border border-sidebar-border/70 bg-background p-6 dark:border-sidebar-border">
-                <h1 class="text-2xl font-semibold tracking-tight">Administració d'usuaris</h1>
+        <div class="relative flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4 md:p-6">
+            <div class="pointer-events-none absolute top-0 right-8 h-48 w-48 rounded-full bg-muted/70 blur-3xl"></div>
+            <div class="pointer-events-none absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/60 blur-3xl"></div>
+
+            <div class="relative rounded-2xl border border-sidebar-border/70 bg-gradient-to-br from-background to-muted/70 p-7 shadow-sm">
+                <p class="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Farmacia Soler</p>
+                <h1 class="mt-2 text-3xl font-semibold tracking-tight text-foreground">Administració d'usuaris</h1>
                 <p class="mt-2 text-sm text-muted-foreground">
-                    Consulta i filtra els usuaris del sistema.
+                    Visualitza i gestiona els usuaris interns de manera ràpida i clara.
                 </p>
             </div>
 
             <div
                 v-if="page.props.flash?.message"
-                class="rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
+                class="rounded-xl border border-green-200 bg-green-50/90 px-4 py-3 text-sm text-green-700 shadow-sm"
                 role="alert"
             >
                 {{ page.props.flash?.message }}
             </div>
 
-            <div class="rounded-xl border border-sidebar-border/70 bg-background p-5 dark:border-sidebar-border">
+            <div class="relative rounded-2xl border border-sidebar-border/70 bg-background/95 p-5 shadow-sm">
                 <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
                     <input
                         v-model="searchQuery"
                         @input="resetPage"
                         type="search"
                         placeholder="Cerca per nom, email o nickname"
-                        class="w-full rounded-lg border border-sidebar-border bg-background px-3 py-2 text-sm"
+                        class="w-full rounded-xl border border-sidebar-border/80 bg-background px-3 py-2 text-sm shadow-xs transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
                     />
 
                     <select
                         v-model="selectedRole"
                         @change="resetPage"
-                        class="w-full rounded-lg border border-sidebar-border bg-background px-3 py-2 text-sm sm:w-auto"
+                        class="w-full rounded-xl border border-sidebar-border/80 bg-background px-3 py-2 text-sm shadow-xs transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none sm:w-auto"
                     >
                         <option value="">Tots els rols</option>
                         <option value="admin">Admin</option>
@@ -117,7 +139,7 @@ const resetPage = () => {
 
                     <Link
                         :href="usersCreate().url"
-                        class="inline-flex w-full items-center justify-center rounded-lg bg-[#0f5f7f] px-4 py-2 text-sm font-medium text-white transition hover:bg-[#0c4a63] sm:ml-auto sm:w-auto"
+                        class="inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90 sm:ml-auto sm:w-auto"
                     >
                         Crear usuari
                     </Link>
@@ -127,19 +149,30 @@ const resetPage = () => {
                     <table class="min-w-full divide-y divide-sidebar-border/70 text-sm">
                         <thead class="bg-muted/40">
                             <tr>
-                                <th class="px-4 py-3 text-left font-semibold">Nom</th>
-                                <th class="px-4 py-3 text-left font-semibold">Email</th>
-                                <th class="px-4 py-3 text-left font-semibold">Usuari</th>
-                                <th class="px-4 py-3 text-left font-semibold">Rol</th>
-                                <th class="px-4 py-3 text-left font-semibold">Creat el</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Nom</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Email</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Usuari</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Rol</th>
+                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Creat el</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-sidebar-border/70">
-                            <tr v-for="user in visibleUsers" :key="user.id" class="hover:bg-muted/30">
+                            <tr
+                                v-for="user in visibleUsers"
+                                :key="user.id"
+                                class="transition-colors hover:bg-muted/30"
+                            >
                                 <td class="px-4 py-3 font-medium">{{ user.name }}</td>
                                 <td class="px-4 py-3 text-muted-foreground">{{ user.email }}</td>
                                 <td class="px-4 py-3 text-muted-foreground">{{ user.nickname || '—' }}</td>
-                                <td class="px-4 py-3 text-muted-foreground">{{ user.role || '—' }}</td>
+                                <td class="px-4 py-3 text-muted-foreground">
+                                    <span
+                                        class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold"
+                                        :class="roleBadgeClass(user.role)"
+                                    >
+                                        {{ roleLabel(user.role) }}
+                                    </span>
+                                </td>
                                 <td class="px-4 py-3 text-muted-foreground">
                                     {{
                                         user.created_at
@@ -164,14 +197,14 @@ const resetPage = () => {
                     </p>
                     <div class="flex gap-2">
                         <button
-                            class="rounded-md border border-sidebar-border px-3 py-1 text-sm disabled:opacity-40"
+                            class="rounded-lg border border-sidebar-border bg-background px-3 py-1.5 text-sm transition hover:bg-sidebar-accent/45 disabled:opacity-40"
                             :disabled="!canGoPrev"
                             @click="goPrev"
                         >
                             Anterior
                         </button>
                         <button
-                            class="rounded-md border border-sidebar-border px-3 py-1 text-sm disabled:opacity-40"
+                            class="rounded-lg border border-sidebar-border bg-background px-3 py-1.5 text-sm transition hover:bg-sidebar-accent/45 disabled:opacity-40"
                             :disabled="!canGoNext"
                             @click="goNext"
                         >

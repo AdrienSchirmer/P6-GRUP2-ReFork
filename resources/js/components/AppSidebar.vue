@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, FolderGit2, LayoutGrid, UserCog } from 'lucide-vue-next';
+import { Globe, HeartPulse, LayoutGrid, UserCog } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -33,21 +33,25 @@ const mainNavItems: NavItem[] = [
 
 const footerNavItems: NavItem[] = [
     {
-        title: 'Repository',
-        href: 'https://github.com/laravel/vue-starter-kit',
-        icon: FolderGit2,
+        title: 'Web Farmàcia',
+        href: '/',
+        icon: Globe,
     },
     {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#vue',
-        icon: BookOpen,
+        title: 'Contacte públic',
+        href: '/contactans',
+        icon: HeartPulse,
     },
 ];
 </script>
 
 <template>
-    <Sidebar collapsible="icon" variant="inset">
-        <SidebarHeader>
+    <Sidebar
+        collapsible="icon"
+        variant="inset"
+        class="border-sidebar-border/70 bg-sidebar/95 shadow-sm"
+    >
+        <SidebarHeader class="border-b border-sidebar-border/65 bg-sidebar/95 px-2 py-3">
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
@@ -63,7 +67,7 @@ const footerNavItems: NavItem[] = [
             <NavMain :items="mainNavItems" />
         </SidebarContent>
 
-        <SidebarFooter>
+        <SidebarFooter class="border-t border-sidebar-border/65 bg-sidebar/90">
             <NavFooter :items="footerNavItems" />
             <NavUser />
         </SidebarFooter>
