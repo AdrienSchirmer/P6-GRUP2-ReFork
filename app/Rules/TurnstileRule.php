@@ -19,7 +19,7 @@ class TurnstileRule implements ValidationRule
         $secret = config('services.turnstile.secret_key');
 
         if (! $secret) {
-            $fail('Cloudflare turnstile no esta configurat..');
+            $fail('Cloudflare turnstile no esta configurado..');
             return;
         }
 
@@ -30,7 +30,7 @@ class TurnstileRule implements ValidationRule
         ]);
 
         if (! $response->ok() || ! $response->json('success')) {
-            $fail('Siusplau, completa la verificació.');
+            $fail('Porfavor, completa la verificación.');
         }
     }
 }

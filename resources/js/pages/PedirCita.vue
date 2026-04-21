@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
-import { ref, computed, onMounted, watch } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import { useForm, usePage, router } from '@inertiajs/vue3';
 import {
     ScanFace,
@@ -220,20 +220,39 @@ onMounted(async () => {
     await fetchBookedTimes();
 });
 
-function nextStep() {
+function renderTurnstile() {
+    const el = document.querySelector('.cf-turnstile') as HTMLElement | null;
+    const t = (window as any).turnstile;
+
+    if (!el || !props.turnstileSiteKey || !t) return;
+
+    el.innerHTML = '';
+    t.render(el, {
+        sitekey: props.turnstileSiteKey,
+        language: 'es',
+    });
+}
+
+async function nextStep() {
     if (step.value < 3) step.value++;
 
     if (step.value === 3) {
-        if (
-            !props.turnstileSiteKey ||
-            document.getElementById('cf-turnstile-api')
-        )
+        if (!props.turnstileSiteKey) return;
+
+        await nextTick();
+
+        if (document.getElementById('cf-turnstile-api')) {
+            renderTurnstile();
             return;
+        }
+
         const s = document.createElement('script');
         s.id = 'cf-turnstile-api';
-        s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+        s.src =
+            'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
         s.async = true;
         s.defer = true;
+        s.onload = renderTurnstile;
         document.head.appendChild(s);
     }
 }
@@ -358,7 +377,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
         <section class="mx-auto max-w-7xl px-6 pb-20">
             <div class="rounded-3xl bg-white p-10 shadow-lg">
                 <div>
-                    <div v-show="step === 1">
+                    <div v-if="step === 1">
                         <div class="mb-8 flex items-center gap-3">
                             <span
                                 class="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f5f7f] text-sm font-bold text-white"
@@ -405,7 +424,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                     </div>
 
                     <!-- Step 2: Date & Time -->
-                    <div v-show="step === 2">
+                    <div v-if="step === 2">
                         <div class="mb-8 flex items-center gap-3">
                             <span
                                 class="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f5f7f] text-sm font-bold text-white"
@@ -510,7 +529,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                     </div>
 
                     <!-- Step 3: Personal Data -->
-                    <div v-show="step === 3">
+                    <div v-if="step === 3">
                         <div class="mb-8 flex items-center gap-3">
                             <span
                                 class="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f5f7f] text-sm font-bold text-white"
@@ -784,8 +803,13 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                             </a>
 
                             <!-- Close -->
-                            <button @click="showModal = false; router.visit('/')"
-                                class="flex-1 border border-gray-300 px-4 py-2.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 hover:border-gray-400 transition">
+                            <button
+                                @click="
+                                    showModal = false;
+                                    router.visit('/');
+                                "
+                                class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-600 transition hover:border-gray-400 hover:bg-gray-50"
+                            >
                                 Tancar
                             </button>
                         </div>

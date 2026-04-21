@@ -10,7 +10,7 @@ use App\Http\Resources\ServiceResource;
 
 use App\Http\Controllers\AssignmentsController;
 use App\Http\Controllers\admin_index_controller;
-
+use App\Http\Controllers\admin_users_controller;
 use App\Http\Controllers\Contactans;
 
 // Public Routes
@@ -26,6 +26,7 @@ Route::get('/appointments/booked-times', [ServiceController::class, 'getBookedTi
 // Private Routes
 Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(function () {
     Route::get('/', [admin_index_controller::class, 'index'])->name('admindashboard');
+    Route::resource('users', admin_users_controller::class);
 });
 Route::resource('assignments', AssignmentsController::class);
 
