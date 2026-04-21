@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
 import { home } from '@/routes';
 
 defineProps<{
@@ -10,33 +9,33 @@ defineProps<{
 </script>
 
 <template>
-    <div
-        class="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10"
-    >
-        <div class="w-full max-w-sm">
-            <div class="flex flex-col gap-8">
-                <div class="flex flex-col items-center gap-4">
-                    <Link
-                        :href="home()"
-                        class="flex flex-col items-center gap-2 font-medium"
-                    >
-                        <div
-                            class="mb-1 flex h-9 w-9 items-center justify-center rounded-md"
-                        >
-                            <AppLogoIcon
-                                class="size-9 fill-current text-[var(--foreground)] dark:text-white"
-                            />
-                        </div>
-                        <span class="sr-only">{{ title }}</span>
+    <div class="relative flex min-h-svh flex-col items-center justify-center overflow-hidden bg-background p-6 md:p-10">
+        <div class="pointer-events-none absolute -top-20 -left-16 h-64 w-64 rounded-full bg-[#dbeaf4]/80 blur-3xl"></div>
+        <div class="pointer-events-none absolute -right-12 bottom-0 h-72 w-72 rounded-full bg-[#0f5f7f]/15 blur-3xl"></div>
+
+        <div class="relative w-full max-w-md">
+            <div class="flex flex-col gap-6">
+                <div class="flex flex-col items-center gap-4 text-center">
+                    <Link :href="home()" class="inline-flex items-center justify-center">
+                        <img
+                            src="/storage/FarmaciaSolerLogoLong.jpeg"
+                            alt="Farmacia Soler"
+                            class="h-14 w-auto rounded-lg border border-[#dbeaf4] bg-card p-1.5 shadow-sm"
+                        />
                     </Link>
-                    <div class="space-y-2 text-center">
-                        <h1 class="text-xl font-medium">{{ title }}</h1>
-                        <p class="text-center text-sm text-muted-foreground">
+                    <div class="space-y-1.5">
+                        <h1 class="text-2xl font-semibold tracking-tight text-[#0f5f7f] dark:text-foreground">
+                            {{ title }}
+                        </h1>
+                        <p class="text-sm text-muted-foreground">
                             {{ description }}
                         </p>
                     </div>
                 </div>
-                <slot />
+
+                <div class="rounded-2xl border border-[#dbeaf4] bg-card/95 p-6 shadow-sm backdrop-blur md:p-8 dark:border-border">
+                    <slot />
+                </div>
             </div>
         </div>
     </div>
