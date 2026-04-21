@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { store } from '@/routes/assignments';
+import { show } from '@/routes/users';
 import { Form } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 import { ref } from 'vue';
@@ -39,9 +40,11 @@ onMounted(() => {
 });
 
 const formRef = ref<HTMLFormElement | null>(null);
+const showModal = ref(false);
 
 function onSuccess() {
     formRef.value?.reset();
+    showModal.value = true;
 }
 </script>
 <template>
@@ -199,6 +202,69 @@ function onSuccess() {
                             alt="Image"
                             class="h-48 w-full rounded-xl object-cover sm:h-56 md:h-64"
                         />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal — outside the scrollable div so it overlays everything -->
+        <div
+            v-if="showModal"
+            class="fixed top-0 right-0 left-0 z-50 flex h-[calc(100%-1rem)] max-h-full w-full items-center justify-center overflow-x-hidden overflow-y-auto md:inset-0"
+        >
+            <div class="relative max-h-full w-full max-w-2xl p-4">
+                <div
+                    class="border-default rounded-base relative border bg-white p-4 shadow-sm md:p-6"
+                >
+                    <!-- Header -->
+                    <div
+                        class="border-default flex items-center justify-between border-b pb-4 md:pb-5"
+                    >
+                        <h3 class="text-heading text-lg font-medium">
+                            Encàrrec creat correctament
+                        </h3>
+                        <button
+                            type="button"
+                            class="text-body hover:bg-neutral-tertiary hover:text-heading rounded-base ms-auto inline-flex h-9 w-9 items-center justify-center bg-transparent text-sm"
+                            @click="showModal = false"
+                        >
+                            <svg
+                                class="h-5 w-5"
+                                aria-hidden="true"
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="24"
+                                height="24"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    stroke="currentColor"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                    stroke-width="2"
+                                    d="M6 18 17.94 6M18 18 6.06 6"
+                                />
+                            </svg>
+                            <span class="sr-only">Tancar</span>
+                        </button>
+                    </div>
+                    <!-- Body -->
+                    <div class="space-y-4 py-4 md:space-y-6 md:py-6">
+                        <p class="text-body leading-relaxed">
+                            El teu encàrrec s'ha creat correctament. Rebràs un
+                            correu electrònic de confirmació en breu.
+                        </p>
+                    </div>
+                    <!-- Footer -->
+                    <div
+                        class="border-default flex items-center space-x-4 border-t pt-4 md:pt-5"
+                    >
+                        <button
+                            type="button"
+                            class="rounded-2xl bg-yellow-300 px-4 py-3 text-lg font-medium sm:text-xl"
+                            @click="showModal = false"
+                        >
+                            Acceptar
+                        </button>
                     </div>
                 </div>
             </div>
