@@ -94,6 +94,10 @@ jobs:
             sed -i "s/MAIL_USERNAME=your-email@yourdomain.com/MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}/g" .env
             sed -i "s/MAIL_PASSWORD=your-dinahosting-password/MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}/g" .env
             sed -i "s/MAIL_FROM_ADDRESS=\"your-email@yourdomain.com\"/MAIL_FROM_ADDRESS=\"${{ secrets.MAIL_FROM_ADDRESS }}\"/g" .env
+            sed -i "s/MAIL_MAILER=smtp/MAIL_MAILER=${{ secrets.MAIL_MAILER }}/g" .env
+            sed -i "s/MAIL_SCHEME=smtp/MAIL_SCHEME=${{ secrets.MAIL_SCHEME }}/g" .env
+            sed -i "s/MAIL_HOST=smtp.dinahosting.com/MAIL_HOST=${{ secrets.MAIL_HOST }}/g" .env
+            sed -i "s/MAIL_PORT=587/MAIL_PORT=${{ secrets.MAIL_PORT }}/g" .env
             sed -i "s/TURNSTILE_SITE_KEY=/TURNSTILE_SITE_KEY=${{ secrets.TURNSTILE_SITE_KEY }}/g" .env
             sed -i "s/TURNSTILE_SECRET_KEY=/TURNSTILE_SECRET_KEY=${{ secrets.TURNSTILE_SECRET_KEY }}/g" .env
             $(which php84) artisan config:clear
