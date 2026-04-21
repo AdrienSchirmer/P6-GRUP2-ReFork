@@ -44,7 +44,7 @@ class AssignmentsController extends Controller
             'message' => 'Ecarrec creat correctament',
         ]);
 
-        return to_route('assignments.create');
+        return to_route('assignments.create')->with('success', true);
     }
 
     /**
