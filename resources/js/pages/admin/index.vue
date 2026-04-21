@@ -14,16 +14,31 @@ const breadcrumbs: BreadcrumbItem[] = [
         <Head title="Admin" />
 
         <div
-            class="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4"
+            class="relative flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4 md:p-6"
         >
             <div
-                class="rounded-xl border border-sidebar-border/70 bg-background p-6 dark:border-sidebar-border"
+                class="pointer-events-none absolute top-0 right-8 h-48 w-48 rounded-full bg-muted/70 blur-3xl"
+            ></div>
+            <div
+                class="pointer-events-none absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/60 blur-3xl"
+            ></div>
+
+            <div
+                class="relative rounded-2xl border border-sidebar-border/70 bg-gradient-to-br from-background to-muted/70 p-7 shadow-sm"
             >
-                <h1 class="text-2xl font-semibold tracking-tight">
+                <p
+                    class="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase"
+                >
+                    Farmacia Soler
+                </p>
+                <h1
+                    class="mt-2 text-3xl font-semibold tracking-tight text-foreground"
+                >
                     Panell d'administració
                 </h1>
-                <p class="mt-2 text-sm text-muted-foreground">
-                    Aquí podràs gestionar les ultimes peticións!
+                <p class="mt-2 max-w-2xl text-sm text-muted-foreground">
+                    Gestiona usuaris i configuració interna des d'un únic espai,
+                    amb un entorn visual alineat amb la marca.
                 </p>
             </div>
         </div>
