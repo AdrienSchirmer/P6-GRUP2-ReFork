@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\ServiceSchedule;
+
 
 class Service extends Model
 {
@@ -13,4 +16,9 @@ class Service extends Model
         'duration_minutes',
         'icon',
     ];
+    public function schedules()
+{
+    return $this->hasMany(ServiceSchedule::class);
 }
+}
+
