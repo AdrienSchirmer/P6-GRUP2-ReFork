@@ -412,7 +412,7 @@ onMounted(async () => {
         <section class="mx-auto max-w-7xl px-6 pb-20">
             <div class="rounded-3xl bg-white p-10 shadow-lg">
                 <div>
-                    <div v-show="step === 1">
+                    <div v-if="step === 1">
                         <div class="mb-8 flex items-center gap-3">
                             <span
                                 class="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f5f7f] text-sm font-bold text-white"

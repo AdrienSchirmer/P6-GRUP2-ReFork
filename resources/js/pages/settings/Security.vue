@@ -130,7 +130,7 @@ onUnmounted(() => clearTwoFactorAuthData());
         </Form>
     </div>
 
-    <div v-if="canManageTwoFactor" class="space-y-6">
+    <!-- <div v-if="canManageTwoFactor" class="space-y-6">
         <Heading
             variant="small"
             title="Two-factor authentication"
@@ -191,5 +191,5 @@ onUnmounted(() => clearTwoFactorAuthData());
             :requiresConfirmation="requiresConfirmation"
             :twoFactorEnabled="twoFactorEnabled"
         />
-    </div>
+    </div> -->
 </template>

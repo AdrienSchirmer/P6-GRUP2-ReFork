@@ -10,8 +10,10 @@ use App\Http\Resources\ServiceResource;
 
 use App\Http\Controllers\AssignmentsController;
 use App\Http\Controllers\admin_index_controller;
-
+use App\Http\Controllers\admin_users_controller;
 use App\Http\Controllers\Contactans;
+use App\Http\Controllers\Admin\MailController;
+
 
 
 // Public Routes
@@ -28,6 +30,8 @@ Route::get('/appointments/schedule', [ServiceController::class, 'getSchedule']);
 // Private Routes
 Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(function () {
     Route::get('/', [admin_index_controller::class, 'index'])->name('admindashboard');
+    Route::resource('users', admin_users_controller::class);
+    Route::resource('mail', MailController::class);
 });
 Route::resource('assignments', AssignmentsController::class);
 

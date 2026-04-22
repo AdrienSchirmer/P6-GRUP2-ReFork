@@ -11,6 +11,9 @@ use App\Models\ServiceAppointment;
 
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Rules\TurnstileRule;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\ReservationCreated;
+
 
 
 class ServiceController extends Controller
@@ -62,6 +65,9 @@ class ServiceController extends Controller
             'appointment_date' => 'required|date',
             'start_time' => 'required|date_format:H:i',
             'cf-turnstile-response' => ['required', 'string', new TurnstileRule],
+
+        ], [
+            'cf-turnstile-response.required' => 'Por favor, completa la verificación.',
         ]);
         $exists = ServiceAppointment::whereDate('appointment_date', $validated['appointment_date'])
             ->where('service_id', $validated['service_id'])
@@ -73,6 +79,9 @@ class ServiceController extends Controller
                 'start_time' => 'Aquesta hora ja està reservada.',
             ]);
         }
+
+        Mail::to($validated['customer_email'])->send(new ReservationCreated());
+
         ServiceAppointment::create([
             'service_id' => $validated['service_id'],
             'customer_name' => $validated['customer_name'],
@@ -95,8 +104,8 @@ class ServiceController extends Controller
             'service' => $validated['service_id'],
             'date' => $validated['appointment_date'],
             'time' => $validated['start_time'],
-            'name'    => $validated['customer_name'],
-            'email'   => $validated['customer_email'],
+            'name' => $validated['customer_name'],
+            'email' => $validated['customer_email'],
         ]);
     }
 
@@ -135,24 +144,24 @@ class ServiceController extends Controller
     {
         $request->validate([
             'service' => 'required|exists:services,id',
-            'date'    => 'required|date',
-            'time'    => 'required|string',
-            'name'    => 'required|string',
-            'email'   => 'required|email',
+            'date' => 'required|date',
+            'time' => 'required|string',
+            'name' => 'required|string',
+            'email' => 'required|email',
         ]);
 
         $service = Service::findOrFail($request->service);
 
         $data = [
             'service_name' => $service->name,
-            'duration'     => $service->duration_minutes . ' min',
-            'date'         => $request->date,
-            'time'         => $request->time,
-            'name'         => $request->name,
-            'email'        => $request->email,
-            'pharmacy'     => 'Farmàcia Soler',
-            'address'      => 'Carrer Nou, 22, 17600 Figueres, Girona',
-            'phone'        => '972 50 02 99',
+            'duration' => $service->duration_minutes . ' min',
+            'date' => $request->date,
+            'time' => $request->time,
+            'name' => $request->name,
+            'email' => $request->email,
+            'pharmacy' => 'Farmàcia Soler',
+            'address' => 'Carrer Nou, 22, 17600 Figueres, Girona',
+            'phone' => '972 50 02 99',
         ];
 
         $pdf = Pdf::loadView('pdf.appointment', $data)

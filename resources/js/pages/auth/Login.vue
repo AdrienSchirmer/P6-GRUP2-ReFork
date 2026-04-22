@@ -8,14 +8,13 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
-import { register } from '@/routes';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 
 defineOptions({
     layout: {
-        title: 'Log in to your account',
-        description: 'Enter your email and password below to log in',
+        title: 'Accedeix al teu compte',
+        description: 'Inicia sessió per gestionar el panell de Farmacia Soler',
     },
 });
 
@@ -27,11 +26,11 @@ defineProps<{
 </script>
 
 <template>
-    <Head title="Log in" />
+    <Head title="Iniciar sessió" />
 
     <div
         v-if="status"
-        class="mb-4 text-center text-sm font-medium text-green-600"
+        class="mb-5 rounded-xl border border-green-200 bg-green-50/90 px-4 py-3 text-center text-sm font-medium text-green-700"
     >
         {{ status }}
     </div>
@@ -40,11 +39,20 @@ defineProps<{
         v-bind="store.form()"
         :reset-on-success="['password']"
         v-slot="{ errors, processing }"
-        class="flex flex-col gap-6"
+        class="flex flex-col gap-5"
     >
-        <div class="grid gap-6">
+        <div class="grid gap-5">
+            <div class="space-y-1">
+                <h2 class="text-lg font-semibold text-[#0f5f7f] dark:text-foreground">
+                    Benvingut de nou
+                </h2>
+                <p class="text-sm text-muted-foreground">
+                    Introdueix les teves credencials per continuar.
+                </p>
+            </div>
+
             <div class="grid gap-2">
-                <Label for="email">Email address</Label>
+                <Label for="email">Correu electrònic</Label>
                 <Input
                     id="email"
                     type="email"
@@ -54,20 +62,21 @@ defineProps<{
                     :tabindex="1"
                     autocomplete="email"
                     placeholder="email@example.com"
+                    class="h-11 rounded-xl border-[#d5e3ec] focus-visible:border-[#0f5f7f] focus-visible:ring-[#0f5f7f]/25"
                 />
                 <InputError :message="errors.email" />
             </div>
 
             <div class="grid gap-2">
                 <div class="flex items-center justify-between">
-                    <Label for="password">Password</Label>
+                    <Label for="password">Contrasenya</Label>
                     <TextLink
                         v-if="canResetPassword"
                         :href="request()"
-                        class="text-sm"
+                        class="text-sm text-[#0f5f7f] decoration-[#99bdd0] hover:decoration-[#0f5f7f]"
                         :tabindex="5"
                     >
-                        Forgot password?
+                        Has oblidat la contrasenya?
                     </TextLink>
                 </div>
                 <PasswordInput
@@ -76,7 +85,8 @@ defineProps<{
                     required
                     :tabindex="2"
                     autocomplete="current-password"
-                    placeholder="Password"
+                    placeholder="Contrasenya"
+                    class="h-11 rounded-xl border-[#d5e3ec] focus-visible:border-[#0f5f7f] focus-visible:ring-[#0f5f7f]/25"
                 />
                 <InputError :message="errors.password" />
             </div>
@@ -84,19 +94,19 @@ defineProps<{
             <div class="flex items-center justify-between">
                 <Label for="remember" class="flex items-center space-x-3">
                     <Checkbox id="remember" name="remember" :tabindex="3" />
-                    <span>Remember me</span>
+                    <span>Recorda’m</span>
                 </Label>
             </div>
 
             <Button
                 type="submit"
-                class="mt-4 w-full"
+                class="mt-2 h-11 w-full rounded-xl bg-[#0f5f7f] text-white shadow-sm transition hover:bg-[#0c4a63]"
                 :tabindex="4"
                 :disabled="processing"
                 data-test="login-button"
             >
                 <Spinner v-if="processing" />
-                Log in
+                Iniciar sessió
             </Button>
         </div>
     </Form>
