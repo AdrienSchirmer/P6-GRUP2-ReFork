@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { Globe, HeartPulse, LayoutGrid, UserCog } from 'lucide-vue-next';
+import { Globe, HeartPulse, LayoutGrid, UsersRound } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -27,7 +27,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Usuaris',
         href: usersIndex(),
-        icon: UserCog,
+        icon: UsersRound,
     },
 ];
 
@@ -51,7 +51,9 @@ const footerNavItems: NavItem[] = [
         variant="inset"
         class="border-sidebar-border/70 bg-sidebar/95 shadow-sm"
     >
-        <SidebarHeader class="border-b border-sidebar-border/65 bg-sidebar/95 px-2 py-3">
+        <SidebarHeader
+            class="border-b border-sidebar-border/65 bg-sidebar/95 px-2 py-3"
+        >
             <SidebarMenu>
                 <SidebarMenuItem>
                     <SidebarMenuButton size="lg" as-child>
