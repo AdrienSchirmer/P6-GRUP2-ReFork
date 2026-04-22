@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             ServicesSeeder::class,
             CalendarExceptionsSeeder::class,
             AdminSeeder::class,
+            ServiceSchedulesSeeder::class,
         ]);
     }
 }
