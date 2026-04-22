@@ -21,6 +21,27 @@ import { format } from 'timeago.js';
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
+        <div class="flex items-center justify-center px-10 pt-5">
+            <div class="relative flex w-full max-w-md justify-between">
+                <input
+                    type="text"
+                    placeholder="Search..."
+                    class="w-full rounded-2xl border border-gray-300 bg-white py-2 pr-10 pl-4 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                />
+                <svg
+                    class="absolute top-1/2 right-3 h-4 w-4 -translate-y-1/2 text-gray-400"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                    stroke-width="2"
+                >
+                    <circle cx="11" cy="11" r="8" />
+                    <path d="m21 21-4.35-4.35" />
+                </svg>
+            </div>
+        </div>
+
         <div class="grid grid-cols-1 gap-5 pr-10 md:grid-cols-2 lg:grid-cols-3">
             <div
                 v-for="ass in assignments"
