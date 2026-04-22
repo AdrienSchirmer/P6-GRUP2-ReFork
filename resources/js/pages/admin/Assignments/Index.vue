@@ -21,7 +21,7 @@ import { format } from 'timeago.js';
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="grid grid-cols-3 gap-5 pr-10">
+        <div class="grid grid-cols-1 gap-5 pr-10 md:grid-cols-2 lg:grid-cols-3">
             <div
                 v-for="ass in assignments"
                 :key="ass.name"
