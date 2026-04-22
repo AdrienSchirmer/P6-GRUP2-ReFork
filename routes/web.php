@@ -9,8 +9,8 @@ use App\Http\Resources\ServiceResource;
 
 
 use App\Http\Controllers\AssignmentsController;
-use App\Http\Controllers\admin_index_controller;
-use App\Http\Controllers\admin_users_controller;
+use App\Http\Controllers\Admin\admin_index_controller;
+use App\Http\Controllers\Admin\admin_users_controller;
 use App\Http\Controllers\Contactans;
 use App\Http\Controllers\Admin\MailController;
 

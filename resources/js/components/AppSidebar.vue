@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { Globe, HeartPulse, LayoutGrid, UserCog, Mail } from 'lucide-vue-next';
+import {
+    Globe,
+    HeartPulse,
+    LayoutGrid,
+    UserCog,
+    Mail,
+    UsersRound,
+} from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -28,7 +35,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Usuaris',
         href: usersIndex(),
-        icon: UserCog,
+        icon: UsersRound,
     },
     {
         title: 'Mail',
