@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Http\Resources\ServiceResource;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceAppointment;
+
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Rules\TurnstileRule;
 use Illuminate\Support\Facades\Mail;
@@ -29,7 +30,7 @@ class ServiceController extends Controller
     */
         return Inertia::render('PedirCita', [
             'turnstileSiteKey' => config('services.turnstile.site_key'),
-            'services' => Service::all()->map(function ($service) {
+            'services' => Service::whereHas('schedules')->get()->map(function ($service) {
                 return [
                     'id' => $service->id,
                     'nom' => $service->name,
@@ -62,7 +63,7 @@ class ServiceController extends Controller
             'customer_phone' => ['required', 'regex:/^[0-9]{9}$/'],
             'customer_email' => 'required|email|max:255',
             'appointment_date' => 'required|date',
-            'start_time' => 'required',
+            'start_time' => 'required|date_format:H:i',
             'cf-turnstile-response' => ['required', 'string', new TurnstileRule],
 
         ], [
@@ -87,9 +88,10 @@ class ServiceController extends Controller
             'customer_phone' => $validated['customer_phone'],
             'customer_email' => $validated['customer_email'],
             'appointment_date' => $validated['appointment_date'],
-            'start_time' => $validated['start_time'],
+            'start_time' =>\Carbon\Carbon::parse($validated['start_time'])->format('H:i:s'),
             'end_time' => \Carbon\Carbon::parse($validated['start_time'])->addMinutes(Service::find($validated['service_id'])->duration_minutes)->format('H:i'),
             'status' => 'pending',
+          
         ]);
 
         /*   Inertia::flash([
@@ -188,4 +190,31 @@ class ServiceController extends Controller
 
         return response()->json($times);
     }
+    public function getSchedule(Request $request)
+{
+    $request->validate([
+        'service_id' => 'required|exists:services,id',
+    ]);
+
+    $service = Service::with('schedules')->findOrFail($request->service_id);
+
+    $schedules = $service->schedules->map(function ($schedule) use ($service) {
+        // Generate time slots from start_time to end_time by duration_minutes
+        $slots = [];
+        $current = \Carbon\Carbon::parse($schedule->start_time);
+        $end = \Carbon\Carbon::parse($schedule->end_time);
+
+        while ($current->copy()->addMinutes($service->duration_minutes)->lte($end)) {
+            $slots[] = $current->format('H:i');
+            $current->addMinutes($service->duration_minutes);
+        }
+
+        return [
+            'day_of_week' => $schedule->day_of_week, 
+            'slots' => $slots,
+        ];
+    });
+
+    return response()->json($schedules);
+}
 }

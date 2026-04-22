@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import WebAppLayout from '@/layouts/WebAppLayout.vue';
-import { ref, computed, onMounted, watch, nextTick } from 'vue';
-import { useForm, usePage, router } from '@inertiajs/vue3';
+import WebAppLayout from '@/layouts/WebAppLayout.vue'
+import { ref, computed, onMounted, watch } from 'vue'
+import { useForm, usePage, router } from '@inertiajs/vue3'
 import {
     ScanFace,
     Droplet,
@@ -14,56 +14,74 @@ import {
     Apple,
     Pill,
     HeartPulse,
-} from 'lucide-vue-next';
+} from 'lucide-vue-next'
 
 defineOptions({
     layout: WebAppLayout,
-});
-const bookedTimes = ref<string[]>([]);
-
+})
+function closeSuccessModal() {
+    showModal.value = false
+    router.visit('/')
+}
 type ServiceItem = {
-    id: number;
-    nom: string;
-    descripció: string;
-    durada: number | string;
-    icon: string;
-};
+    id: number
+    nom: string
+    descripció: string
+    durada: number | string
+    icon: string
+}
 
 type FlashSuccess = {
-    message: string;
-    service: number;
-    date: string;
-    time: string;
-    name: string;
-    email: string;
-};
+    message: string
+    service: number
+    date: string
+    time: string
+    name: string
+    email: string
+}
+
+type CalendarCell = {
+    day: number
+    isCurrentMonth: boolean
+}
 
 const props = defineProps<{
-    services: ServiceItem[];
-    turnstileSiteKey: string | null;
-}>();
+    services: ServiceItem[]
+    turnstileSiteKey: string | null
+}>()
 
 const page = usePage<{
     flash?: {
-        success?: FlashSuccess;
-    };
-}>();
+        success?: FlashSuccess
+    }
+}>()
 
-const showModal = ref(false);
+const showConfirmModal = ref(false)
+const showModal = ref(false)
+const isSubmitting = ref(false)
+const bookedTimes = ref<string[]>([])
 
-const today = new Date();
-const todayYear = today.getFullYear();
-const todayMonth = today.getMonth();
-const todayDate = today.getDate();
+const today = new Date()
+const todayYear = today.getFullYear()
+const todayMonth = today.getMonth()
+const todayDate = today.getDate()
+
+const selectedService = ref<number | null>(null)
+const selectedTime = ref('')
+const selectedDate = ref<number | null>(todayDate)
+
+const currentYear = ref(todayYear)
+const currentMonth = ref(todayMonth)
+const step = ref(1)
 
 const form = useForm<{
-    service_id: number | null;
-    customer_name: string;
-    customer_phone: string;
-    customer_email: string;
-    appointment_date: string;
-    start_time: string;
-    'cf-turnstile-response': string;
+    service_id: number | null
+    customer_name: string
+    customer_phone: string
+    customer_email: string
+    appointment_date: string
+    start_time: string
+    'cf-turnstile-response': string
 }>({
     service_id: null,
     customer_name: '',
@@ -72,16 +90,7 @@ const form = useForm<{
     appointment_date: '',
     start_time: '',
     'cf-turnstile-response': '',
-});
-
-const selectedService = ref<number | null>(null);
-const selectedTime = ref('10:30');
-const selectedDate = ref<number | null>(todayDate);
-
-const step = ref(1);
-
-const currentYear = ref(todayYear);
-const currentMonth = ref(todayMonth);
+})
 
 const monthNames = [
     'Gener',
@@ -96,9 +105,9 @@ const monthNames = [
     'Octubre',
     'Novembre',
     'Desembre',
-];
+]
 
-const dayHeaders = ['DL', 'DT', 'DC', 'DJ', 'DV', 'DS', 'DG'];
+const dayHeaders = ['DL', 'DT', 'DC', 'DJ', 'DV', 'DS', 'DG']
 
 const iconsMap: Record<string, any> = {
     ScanFace,
@@ -112,224 +121,250 @@ const iconsMap: Record<string, any> = {
     Apple,
     Pill,
     HeartPulse,
-};
+}
 
-const successData = computed(() => page.props.flash?.success);
+const successData = computed(() => page.props.flash?.success)
 
 const selectedServiceObj = computed(() =>
     props.services.find((s) => s.id === selectedService.value),
-);
+)
 
 const successServiceName = computed(() => {
-    if (!successData.value?.service) return '—';
+    if (!successData.value?.service) return '—'
     return (
         props.services.find((s) => s.id === successData.value?.service)?.nom ??
         '—'
-    );
-});
+    )
+})
+
+const formattedDate = computed(() => {
+    if (!selectedDate.value) return ''
+    return `${currentYear.value}-${String(currentMonth.value + 1).padStart(2, '0')}-${String(selectedDate.value).padStart(2, '0')}`
+})
 
 const currentMonthLabel = computed(
     () => `${monthNames[currentMonth.value]} ${currentYear.value}`,
-);
+)
 
-const calendarDays = computed(() => {
-    const year = currentYear.value;
-    const month = currentMonth.value;
+const calendarDays = computed<CalendarCell[]>(() => {
+    const year = currentYear.value
+    const month = currentMonth.value
 
-    const firstDay = new Date(year, month, 1);
-    const lastDay = new Date(year, month + 1, 0);
-    const daysInMonth = lastDay.getDate();
+    const firstDay = new Date(year, month, 1)
+    const lastDay = new Date(year, month + 1, 0)
+    const daysInMonth = lastDay.getDate()
 
-    let startDow = firstDay.getDay();
-    startDow = (startDow + 6) % 7;
+    let startDow = firstDay.getDay()
+    startDow = (startDow + 6) % 7
 
-    const prevMonthLastDay = new Date(year, month, 0).getDate();
-
-    const cells: { day: number; isCurrentMonth: boolean }[] = [];
+    const prevMonthLastDay = new Date(year, month, 0).getDate()
+    const cells: CalendarCell[] = []
 
     for (let i = startDow - 1; i >= 0; i--) {
-        cells.push({ day: prevMonthLastDay - i, isCurrentMonth: false });
+        cells.push({ day: prevMonthLastDay - i, isCurrentMonth: false })
     }
 
     for (let d = 1; d <= daysInMonth; d++) {
-        cells.push({ day: d, isCurrentMonth: true });
+        cells.push({ day: d, isCurrentMonth: true })
     }
 
-    const remaining = 42 - cells.length;
+    const remaining = 42 - cells.length
     for (let d = 1; d <= remaining; d++) {
-        cells.push({ day: d, isCurrentMonth: false });
+        cells.push({ day: d, isCurrentMonth: false })
     }
 
-    return cells;
-});
+    return cells
+})
 
-const availableTimes = [
-    '09:00',
-    '09:30',
-    '10:00',
-    '10:30',
-    '11:00',
-    '11:30',
-    '12:00',
-    '12:30',
-    '13:00',
-    '13:30',
-    '16:00',
-    '16:30',
-    '17:00',
-    '17:30',
-    '18:00',
-    '18:30',
-    '19:00',
-    '19:30',
-];
+const serviceSchedules = ref<{ day_of_week: number; slots: string[] }[]>([])
 
-// Build PDF download URL from flash data
+async function fetchSchedule() {
+    if (!selectedService.value) {
+        serviceSchedules.value = []
+        return
+    }
+
+    const res = await fetch(
+        `/appointments/schedule?service_id=${selectedService.value}`,
+    )
+    serviceSchedules.value = await res.json()
+}
+
+const availableDaysOfWeek = computed(
+    () => new Set(serviceSchedules.value.map((s) => s.day_of_week)),
+)
+
+const availableTimes = computed(() => {
+    if (!selectedDate.value) return []
+
+    const date = new Date(
+        currentYear.value,
+        currentMonth.value,
+        selectedDate.value,
+    )
+    const iso = date.getDay() === 0 ? 7 : date.getDay()
+
+    const schedule = serviceSchedules.value.find((s) => s.day_of_week === iso)
+    return schedule?.slots ?? []
+})
+
+function isDayAvailable(cell: CalendarCell): boolean {
+    if (!cell.isCurrentMonth) return false
+
+    const isPast =
+        currentYear.value === todayYear &&
+        currentMonth.value === todayMonth &&
+        cell.day < todayDate
+
+    if (isPast) return false
+
+    const date = new Date(currentYear.value, currentMonth.value, cell.day)
+    const iso = date.getDay() === 0 ? 7 : date.getDay()
+
+    return availableDaysOfWeek.value.has(iso)
+}
+
+function selectDay(cell: CalendarCell) {
+    if (!isDayAvailable(cell)) return
+    selectedDate.value = cell.day
+    selectedTime.value = ''
+}
+
+function prevMonth() {
+    const isCurrentRealMonth =
+        currentYear.value === todayYear && currentMonth.value === todayMonth
+
+    if (isCurrentRealMonth) return
+
+    if (currentMonth.value === 0) {
+        currentMonth.value = 11
+        currentYear.value--
+    } else {
+        currentMonth.value--
+    }
+
+    selectedDate.value = null
+    selectedTime.value = ''
+}
+
+function nextMonth() {
+    if (currentMonth.value === 11) {
+        currentMonth.value = 0
+        currentYear.value++
+    } else {
+        currentMonth.value++
+    }
+
+    selectedDate.value = null
+    selectedTime.value = ''
+}
+
 const pdfDownloadUrl = computed(() => {
-    if (!successData.value) return '#';
+    if (!successData.value) return '#'
+
     const params = new URLSearchParams({
         service: String(successData.value.service),
         date: successData.value.date,
         time: successData.value.time,
         name: successData.value.name,
         email: successData.value.email,
-    });
-    return `/appointments/pdf?${params.toString()}`;
-});
+    })
 
-// Watch flash
-watch(
-    () => page.props.flash?.success,
-    (val) => {
-        if (val) {
-            showModal.value = true;
-            step.value = 1;
-            form.reset();
-            selectedDate.value = todayDate;
-            selectedTime.value = '10:30';
-        }
-    },
-    { immediate: true },
-);
+    return `/appointments/pdf?${params.toString()}`
+})
 
-onMounted(async () => {
-    if (props.services.length > 0) {
-        selectedService.value = props.services[0].id;
+async function fetchBookedTimes() {
+    if (!selectedService.value || !selectedDate.value) {
+        bookedTimes.value = []
+        return
     }
 
-    await fetchBookedTimes();
-});
+    const res = await fetch(
+        `/appointments/booked-times?date=${formattedDate.value}&service_id=${selectedService.value}`,
+    )
 
-function renderTurnstile() {
-    const el = document.querySelector('.cf-turnstile') as HTMLElement | null;
-    const t = (window as any).turnstile;
-
-    if (!el || !props.turnstileSiteKey || !t) return;
-
-    el.innerHTML = '';
-    t.render(el, {
-        sitekey: props.turnstileSiteKey,
-        language: 'es',
-    });
+    bookedTimes.value = await res.json()
 }
 
-async function nextStep() {
-    if (step.value < 3) step.value++;
+function nextStep() {
+    if (step.value < 3) step.value++
 
     if (step.value === 3) {
-        if (!props.turnstileSiteKey) return;
-
-        await nextTick();
-
-        if (document.getElementById('cf-turnstile-api')) {
-            renderTurnstile();
-            return;
+        if (
+            !props.turnstileSiteKey ||
+            document.getElementById('cf-turnstile-api')
+        ) {
+            return
         }
 
-        const s = document.createElement('script');
-        s.id = 'cf-turnstile-api';
-        s.src =
-            'https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';
-        s.async = true;
-        s.defer = true;
-        s.onload = renderTurnstile;
-        document.head.appendChild(s);
+        const s = document.createElement('script')
+        s.id = 'cf-turnstile-api'
+        s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js'
+        s.async = true
+        s.defer = true
+        document.head.appendChild(s)
     }
 }
 
 function prevStep() {
-    if (step.value > 1) step.value--;
-}
-
-function prevMonth() {
-    const isCurrentRealMonth =
-        currentYear.value === todayYear && currentMonth.value === todayMonth;
-    if (isCurrentRealMonth) return;
-    if (currentMonth.value === 0) {
-        currentMonth.value = 11;
-        currentYear.value--;
-    } else {
-        currentMonth.value--;
-    }
-    selectedDate.value = null;
-}
-
-function nextMonth() {
-    if (currentMonth.value === 11) {
-        currentMonth.value = 0;
-        currentYear.value++;
-    } else {
-        currentMonth.value++;
-    }
-    selectedDate.value = null;
-}
-
-function selectDay(cell: { day: number; isCurrentMonth: boolean }) {
-    if (!cell.isCurrentMonth) return;
-    const isPast =
-        currentYear.value === todayYear &&
-        currentMonth.value === todayMonth &&
-        cell.day < todayDate;
-    if (isPast) return;
-    selectedDate.value = cell.day;
+    if (step.value > 1) step.value--
 }
 
 function submitReservation() {
-    form.service_id = selectedService.value;
-    form.appointment_date = selectedDate.value
-        ? `${currentYear.value}-${String(currentMonth.value + 1).padStart(2, '0')}-${String(selectedDate.value).padStart(2, '0')}`
-        : '';
-    form.start_time = selectedTime.value;
+    form.service_id = selectedService.value
+    form.appointment_date = formattedDate.value
+    form.start_time = selectedTime.value
     form['cf-turnstile-response'] =
         (
             document.querySelector(
                 'input[name="cf-turnstile-response"]',
             ) as HTMLInputElement | null
-        )?.value ?? '';
-    form.post('/appointments');
+        )?.value ?? ''
+
+    form.post('/appointments', {
+        preserveScroll: true,
+        onSuccess: () => {
+            isSubmitting.value = false
+            showConfirmModal.value = false
+            showModal.value = true
+        },
+        onError: () => {
+            isSubmitting.value = false
+        },
+    })
 }
 
-function goToDashboard() {
-    router.visit('/dashboard');
+function confirmReservation() {
+    isSubmitting.value = true
+    submitReservation()
 }
-/********************   */
-async function fetchBookedTimes() {
-    if (!selectedDate.value || !selectedService.value) {
-        bookedTimes.value = [];
-        return;
+
+watch(selectedService, async () => {
+    selectedDate.value = null
+    selectedTime.value = ''
+    bookedTimes.value = []
+    await fetchSchedule()
+})
+
+watch([selectedDate, currentMonth, currentYear], async () => {
+    selectedTime.value = ''
+    await fetchBookedTimes()
+})
+
+watch(
+    () => page.props.flash?.success,
+    (val) => {
+        if (!val) return
+        showModal.value = true
+    },
+)
+
+onMounted(async () => {
+    if (props.services.length > 0) {
+        selectedService.value = props.services[0].id
+        await fetchSchedule()
     }
-
-    const date = `${currentYear.value}-${String(currentMonth.value + 1).padStart(2, '0')}-${String(selectedDate.value).padStart(2, '0')}`;
-
-    const response = await fetch(
-        `/appointments/booked-times?date=${date}&service_id=${selectedService.value}`,
-    );
-    bookedTimes.value = await response.json();
-}
-
-watch([selectedDate, selectedService, currentMonth, currentYear], () => {
-    fetchBookedTimes();
-});
+})
 </script>
 
 <template>
@@ -404,7 +439,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                     class="mb-2 flex items-center justify-between"
                                 >
                                     <component
-                                        :is="iconsMap[service.icon] || 'Plus'"
+                                        :is="iconsMap[service.icon] || 'div'"
                                         class="h-5 w-5 text-[#0f5f7f]"
                                     />
                                     <span
@@ -423,8 +458,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                         </div>
                     </div>
 
-                    <!-- Step 2: Date & Time -->
-                    <div v-if="step === 2">
+                    <div v-show="step === 2">
                         <div class="mb-8 flex items-center gap-3">
                             <span
                                 class="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f5f7f] text-sm font-bold text-white"
@@ -471,11 +505,12 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                         v-for="(cell, idx) in calendarDays"
                                         :key="idx"
                                         @click="selectDay(cell)"
-                                        :disabled="!cell.isCurrentMonth"
+                                        :disabled="!isDayAvailable(cell)"
                                         :class="[
                                             'flex h-8 items-center justify-center rounded-lg text-xs transition',
-                                            !cell.isCurrentMonth
-                                                ? 'text-slate-300'
+                                            !cell.isCurrentMonth ||
+                                            !isDayAvailable(cell)
+                                                ? 'cursor-not-allowed text-slate-300'
                                                 : selectedDate === cell.day
                                                   ? 'bg-[#0f5f7f] font-semibold text-white shadow-sm'
                                                   : 'text-slate-700 hover:bg-[#dbeaf4] hover:text-[#0f5f7f]',
@@ -492,9 +527,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                 >
                                     Hores Disponibles
                                 </h4>
-                                <div
-                                    class="grid grid-cols-2 gap-2 sm:grid-cols-3"
-                                >
+                                <div class="grid grid-cols-2 gap-2 sm:grid-cols-3">
                                     <button
                                         v-for="time in availableTimes"
                                         :key="time"
@@ -505,7 +538,6 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                         "
                                         :class="[
                                             'rounded-lg border py-2 text-xs font-medium transition',
-
                                             !selectedDate
                                                 ? 'cursor-not-allowed bg-gray-100 text-gray-400'
                                                 : bookedTimes.includes(time)
@@ -518,6 +550,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                         {{ time }}
                                     </button>
                                 </div>
+
                                 <p
                                     v-if="form.errors.start_time"
                                     class="mt-2 text-xs text-red-500"
@@ -528,8 +561,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                         </div>
                     </div>
 
-                    <!-- Step 3: Personal Data -->
-                    <div v-if="step === 3">
+                    <div v-show="step === 3">
                         <div class="mb-8 flex items-center gap-3">
                             <span
                                 class="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f5f7f] text-sm font-bold text-white"
@@ -612,9 +644,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                     >
                                         Resum de la reserva
                                     </p>
-                                    <div
-                                        class="space-y-2 text-sm text-slate-600"
-                                    >
+                                    <div class="space-y-2 text-sm text-slate-600">
                                         <div class="flex justify-between">
                                             <span>Servei</span>
                                             <span class="font-medium">{{
@@ -626,8 +656,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                             <span class="font-medium">
                                                 {{
                                                     selectedDate
-                                                        ? `${selectedDate} ${monthNames[currentMonth]}
-                                                ${currentYear}`
+                                                        ? `${selectedDate} ${monthNames[currentMonth]} ${currentYear}`
                                                         : '—'
                                                 }}
                                             </span>
@@ -635,16 +664,16 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                         <div class="flex justify-between">
                                             <span>Hora</span>
                                             <span class="font-medium">{{
-                                                selectedTime
+                                                selectedTime || '—'
                                             }}</span>
                                         </div>
                                     </div>
                                 </div>
 
                                 <button
-                                    @click="submitReservation"
-                                    :disabled="form.processing"
-                                    class="w-full rounded-lg bg-[#0f5f7f] py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#0c4a63] active:scale-[0.98]"
+                                    @click="showConfirmModal = true"
+                                    :disabled="!selectedDate || !selectedTime || form.processing"
+                                    class="w-full rounded-lg bg-[#0f5f7f] py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#0c4a63] disabled:opacity-50"
                                 >
                                     {{
                                         form.processing
@@ -652,6 +681,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                             : 'Confirmar Reserva'
                                     }}
                                 </button>
+
                                 <div v-if="props.turnstileSiteKey" class="pt-2">
                                     <div
                                         class="cf-turnstile"
@@ -659,21 +689,16 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                         data-language="es"
                                     ></div>
                                     <p
-                                        v-if="
-                                            form.errors['cf-turnstile-response']
-                                        "
+                                        v-if="form.errors['cf-turnstile-response']"
                                         class="mt-2 text-sm text-red-600"
                                     >
-                                        {{
-                                            form.errors['cf-turnstile-response']
-                                        }}
+                                        {{ form.errors['cf-turnstile-response'] }}
                                     </p>
                                 </div>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Navigation Buttons -->
                     <div class="mt-8 flex items-center justify-between">
                         <button
                             v-if="step > 1"
@@ -682,10 +707,11 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                         >
                             ← Enrere
                         </button>
+
                         <button
                             v-if="step < 3"
                             @click="nextStep"
-                            :disabled="step === 2 && !selectedDate"
+                            :disabled="(step === 2 && !selectedDate) || (step === 2 && !selectedTime)"
                             class="ml-auto rounded-lg bg-[#0f5f7f] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#0c4a63] disabled:opacity-50"
                         >
                             Següent →
@@ -694,17 +720,71 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                 </div>
             </div>
 
-            <!--  Success Confirmation Modal -->
+            <div
+                v-if="showConfirmModal"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+            >
+                <div class="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
+                    <h3 class="mb-3 text-lg font-bold text-[#0f5f7f]">
+                        Confirmar reserva
+                    </h3>
+
+                    <p class="mb-4 text-sm text-gray-600">
+                        Estàs segur que vols confirmar aquesta reserva?
+                    </p>
+
+                    <div class="mb-4 space-y-2 rounded-lg bg-gray-100 p-3 text-sm">
+                        <div class="flex justify-between">
+                            <span>Servei</span>
+                            <span class="font-semibold">{{
+                                selectedServiceObj?.nom || '—'
+                            }}</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Data</span>
+                            <span class="font-semibold">
+                                {{
+                                    selectedDate
+                                        ? `${selectedDate} ${monthNames[currentMonth]} ${currentYear}`
+                                        : '—'
+                                }}
+                            </span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span>Hora</span>
+                            <span class="font-semibold">{{
+                                selectedTime || '—'
+                            }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex gap-3">
+                        <button
+                            @click="showConfirmModal = false"
+                            :disabled="isSubmitting"
+                            class="flex-1 rounded-lg border border-gray-300 py-2 text-sm"
+                        >
+                            Cancel·lar
+                        </button>
+
+                        <button
+                            @click="confirmReservation"
+                            :disabled="isSubmitting"
+                            class="flex-1 rounded-lg bg-[#0f5f7f] py-2 text-sm text-white disabled:opacity-50"
+                        >
+                            {{ isSubmitting ? 'Confirmant...' : 'Sí, confirmar' }}
+                        </button>
+                    </div>
+                </div>
+            </div>
+
             <div
                 v-if="showModal"
                 class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60"
             >
                 <div class="relative w-full max-w-md p-4">
                     <div class="rounded-lg bg-white p-6 shadow-xl">
-                        <!-- Header -->
-                        <div
-                            class="flex items-center justify-between border-b pb-4"
-                        >
+                        <div class="flex items-center justify-between border-b pb-4">
                             <h3 class="text-lg font-semibold text-[#0f5f7f]">
                                 Reserva confirmada
                             </h3>
@@ -716,14 +796,12 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                             </button>
                         </div>
 
-                        <!-- Success message -->
-                        <div class="pt-4 pb-3">
+                        <div class="pb-3 pt-4">
                             <p class="text-sm font-medium text-green-600">
                                 {{ successData?.message }}
                             </p>
                         </div>
 
-                        <!-- Booking + client summary -->
                         <div
                             class="mb-4 space-y-2 rounded-lg bg-gray-100 p-3 text-xs"
                         >
@@ -745,10 +823,8 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                     successData?.time
                                 }}</span>
                             </div>
-                            <!-- Client info separator -->
-                            <div
-                                class="mt-1 space-y-2 border-t border-gray-300 pt-2"
-                            >
+
+                            <div class="mt-1 space-y-2 border-t border-gray-300 pt-2">
                                 <div class="flex justify-between">
                                     <span class="text-gray-500">Nom</span>
                                     <span class="font-semibold text-gray-800">{{
@@ -765,19 +841,7 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                             </div>
                         </div>
 
-                        <!-- Captcha 
-                        <div
-                            class="mb-4 rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 flex items-center justify-center h-[78px]">
-
-                            <div class="text-center">
-                                <p class="text-xs text-gray-400 font-medium">[ CAPTCHA ]</p>
-                                <p class="text-[10px] text-gray-300">El meu captcha </p>
-                            </div>
-                        </div>
--->
-                        <!-- Action buttons -->
                         <div class="flex gap-3">
-                            <!-- Download PDF -->
                             <a
                                 :href="pdfDownloadUrl"
                                 target="_blank"
@@ -793,21 +857,15 @@ watch([selectedDate, selectedService, currentMonth, currentYear], () => {
                                     stroke-linecap="round"
                                     stroke-linejoin="round"
                                 >
-                                    <path
-                                        d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
-                                    />
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
                                     <polyline points="7 10 12 15 17 10" />
                                     <line x1="12" y1="15" x2="12" y2="3" />
                                 </svg>
                                 Descarregar PDF
                             </a>
 
-                            <!-- Close -->
                             <button
-                                @click="
-                                    showModal = false;
-                                    router.visit('/');
-                                "
+                                @click="closeSuccessModal"
                                 class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-600 transition hover:border-gray-400 hover:bg-gray-50"
                             >
                                 Tancar
