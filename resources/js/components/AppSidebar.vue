@@ -1,6 +1,13 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { Globe, HeartPulse, LayoutGrid, UserCog, Mail } from 'lucide-vue-next';
+import {
+    Globe,
+    HeartPulse,
+    LayoutGrid,
+    UserCog,
+    Mail,
+    ClipboardPen,
+} from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
 import NavMain from '@/components/NavMain.vue';
@@ -17,6 +24,8 @@ import {
 import { admindashboard as dashboard } from '@/routes';
 import { index as usersIndex } from '@/routes/users';
 import { index as mailIndex } from '@/routes/mail';
+import { index as assignmentsIndex } from '@/routes/adminAssignments';
+
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -34,6 +43,11 @@ const mainNavItems: NavItem[] = [
         title: 'Mail',
         href: mailIndex(),
         icon: Mail,
+    },
+    {
+        title: 'Assignments',
+        href: assignmentsIndex(),
+        icon: ClipboardPen,
     },
 ];
 

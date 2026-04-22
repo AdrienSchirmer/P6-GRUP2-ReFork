@@ -13,6 +13,8 @@ use App\Http\Controllers\admin_index_controller;
 use App\Http\Controllers\admin_users_controller;
 use App\Http\Controllers\Contactans;
 use App\Http\Controllers\Admin\MailController;
+use App\Http\Controllers\Admin\AssignmentsController as AdminAssignmentsController;
+
 
 
 // Public Routes
@@ -30,6 +32,8 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
     Route::get('/', [admin_index_controller::class, 'index'])->name('admindashboard');
     Route::resource('users', admin_users_controller::class);
     Route::resource('mail', MailController::class);
+    Route::resource('adminAssignments', AdminAssignmentsController::class);
+
 });
 Route::resource('assignments', AssignmentsController::class);
 
