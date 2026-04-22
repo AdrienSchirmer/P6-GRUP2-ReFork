@@ -9,11 +9,12 @@ use App\Http\Resources\ServiceResource;
 
 
 use App\Http\Controllers\AssignmentsController;
-use App\Http\Controllers\admin_index_controller;
-use App\Http\Controllers\admin_users_controller;
+use App\Http\Controllers\Admin\admin_index_controller;
+use App\Http\Controllers\Admin\admin_users_controller;
 use App\Http\Controllers\Contactans;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\AssignmentsController as AdminAssignmentsController;
+
 
 
 
@@ -27,6 +28,7 @@ Route::get('/pedir-cita', [ServiceController::class, 'index'])->name('pedir-cita
 Route::post('/appointments', [ServiceController::class, 'store'])->name('appointments.store');
 Route::get('/appointments/pdf', [ServiceController::class, 'downloadPdf'])->name('appointments.pdf');
 Route::get('/appointments/booked-times', [ServiceController::class, 'getBookedTimes']);
+Route::get('/appointments/schedule', [ServiceController::class, 'getSchedule']);
 // Private Routes
 Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(function () {
     Route::get('/', [admin_index_controller::class, 'index'])->name('admindashboard');

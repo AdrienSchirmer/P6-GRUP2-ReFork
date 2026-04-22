@@ -16,8 +16,10 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $this->call([
             ServicesSeeder::class,
+            CalendarExceptionsSeeder::class,
             AdminSeeder::class,
             AssignmentsSeeder::class,
+            ServiceSchedulesSeeder::class,
         ]);
     }
 }

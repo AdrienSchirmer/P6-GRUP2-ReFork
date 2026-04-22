@@ -7,6 +7,7 @@ import {
     UserCog,
     Mail,
     ClipboardPen,
+    UsersRound,
 } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
@@ -37,7 +38,7 @@ const mainNavItems: NavItem[] = [
     {
         title: 'Usuaris',
         href: usersIndex(),
-        icon: UserCog,
+        icon: UsersRound,
     },
     {
         title: 'Mail',
