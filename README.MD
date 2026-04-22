@@ -7,7 +7,7 @@ Aquest és el repositori per al desenvolupament del Projecte 6 dedicat a la **Fa
 - **Adrien Schirmer** (Scrum Manager)
 - **Brandon Reyes**
 - **Fran Olivera**
-- **Charfah Illyas**
+- **Charfah Ilyass**
 
 ## 🛠️ Tecnologies
 
