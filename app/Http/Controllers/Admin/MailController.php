@@ -13,7 +13,16 @@ class MailController extends Controller
      */
     public function index()
     {
-        return Inertia::render('admin/Mail/Index');
+        return Inertia::render('admin/Mail/Index', [
+            'mail' => [
+                'mail_mailer' => (string) env('MAIL_MAILER', 'smtp'),
+                'mail_scheme' => (string) env('MAIL_SCHEME', 'smtp'),
+                'mail_host' => (string) env('MAIL_HOST', ''),
+                'mail_port' => (string) env('MAIL_PORT', '587'),
+                'mail_username' => (string) env('MAIL_USERNAME', ''),
+                'mail_from_address' => (string) env('MAIL_FROM_ADDRESS', ''),
+            ],
+        ]);
     }
 
     /**
