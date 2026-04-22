@@ -16,20 +16,22 @@ defineProps<{
         updated_at: string;
     }[];
 }>();
+
+import { format } from 'timeago.js';
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="grid grid-cols-3 gap-5">
+        <div class="grid grid-cols-3 gap-5 pr-10">
             <div
                 v-for="ass in assignments"
                 :key="ass.name"
-                class="relative m-6 flex w-96 flex-col rounded-lg border border-slate-200 bg-white shadow-sm"
+                class="relative m-6 flex w-full flex-col rounded-lg border border-slate-200 bg-white shadow-sm"
             >
                 <div
                     class="mx-3 mb-0 flex flex-col border-b border-slate-200 px-1 pt-3 pb-2"
                 >
                     <span class="text-sm text-slate-600">
-                        <strong>Nom:</strong> {{ ass.name }}
+                        <strong>Estat:</strong> {{ ass.status }}
                     </span>
                     <span class="text-sm text-slate-600">
                         <strong>Correu:</strong> {{ ass.address }}
@@ -41,18 +43,15 @@ defineProps<{
 
                 <div class="p-4">
                     <h5 class="mb-2 text-xl font-semibold text-slate-800">
-                        Website Review Check Update from Our Team in San
-                        Francisco
+                        {{ ass.name }}
                     </h5>
                     <p class="leading-normal font-light text-slate-600">
-                        The place is close to Barceloneta Beach and bus stop
-                        just 2 min by walk and near to Naviglio where you can
-                        enjoy the main night life in Barcelona.
+                        {{ ass.description }}
                     </p>
                 </div>
                 <div class="mx-3 border-t border-slate-200 px-1 pt-2 pb-3">
                     <span class="text-sm font-medium text-slate-600">
-                        Last updated: 4 hours ago
+                        {{ format(ass.updated_at) }}
                     </span>
                 </div>
             </div>
