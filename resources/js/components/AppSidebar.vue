@@ -8,6 +8,7 @@ import {
     Mail,
     ClipboardPen,
     UsersRound,
+    Shield,
 } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
@@ -26,6 +27,7 @@ import { admindashboard as dashboard } from '@/routes';
 import { index as usersIndex } from '@/routes/users';
 import { index as mailIndex } from '@/routes/mail';
 import { index as assignmentsIndex } from '@/routes/adminAssignments';
+import { index as pharmacyguardsIndex } from '@/routes/pharmacyguards';
 
 import type { NavItem } from '@/types';
 
@@ -49,6 +51,11 @@ const mainNavItems: NavItem[] = [
         title: 'Assignments',
         href: assignmentsIndex(),
         icon: ClipboardPen,
+    },
+    {
+        title: 'Guardies',
+        href: pharmacyguardsIndex(),
+        icon: Shield,
     },
 ];
 
