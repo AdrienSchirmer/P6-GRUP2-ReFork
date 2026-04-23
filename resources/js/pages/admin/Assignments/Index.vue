@@ -24,7 +24,22 @@ import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
 import { ref, computed } from 'vue';
 const search = ref('');
 
+function normalize(str: string): string {
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+}
 
+const filteredAssignments = computed(() => {
+    const s = normalize(search.value);
+    if (!s) return props.assignments;
+    return props.assignments.filter(
+        (ass) =>
+            normalize(ass.name).includes(s) ||
+            normalize(ass.description).includes(s),
+    );
+});
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -32,6 +47,7 @@ const search = ref('');
             <div class="relative flex w-full max-w-md justify-between">
                 <input
                     type="text"
+                    v-model="search"
                     placeholder="Search..."
                     class="w-full rounded-2xl border border-gray-300 bg-white py-2 pr-10 pl-4 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
