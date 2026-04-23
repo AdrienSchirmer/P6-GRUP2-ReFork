@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import assignments from '@/routes/assignments';
 import { type BreadcrumbItem } from '@/types';
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Administració de Encarrecs', href: 'admin/adminAssignments' },
 ];
 
-defineProps<{
+const props = defineProps<{
     assignments: {
         id: number;
         name: string;
@@ -20,6 +21,29 @@ defineProps<{
 
 import { Link } from '@inertiajs/vue3';
 import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
+import { ref, computed } from 'vue';
+const search = ref('');
+
+function normalize(str: string): string {
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+}
+
+const filteredAssignments = computed(() => {
+    const s = normalize(search.value);
+    if (!s) return props.assignments;
+    return props.assignments.filter(
+        (ass) =>
+            normalize(ass.name).includes(s) ||
+            normalize(ass.description).includes(s) ||
+            normalize(ass.address).includes(s) ||
+            normalize(ass.updated_at).includes(s) ||
+            normalize(ass.created_at).includes(s) ||
+            normalize(ass.status).includes(s),
+    );
+});
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -27,6 +51,7 @@ import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
             <div class="relative flex w-full max-w-md justify-between">
                 <input
                     type="text"
+                    v-model="search"
                     placeholder="Search..."
                     class="w-full rounded-2xl border border-gray-300 bg-white py-2 pr-10 pl-4 text-sm text-gray-900 placeholder-gray-400 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:outline-none"
                 />
@@ -46,7 +71,7 @@ import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
 
         <div class="grid grid-cols-1 gap-5 pr-10 md:grid-cols-2 lg:grid-cols-3">
             <div
-                v-for="ass in assignments"
+                v-for="ass in filteredAssignments"
                 :key="ass.name"
                 class="relative m-6 flex w-full flex-col rounded-lg border border-slate-200 bg-white shadow-sm"
             >
