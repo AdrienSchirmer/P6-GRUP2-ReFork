@@ -13,6 +13,8 @@ use App\Http\Controllers\Admin\admin_users_controller;
 use App\Http\Controllers\Contactans;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\AdminServiceController;
+use App\Http\Controllers\Admin\AssignmentsController as AdminAssignmentsController;
+
 
 
 
@@ -33,6 +35,8 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
     Route::resource('users', admin_users_controller::class);
     Route::resource('mail', MailController::class);
     Route::resource('services', AdminServiceController::class);
+    Route::resource('adminAssignments', AdminAssignmentsController::class);
+
 });
 Route::resource('assignments', AssignmentsController::class);
 

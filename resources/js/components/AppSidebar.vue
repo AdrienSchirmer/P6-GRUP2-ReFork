@@ -6,6 +6,7 @@ import {
     LayoutGrid,
     UserCog,
     Mail,
+    ClipboardPen,
     UsersRound,
     Pill,
 } from 'lucide-vue-next';
@@ -26,6 +27,8 @@ import { admindashboard as dashboard } from '@/routes';
 import { index as usersIndex } from '@/routes/users';
 import { index as mailIndex } from '@/routes/mail';
 import { index as servicesIndex } from '@/routes/services';
+import { index as assignmentsIndex } from '@/routes/adminAssignments';
+
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -48,6 +51,10 @@ const mainNavItems: NavItem[] = [
         title: 'Serveis',
         href: servicesIndex(),
         icon: Pill,
+    {
+        title: 'Assignments',
+        href: assignmentsIndex(),
+        icon: ClipboardPen,
     },
 ];
 
