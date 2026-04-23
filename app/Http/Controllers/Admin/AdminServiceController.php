@@ -61,6 +61,11 @@ class AdminServiceController extends Controller
     public function edit(string $id)
     {
         //
+        $service = Service::findOrFail($id);
+        return Inertia::render('admin/Services/Edit', [
+            'service' => $service,
+        ]);
+            
     }
 
     /**
@@ -69,7 +74,20 @@ class AdminServiceController extends Controller
     public function update(Request $request, string $id)
     {
         //
-    }
+     $validated = $request->validate([
+        'name' => 'required|string|max:255',
+        'description' => 'nullable|string',
+        'duration_minutes' => 'required|integer|min:1',
+        'icon' => 'nullable|string',
+    ]);
+
+    $service = Service::findOrFail($id);
+    $service->update($validated);
+
+    return redirect()
+        ->route('services.index')
+        ->with('message', 'Servei actualitzat correctament.');
+}
 
     /**
      * Remove the specified resource from storage.
