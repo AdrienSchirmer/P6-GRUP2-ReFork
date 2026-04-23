@@ -1,11 +1,12 @@
 <script setup lang="ts">
 import AppLayout from '@/layouts/AppLayout.vue';
+import assignments from '@/routes/assignments';
 import { type BreadcrumbItem } from '@/types';
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Administració de Encarrecs', href: 'admin/adminAssignments' },
 ];
 
-defineProps<{
+const props = defineProps<{
     assignments: {
         id: number;
         name: string;
@@ -20,6 +21,10 @@ defineProps<{
 
 import { Link } from '@inertiajs/vue3';
 import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
+import { ref, computed } from 'vue';
+const search = ref('');
+
+
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
