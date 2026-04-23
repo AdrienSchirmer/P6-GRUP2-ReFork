@@ -79,24 +79,47 @@ import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
                 <div
                     class="mx-auto mb-5 grid w-full max-w-7xl grid-cols-3 gap-1 px-3 text-center"
                 >
-                    <Link
-                        preserve-scroll
-                        class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
-                    >
-                        <ClockArrowDown />
-                    </Link>
-                    <Link
-                        preserve-scroll
-                        class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
-                    >
-                        <Ban />
-                    </Link>
-                    <Link
-                        preserve-scroll
-                        class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
-                    >
-                        <CheckCheck />
-                    </Link>
+                    <div class="group relative">
+                        <Link
+                            preserve-scroll
+                            class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
+                        >
+                            <ClockArrowDown />
+                        </Link>
+                        <div
+                            class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100"
+                        >
+                            Marcar com a pendent
+                        </div>
+                    </div>
+
+                    <div class="group relative">
+                        <Link
+                            preserve-scroll
+                            class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
+                        >
+                            <Ban />
+                        </Link>
+                        <div
+                            class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100"
+                        >
+                            Marcar com a cencel·lat
+                        </div>
+                    </div>
+
+                    <div class="group relative">
+                        <Link
+                            preserve-scroll
+                            class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
+                        >
+                            <CheckCheck />
+                        </Link>
+                        <div
+                            class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100"
+                        >
+                            Marcar com a completat
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
