@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Link, router, Head } from '@inertiajs/vue3'
+import { Link, Head, useForm } from '@inertiajs/vue3'
 import { ref, computed } from 'vue'
 import { Eye, SquarePen, Trash2, Plus, CalendarPlus } from 'lucide-vue-next'
 import { admindashboard as dashboard } from '@/routes'
@@ -12,22 +12,23 @@ import {
     FlaskConical,
     ShieldCheck,
     ScanFace,
-
 } from 'lucide-vue-next'
 
+// ICON MAP
 const iconMap: Record<string, any> = {
     pill: Pill,
     heart: HeartPulse,
     flask: FlaskConical,
     shield: ShieldCheck,
     scan: ScanFace,
-
 }
 
+// BREADCRUMBS
 const breadcrumbs: BreadcrumbItem[] = [
     { title: "Administració de serveis", href: dashboard().url },
 ]
 
+// TYPES
 interface Service {
     id: number
     name: string
@@ -36,42 +37,79 @@ interface Service {
     icon: string | null
 }
 
-
 const props = defineProps<{
     services: Service[]
 }>()
 
-// SEARCH
+
 const search = ref('')
 
-const filteredServices = computed(() => {
-    return props.services.filter(service =>
-        service.name.toLowerCase().includes(search.value.toLowerCase())
-    )
-})
 
-// DELETE MODAL
-const selectedService = ref<Service | null>(null)
+const searchResults = ref<Service[]>(props.services)
+
+
+const filteredServices = ref<Service[]>(props.services)
+
+
+function filter() {
+    let result = searchResults.value
+
+    if (search.value.trim() !== '') {
+        result = result.filter(service =>
+            service.name.toLowerCase().includes(search.value.toLowerCase())
+        )
+    }
+
+    filteredServices.value = result
+}
+
+
+function handleSearch(event: Event) {
+    const input = event.target as HTMLInputElement
+    search.value = input.value
+    filter()
+}
+
+
+// DELETE
+
 const showDeleteModal = ref(false)
 
+const selectedService = ref({
+    id: 0,
+    name: ''
+})
+
 function openDeleteModal(service: Service) {
-    selectedService.value = service
+    selectedService.value = {
+        id: service.id,
+        name: service.name
+    }
     showDeleteModal.value = true
 }
 
-function closeDeleteModal() {
-    showDeleteModal.value = false
-}
+function deleteService(id: number) {
+    const form = useForm({})
+    const serviceId = selectedService.value.id
 
-/*function deleteService() {
-    if (!selectedService.value) return
-
-    router.delete(route('admin.services.destroy', selectedService.value.id), {
+    form.delete('/admin/services/' + id, {
         onSuccess: () => {
+
+            filteredServices.value = filteredServices.value.filter(
+                s => s.id !== serviceId
+            )
+
+            searchResults.value = searchResults.value.filter(
+                s => s.id !== serviceId
+            )
+
             showDeleteModal.value = false
+        },
+        onFinish: () => {
+            selectedService.value = { id: 0, name: '' }
         }
     })
-}*/
+}
 </script>
 
 <template>
@@ -81,6 +119,7 @@ function closeDeleteModal() {
 
         <div class="p-6 space-y-6">
 
+            <!-- HEADER -->
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
 
                 <div>
@@ -88,26 +127,26 @@ function closeDeleteModal() {
                     <p class="text-gray-500 text-sm">
                         Administra tots els serveis disponibles
                     </p>
+                    <div v-if="$page.flash.message"
+                        class="mx-auto mb-4 mt-4 w-full rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+                        role="alert">
+                        <p> {{ $page.flash.message }}</p>
+
+
+                    </div>
                 </div>
 
-
                 <div class="flex items-center gap-3">
-
-                    <input v-model="search" type="text" placeholder="Cercar servei..."
+                    <input :value="search" @input="handleSearch" type="text" placeholder="Cercar servei..."
                         class="border rounded-lg px-4 py-2 focus:ring focus:ring-blue-200" />
 
-                    <Link href="route('admin.services.create')"
-                        class="flex items-center gap-2 px-4 py-2 rounded-lg text-white"
+                    <Link href="/admin/services/create" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white"
                         style="background-color: #aadbf0">
                         <Plus class="w-4 h-4" />
                         Nou servei
                     </Link>
-
                 </div>
             </div>
-
-
-
 
             <!-- TABLE -->
             <div class="bg-white rounded-xl shadow border overflow-hidden">
@@ -123,13 +162,10 @@ function closeDeleteModal() {
 
                     <tbody>
                         <tr v-for="service in filteredServices" :key="service.id" class="border-t hover:bg-gray-50">
-                            <!-- NAME + ICON -->
                             <td class="p-3">
                                 <div class="flex items-center gap-2">
-
                                     <component v-if="service.icon && iconMap[service.icon]" :is="iconMap[service.icon]"
                                         class="w-5 h-5 text-blue-600" />
-
                                     <span class="font-medium">
                                         {{ service.name }}
                                     </span>
@@ -144,29 +180,24 @@ function closeDeleteModal() {
                                 {{ service.duration_minutes }} min
                             </td>
 
-                            <!-- ACTIONS -->
                             <td class="p-3">
                                 <div class="flex justify-end gap-2 flex-wrap">
 
-                                    <!-- VIEW -->
-                                    <Link href="route('admin.services.show', service.id)"
+                                    <Link :href="`/admin/services/${service.id}`"
                                         class="p-2 rounded hover:bg-green-100">
                                         <Eye class="w-4 h-4 text-green-600" />
                                     </Link>
 
-                                    <!-- EDIT -->
-                                    <Link href="route('admin.services.edit', service.id)"
+                                    <Link :href="`/admin/services/${service.id}/edit`"
                                         class="p-2 rounded hover:bg-orange-100">
                                         <SquarePen class="w-4 h-4 text-orange-600" />
                                     </Link>
 
-                                    <!-- ADD SCHEDULE -->
-                                    <Link href="route('admin.service-schedules.create', { service_id: service.id })"
+                                    <Link :href="`/admin/service-schedules/create?service_id=${service.id}`"
                                         class="p-2 rounded hover:bg-blue-100">
                                         <CalendarPlus class="w-4 h-4 text-blue-600" />
                                     </Link>
 
-                                    <!-- DELETE -->
                                     <button @click="openDeleteModal(service)" class="p-2 rounded hover:bg-red-100">
                                         <Trash2 class="w-4 h-4 text-red-600" />
                                     </button>
@@ -177,30 +208,33 @@ function closeDeleteModal() {
                     </tbody>
                 </table>
             </div>
-
         </div>
 
         <!-- DELETE MODAL -->
-        <div v-if="showDeleteModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+        <div v-show="showDeleteModal" class="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div class="bg-white rounded-xl p-6 w-full max-w-md space-y-4">
 
-                <h2 class="text-lg font-bold">Eliminar servei</h2>
+                <div class="flex justify-between items-center">
+                    <h2 class="text-lg font-bold">Eliminar servei</h2>
+                    <button @click="showDeleteModal = false">✕</button>
+                </div>
 
                 <p class="text-gray-600">
-                    Estàs segur que vols eliminar aquest servei?
+                    Estàs segur que vols eliminar el servei:
                 </p>
 
-                <p class="font-semibold">
-                    {{ selectedService?.name }}
+                <p class="font-semibold break-words">
+                    {{ selectedService.name }}
                 </p>
 
                 <div class="flex justify-end gap-3 pt-4">
-                    <button @click="closeDeleteModal" class="px-4 py-2 border rounded">
+                    <button @click="showDeleteModal = false" class="px-4 py-2 border rounded">
                         Cancel·lar
                     </button>
 
-                    <button click="deleteService" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
-                        Eliminar
+                    <button @click="deleteService(selectedService.id)"
+                        class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700">
+                        Eliminar definitivament
                     </button>
                 </div>
 

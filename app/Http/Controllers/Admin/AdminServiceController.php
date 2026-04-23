@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Service;
 use Illuminate\Support\Facades\Auth;
+
 class AdminServiceController extends Controller
 {
     /**
@@ -16,7 +17,7 @@ class AdminServiceController extends Controller
     {
         //
 
-         $services = Service::select(
+        $services = Service::select(
             'id',
             'name',
             'description',
@@ -76,5 +77,10 @@ class AdminServiceController extends Controller
     public function destroy(string $id)
     {
         //
+        $service = Service::findOrFail($id);
+        $service->delete();
+
+        Inertia::flash(['message' => 'Servei eliminat correctament.']);
+        return redirect()->back();
     }
 }
