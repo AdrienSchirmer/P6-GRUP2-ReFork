@@ -51,6 +51,8 @@ const mainNavItems: NavItem[] = [
         title: 'Serveis',
         href: servicesIndex(),
         icon: Pill,
+    },
+
     {
         title: 'Assignments',
         href: assignmentsIndex(),
