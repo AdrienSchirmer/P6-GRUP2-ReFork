@@ -35,7 +35,6 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
     Route::resource('users', admin_users_controller::class);
     Route::resource('mail', MailController::class);
     Route::resource('services', AdminServiceController::class);
-    //Route::get('/services/{service}/delete', [AdminServiceController::class, 'destroy'])->name('admin.services.destroy');
     Route::resource('adminAssignments', AdminAssignmentsController::class);
 
 });
