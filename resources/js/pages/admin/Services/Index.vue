@@ -12,6 +12,15 @@ import {
     FlaskConical,
     ShieldCheck,
     ScanFace,
+    Droplet,
+    Activity,
+    Stethoscope,
+    Syringe,
+    Microscope,
+    Apple,
+    Brain,
+    Bandage,
+    Thermometer,
 } from 'lucide-vue-next'
 
 // ICON MAP
@@ -21,9 +30,18 @@ const iconMap: Record<string, any> = {
     flask: FlaskConical,
     shield: ShieldCheck,
     scan: ScanFace,
+    droplet: Droplet,
+    activity: Activity,
+    stethoscope: Stethoscope,
+    syringe: Syringe,
+    microscope: Microscope,
+    apple: Apple,
+    brain: Brain,
+    bandage: Bandage,
+    thermometer: Thermometer,
 }
 
-// BREADCRUMBS
+
 const breadcrumbs: BreadcrumbItem[] = [
     { title: "Administració de serveis", href: dashboard().url },
 ]
