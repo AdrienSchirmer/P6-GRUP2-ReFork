@@ -52,8 +52,23 @@ import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
                 <div
                     class="mx-3 mb-0 flex flex-col border-b border-slate-200 px-1 pt-3 pb-2"
                 >
-                    <span class="text-sm text-slate-600">
-                        <strong>Estat:</strong> {{ ass.status }}
+                    <span
+                        v-if="ass.status === 'completed'"
+                        class="text-sm text-slate-600"
+                    >
+                        <strong>Estat:</strong> Completat
+                    </span>
+                    <span
+                        v-if="ass.status === 'pending'"
+                        class="text-sm text-slate-600"
+                    >
+                        <strong>Estat:</strong> Pendent
+                    </span>
+                    <span
+                        v-if="ass.status === 'cancelled'"
+                        class="text-sm text-slate-600"
+                    >
+                        <strong>Estat:</strong> Cancelat
                     </span>
                     <span class="text-sm text-slate-600">
                         <strong>Correu:</strong> {{ ass.address }}
