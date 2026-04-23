@@ -7,6 +7,7 @@ import {
     UserCog,
     Mail,
     UsersRound,
+    Pill,
 } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
@@ -24,6 +25,7 @@ import {
 import { admindashboard as dashboard } from '@/routes';
 import { index as usersIndex } from '@/routes/users';
 import { index as mailIndex } from '@/routes/mail';
+import { index as servicesIndex } from '@/routes/services';
 import type { NavItem } from '@/types';
 
 const mainNavItems: NavItem[] = [
@@ -41,6 +43,11 @@ const mainNavItems: NavItem[] = [
         title: 'Mail',
         href: mailIndex(),
         icon: Mail,
+    },
+       {
+        title: 'Serveis',
+        href: servicesIndex(),
+        icon: Pill,
     },
 ];
 
