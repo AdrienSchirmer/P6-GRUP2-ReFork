@@ -8,6 +8,7 @@ import {
     Mail,
     ClipboardPen,
     UsersRound,
+    Shield,
     Pill,
 } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
@@ -28,6 +29,7 @@ import { index as usersIndex } from '@/routes/users';
 import { index as mailIndex } from '@/routes/mail';
 import { index as servicesIndex } from '@/routes/services';
 import { index as assignmentsIndex } from '@/routes/adminAssignments';
+import { index as pharmacyguardsIndex } from '@/routes/pharmacyguards';
 
 import type { NavItem } from '@/types';
 
@@ -47,7 +49,7 @@ const mainNavItems: NavItem[] = [
         href: mailIndex(),
         icon: Mail,
     },
-       {
+    {
         title: 'Serveis',
         href: servicesIndex(),
         icon: Pill,
@@ -57,6 +59,11 @@ const mainNavItems: NavItem[] = [
         title: 'Assignments',
         href: assignmentsIndex(),
         icon: ClipboardPen,
+    },
+    {
+        title: 'Guardies',
+        href: pharmacyguardsIndex(),
+        icon: Shield,
     },
 ];
 
