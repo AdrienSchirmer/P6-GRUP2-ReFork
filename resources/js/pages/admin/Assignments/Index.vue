@@ -41,7 +41,8 @@ const filteredAssignments = computed(() => {
             normalize(ass.address).includes(s) ||
             normalize(ass.updated_at).includes(s) ||
             normalize(ass.created_at).includes(s) ||
-            normalize(ass.status).includes(s),
+            normalize(ass.status).includes(s) ||
+            normalize(String(ass.phone_number)).includes(s),
     );
 });
 </script>
