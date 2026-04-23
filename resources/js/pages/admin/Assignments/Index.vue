@@ -37,7 +37,11 @@ const filteredAssignments = computed(() => {
     return props.assignments.filter(
         (ass) =>
             normalize(ass.name).includes(s) ||
-            normalize(ass.description).includes(s),
+            normalize(ass.description).includes(s) ||
+            normalize(ass.address).includes(s) ||
+            normalize(ass.updated_at).includes(s) ||
+            normalize(ass.created_at).includes(s) ||
+            normalize(ass.status).includes(s),
     );
 });
 </script>
@@ -67,7 +71,7 @@ const filteredAssignments = computed(() => {
 
         <div class="grid grid-cols-1 gap-5 pr-10 md:grid-cols-2 lg:grid-cols-3">
             <div
-                v-for="ass in assignments"
+                v-for="ass in filteredAssignments"
                 :key="ass.name"
                 class="relative m-6 flex w-full flex-col rounded-lg border border-slate-200 bg-white shadow-sm"
             >
