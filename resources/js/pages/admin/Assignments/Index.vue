@@ -17,7 +17,8 @@ defineProps<{
     }[];
 }>();
 
-import { format } from 'timeago.js';
+import { Link } from '@inertiajs/vue3';
+import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -72,8 +73,30 @@ import { format } from 'timeago.js';
                 </div>
                 <div class="mx-3 border-t border-slate-200 px-1 pt-2 pb-3">
                     <span class="text-sm font-medium text-slate-600">
-                        {{ format(ass.updated_at) }}
+                        {{ ass.updated_at }}
                     </span>
+                </div>
+                <div
+                    class="mx-auto mb-5 grid w-full max-w-7xl grid-cols-3 gap-1 px-3 text-center"
+                >
+                    <Link
+                        preserve-scroll
+                        class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
+                    >
+                        <ClockArrowDown />
+                    </Link>
+                    <Link
+                        preserve-scroll
+                        class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
+                    >
+                        <Ban />
+                    </Link>
+                    <Link
+                        preserve-scroll
+                        class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
+                    >
+                        <CheckCheck />
+                    </Link>
                 </div>
             </div>
         </div>
