@@ -7,6 +7,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 defineProps<{
     assignments: {
+        id: number;
         name: string;
         address: string;
         phone_number: number;
@@ -96,7 +97,10 @@ import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
                 >
                     <div class="group relative">
                         <Link
+                            :href="`/admin/adminAssignments/${ass.id}`"
+                            :data="{ status: 'pending' }"
                             preserve-scroll
+                            method="patch"
                             class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
                         >
                             <ClockArrowDown />
@@ -110,7 +114,10 @@ import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
 
                     <div class="group relative">
                         <Link
+                            :href="`/admin/adminAssignments/${ass.id}`"
+                            :data="{ status: 'cancelled' }"
                             preserve-scroll
+                            method="patch"
                             class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
                         >
                             <Ban />
@@ -124,7 +131,10 @@ import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
 
                     <div class="group relative">
                         <Link
+                            :href="`/admin/adminAssignments/${ass.id}`"
+                            :data="{ status: 'completed' }"
                             preserve-scroll
+                            method="patch"
                             class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
                         >
                             <CheckCheck />

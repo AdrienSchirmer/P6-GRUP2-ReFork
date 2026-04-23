@@ -58,7 +58,13 @@ class AssignmentsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'status' => ['required', 'in:pending,cancelled,completed'],
+        ]);
+
+        assignments::findOrFail($id)->update(['status' => $request->status]);
+
+        return back();
     }
 
     /**
