@@ -158,7 +158,7 @@ function deleteService(id: number) {
                     <input :value="search" @input="handleSearch" type="text" placeholder="Cercar servei..."
                         class="border rounded-lg px-4 py-2 focus:ring focus:ring-blue-200" />
 
-                    <Link href="/admin/services/create" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white"
+                    <Link :href="`/admin/services/create`" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white"
                         style="background-color: #aadbf0">
                         <Plus class="w-4 h-4" />
                         Nou servei

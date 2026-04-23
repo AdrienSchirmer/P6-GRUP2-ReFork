@@ -37,6 +37,8 @@ class AdminServiceController extends Controller
     public function create()
     {
         //
+            return Inertia::render('admin/Services/Create');
+
     }
 
     /**
@@ -45,7 +47,23 @@ class AdminServiceController extends Controller
     public function store(Request $request)
     {
         //
-    }
+        
+        $validated = $request->validate([
+            'name'             => 'required|string|max:255',
+            'description'      => 'required|string',
+            'duration_minutes' => 'required|integer|min:1',
+            'icon'             => 'nullable|string|max:50',
+        ]);
+ 
+        Service::create($validated);
+ 
+        Inertia::flash(['message' => 'Servei creat correctament.']);
+ 
+           return redirect()
+        ->route('services.index');
+}
+    
+    
 
     /**
      * Display the specified resource.
