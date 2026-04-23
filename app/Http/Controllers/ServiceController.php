@@ -8,7 +8,6 @@ use Inertia\Inertia;
 use App\Http\Resources\ServiceResource;
 use App\Http\Controllers\Controller;
 use App\Models\ServiceAppointment;
-
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Rules\TurnstileRule;
 use Illuminate\Support\Facades\Mail;

@@ -5,19 +5,28 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
-use App\Models\assignments;
-
-class AssignmentsController extends Controller
+use App\Models\Service;
+use Illuminate\Support\Facades\Auth;
+class AdminServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $assignments = assignments::latest()->get();
-        return Inertia::render('admin/Assignments/Index', [
-            'assignments' => $assignments ?? [],
+        //
+
+         $services = Service::select(
+            'id',
+            'name',
+            'description',
+            'duration_minutes',
+            'icon'
+        )->latest()->get();
+
+        return Inertia::render('admin/Services/Index', [
+            'services' => $services,
+            'currentUser' => Auth::user(),
         ]);
     }
 
@@ -58,13 +67,7 @@ class AssignmentsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $request->validate([
-            'status' => ['required', 'in:pending,cancelled,completed'],
-        ]);
-
-        assignments::findOrFail($id)->update(['status' => $request->status]);
-
-        return back();
+        //
     }
 
     /**

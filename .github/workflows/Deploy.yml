@@ -98,8 +98,8 @@ jobs:
             sed -i "s/MAIL_SCHEME=smtp/MAIL_SCHEME=${{ secrets.MAIL_SCHEME }}/g" .env
             sed -i "s/MAIL_HOST=smtp.dinahosting.com/MAIL_HOST=${{ secrets.MAIL_HOST }}/g" .env
             sed -i "s/MAIL_PORT=587/MAIL_PORT=${{ secrets.MAIL_PORT }}/g" .env
-            sed -i "s/TURNSTILE_SITE_KEY=/TURNSTILE_SITE_KEY=${{ secrets.TURNSTILE_SITE_KEY }}/g" .env
-            sed -i "s/TURNSTILE_SECRET_KEY=/TURNSTILE_SECRET_KEY=${{ secrets.TURNSTILE_SECRET_KEY }}/g" .env
+            sed -i "s/TURNSTILE_SITE_KEY=9/TURNSTILE_SITE_KEY=${{ secrets.TURNSTILE_SITE_KEY }}/g" .env
+            sed -i "s/TURNSTILE_SECRET_KEY=9/TURNSTILE_SECRET_KEY=${{ secrets.TURNSTILE_SECRET_KEY }}/g" .env
             $(which php84) artisan config:clear
             $(which php84) artisan key:generate
             echo "Executar migracions, cache i altres operacions de Laravel"

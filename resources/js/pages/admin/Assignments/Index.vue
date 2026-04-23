@@ -7,6 +7,7 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 defineProps<{
     assignments: {
+        id: number;
         name: string;
         address: string;
         phone_number: number;
@@ -17,7 +18,8 @@ defineProps<{
     }[];
 }>();
 
-import { format } from 'timeago.js';
+import { Link } from '@inertiajs/vue3';
+import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -51,8 +53,23 @@ import { format } from 'timeago.js';
                 <div
                     class="mx-3 mb-0 flex flex-col border-b border-slate-200 px-1 pt-3 pb-2"
                 >
-                    <span class="text-sm text-slate-600">
-                        <strong>Estat:</strong> {{ ass.status }}
+                    <span
+                        v-if="ass.status === 'completed'"
+                        class="text-sm text-slate-600"
+                    >
+                        <strong>Estat:</strong> Completat
+                    </span>
+                    <span
+                        v-if="ass.status === 'pending'"
+                        class="text-sm text-slate-600"
+                    >
+                        <strong>Estat:</strong> Pendent
+                    </span>
+                    <span
+                        v-if="ass.status === 'cancelled'"
+                        class="text-sm text-slate-600"
+                    >
+                        <strong>Estat:</strong> Cancelat
                     </span>
                     <span class="text-sm text-slate-600">
                         <strong>Correu:</strong> {{ ass.address }}
@@ -72,8 +89,62 @@ import { format } from 'timeago.js';
                 </div>
                 <div class="mx-3 border-t border-slate-200 px-1 pt-2 pb-3">
                     <span class="text-sm font-medium text-slate-600">
-                        {{ format(ass.updated_at) }}
+                        {{ ass.updated_at }}
                     </span>
+                </div>
+                <div
+                    class="mx-auto mb-5 grid w-full max-w-7xl grid-cols-3 gap-1 px-3 text-center"
+                >
+                    <div class="group relative">
+                        <Link
+                            :href="`/admin/adminAssignments/${ass.id}`"
+                            :data="{ status: 'pending' }"
+                            preserve-scroll
+                            method="patch"
+                            class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
+                        >
+                            <ClockArrowDown />
+                        </Link>
+                        <div
+                            class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100"
+                        >
+                            Marcar com a pendent
+                        </div>
+                    </div>
+
+                    <div class="group relative">
+                        <Link
+                            :href="`/admin/adminAssignments/${ass.id}`"
+                            :data="{ status: 'cancelled' }"
+                            preserve-scroll
+                            method="patch"
+                            class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
+                        >
+                            <Ban />
+                        </Link>
+                        <div
+                            class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100"
+                        >
+                            Marcar com a cencel·lat
+                        </div>
+                    </div>
+
+                    <div class="group relative">
+                        <Link
+                            :href="`/admin/adminAssignments/${ass.id}`"
+                            :data="{ status: 'completed' }"
+                            preserve-scroll
+                            method="patch"
+                            class="flex w-full items-center justify-center rounded-md bg-gray-100 p-1 hover:bg-gray-200"
+                        >
+                            <CheckCheck />
+                        </Link>
+                        <div
+                            class="pointer-events-none absolute -top-8 left-1/2 -translate-x-1/2 rounded bg-gray-800 px-2 py-1 text-xs whitespace-nowrap text-white opacity-0 transition-opacity group-hover:opacity-100"
+                        >
+                            Marcar com a completat
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
