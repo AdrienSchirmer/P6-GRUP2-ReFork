@@ -56,7 +56,7 @@ const mainNavItems: NavItem[] = [
     },
 
     {
-        title: 'Assignments',
+        title: 'Encarrecs',
         href: assignmentsIndex(),
         icon: ClipboardPen,
     },
