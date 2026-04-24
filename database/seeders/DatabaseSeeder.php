@@ -17,6 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ServicesSeeder::class,
             CalendarExceptionsSeeder::class,
+            PharmaciesSeeder::class,
             AdminSeeder::class,
             AssignmentsSeeder::class,
             ServiceSchedulesSeeder::class,
