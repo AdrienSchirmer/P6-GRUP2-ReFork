@@ -13,8 +13,6 @@ use App\Rules\TurnstileRule;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReservationCreated;
 
-
-
 class ServiceController extends Controller
 {
     /**
