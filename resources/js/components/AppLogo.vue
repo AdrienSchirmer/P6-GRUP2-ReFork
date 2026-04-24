@@ -1,16 +1,21 @@
-<script setup lang="ts">
-import AppLogoIcon from '@/components/AppLogoIcon.vue';
-</script>
-
 <template>
     <div
-        class="flex aspect-square size-8 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground"
+        class="flex aspect-square size-9 items-center justify-center overflow-hidden rounded-lg border border-sidebar-border/80 bg-sidebar-primary/10 shadow-sm"
     >
-        <AppLogoIcon class="size-5 fill-current text-white dark:text-black" />
+        <img
+            src="/storage/FarmaciaSolerLogo.jpg"
+            alt="Farmacia Soler logo"
+            class="size-8 rounded object-cover"
+        />
     </div>
-    <div class="ml-1 grid flex-1 text-left text-sm">
-        <span class="mb-0.5 truncate leading-tight font-semibold"
-            >Laravel Starter Kit</span
+    <div class="ml-2 grid flex-1 text-left text-sm">
+        <span
+            class="mb-0.5 truncate leading-tight font-semibold text-sidebar-foreground"
+            >Farmacia Soler</span
+        >
+        <span
+            class="truncate text-[11px] font-medium tracking-wide text-muted-foreground"
+            >Panell Administratiu</span
         >
     </div>
 </template>

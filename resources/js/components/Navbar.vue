@@ -1,7 +1,8 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
-import { usePage } from '@inertiajs/vue3';
-import { computed } from 'vue';
+import { ref } from 'vue';
+
+const isMobileMenuOpen = ref(false);
 </script>
 <template>
     <nav
@@ -27,11 +28,11 @@ import { computed } from 'vue';
                     Get started
                 </button>
                 <button
-                    data-collapse-toggle="navbar-sticky"
                     type="button"
                     class="text-body rounded-base hover:bg-neutral-secondary-soft hover:text-heading focus:ring-neutral-tertiary inline-flex h-10 w-10 items-center justify-center p-2 text-sm focus:ring-2 focus:outline-none md:hidden"
                     aria-controls="navbar-sticky"
-                    aria-expanded="false"
+                    :aria-expanded="isMobileMenuOpen"
+                    @click="isMobileMenuOpen = !isMobileMenuOpen"
                 >
                     <span class="sr-only">Open main menu</span>
                     <svg
@@ -53,15 +54,17 @@ import { computed } from 'vue';
                 </button>
             </div>
             <div
-                class="hidden w-full items-center justify-between md:order-1 md:flex md:w-auto"
+                :class="[
+                    isMobileMenuOpen ? 'flex' : 'hidden',
+                    'w-full items-center justify-between md:order-1 md:flex md:w-auto',
+                ]"
                 id="navbar-sticky"
             >
                 <ul
                     class="border-default rounded-base bg-neutral-secondary-soft md:bg-neutral-primary mt-4 flex flex-col border p-4 text-2xl font-medium text-[#4D3701] italic md:mt-0 md:flex-row md:space-x-8 md:border-0 md:p-0 rtl:space-x-reverse"
                 >
-                    <Link href="#/"> Demanar cita </Link>
+                    <Link href="/pedir-cita"> Demanar cita </Link>
                     <Link href="/assignments/create"> Demanar encarrec </Link>
-                    <Link href="#/"> ¿Qui Som? </Link>
                     <Link href="/contactans"> Contactan’s </Link>
                 </ul>
             </div>

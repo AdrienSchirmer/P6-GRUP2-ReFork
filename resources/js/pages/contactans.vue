@@ -3,7 +3,7 @@ import { Icon } from "@iconify/vue";
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import Card from '@/components/Card.vue';
 </script>
- 
+
 <template>
     <WebAppLayout>
     <div class="bg-[#F2FAFF] py-12 px-2 md:px-24">
@@ -11,11 +11,13 @@ import Card from '@/components/Card.vue';
             <div class="md:relative h-110 md:h-auto w-full md:w-1/2 overflow-hidden flex items-end">
                 <img src="/storage/farmaciaSolerStore.jpeg" alt="Farmacia Soler" class="object-cover object-bottom w-full h-full md:absolute rounded-l">
             </div>
-            <div class="md:w-1/2 px-8 py-8 md:py-16 flex flex-col gap-4">
-                <h2 class="text-2xl md:text-4xl text-center md:text-left font-bold">Contactan's</h2>
+            <div class="flex flex-col gap-4 px-8 py-8 md:w-1/2 md:py-16">
+                <h2 class="text-center text-2xl font-bold md:text-left md:text-4xl">
+                    Contactan's
+                </h2>
                 <div>
                     <h3 class="text-xl font-medium">Horari d'atenció</h3>
-                    <div class="pl-6 pt-4">
+                    <div class="pt-4 pl-6">
                         <li>Dilluns: 8:30 am - 8:30 pm</li>
                         <li>Dimarts: 8:30 am - 8:30 pm</li>
                         <li>Dimecres: 8:30 am - 8:30 pm</li>
@@ -30,30 +32,64 @@ import Card from '@/components/Card.vue';
                         <Icon icon="ic:mail" width="24" height="24"></Icon>
                     </div>
                     <div class="flex gap-1">
-                        <Icon icon="ri:phone-fill" width="24" height="24"></Icon>
+                        <Icon
+                            icon="ri:phone-fill"
+                            width="24"
+                            height="24"
+                        ></Icon>
                         <a href="tel:+34972500299">972 50 02 99</a>
                     </div>
                     <div class="flex gap-1">
-                        <Icon icon="ri:instagram-fill" width="24" height="24"></Icon>
-                        <a href="https://www.instagram.com/farmaciasolerfigueres/">farmaciasolerfigueres</a>
+                        <Icon
+                            icon="ri:instagram-fill"
+                            width="24"
+                            height="24"
+                        ></Icon>
+                        <a
+                            href="https://www.instagram.com/farmaciasolerfigueres/"
+                            >farmaciasolerfigueres</a
+                        >
                     </div>
                     <div class="flex gap-1">
-                        <Icon icon="mage:tiktok-circle" width="24" height="24"></Icon>
-                        <a href="https://www.tiktok.com/@farmaciasoler">farmaciasoler</a>
+                        <Icon
+                            icon="mage:tiktok-circle"
+                            width="24"
+                            height="24"
+                        ></Icon>
+                        <a href="https://www.tiktok.com/@farmaciasoler"
+                            >farmaciasoler</a
+                        >
                     </div>
                     <div class="flex gap-1">
-                        <Icon icon="ic:twotone-facebook" width="24" height="24"></Icon>
-                        <a href="https://es-es.facebook.com/farmaciasolerfigueres">farmaciasolerfigueres</a>
+                        <Icon
+                            icon="ic:twotone-facebook"
+                            width="24"
+                            height="24"
+                        ></Icon>
+                        <a
+                            href="https://es-es.facebook.com/farmaciasolerfigueres"
+                            >farmaciasolerfigueres</a
+                        >
                     </div>
                 </div>
-                <p class="text-gray-700 underline italic">Carrer Nou, 22, 17600 Figueres, Girona, Spain</p>
+                <p class="text-gray-700 italic underline">
+                    Carrer Nou, 22, 17600 Figueres, Girona, Spain
+                </p>
             </div>
         </Card>
     </div>
     </WebAppLayout>
-    <div class="sticky bottom-0 flex justify-end">
-        <a class="h-15 w-15 mr-4 mb-4 bg-[#08c004] rounded-4xl flex justify-center cursor-pointer" href="https://wa.me/34658359458?text=Hola%2C%20estoy%20interesado%20en%20">
-            <Icon icon="fontisto:whatsapp" width="35" height="35" class="text-white self-center"></Icon>
+    <div class="fixed right-0 bottom-0">
+        <a
+            class="mr-4 mb-4 flex h-15 w-15 cursor-pointer justify-center rounded-4xl bg-[#08c004]"
+            href="ht tps://wa.me/34658359458?text=Hola%2C%20estoy%20interesado%20en%20"
+        >
+            <Icon
+                icon="fontisto:whatsapp"
+                width="35"
+                height="35"
+                class="self-center text-white"
+            ></Icon>
         </a>
     </div>
 </template>

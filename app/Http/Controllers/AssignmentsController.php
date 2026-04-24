@@ -6,7 +6,11 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Actions\Assignments\CreateAssignmentAction;
 use App\Http\Requests\CreateAssignmentRequest;
+use App\Mail\AssignmentCreated;
 use App\Models\Link;
+use Illuminate\Support\Facades\Mail;
+use App\Rules\TurnstileRule;
+
 
 class AssignmentsController extends Controller
 {
@@ -23,7 +27,9 @@ class AssignmentsController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Assignments/Create');
+        return Inertia::render('Assignments/Create', [
+            'turnstileSiteKey' => config('services.turnstile.site_key'),
+        ]);
     }
 
     /**
@@ -33,12 +39,12 @@ class AssignmentsController extends Controller
     {
         $validated = $request->validated();
         $assignment = $createAssignment->execute($validated);
-
+        Mail::to($validated['address'])->send(new AssignmentCreated());
         Inertia::flash([
             'message' => 'Ecarrec creat correctament',
         ]);
 
-        return to_route('assignments.show');
+        return to_route('assignments.create');
     }
 
     /**

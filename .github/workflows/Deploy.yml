@@ -1,10 +1,10 @@
 name: Deploy
 
 on:
-  # push:
-  #   branches: ['main']
-  # pull_request:
-  #   branches: ['main']
+  push:
+    branches: ['develop', 'main']
+  pull_request:
+    branches: ['main']
   workflow_dispatch:
 
 jobs:
@@ -46,8 +46,8 @@ jobs:
         run: npm run build
       - name: Fent neteja
         run: rm -rf node_modules
-      - name: Esborrar la carpeta storage
-        run: rm -rf storage
+      # - name: Esborrar la carpeta storage
+      #   run: rm -rf storage
       - name: Comprimir el projecte  (incloent els ocults)
         run: tar -czf /tmp/app.tgz . && mv /tmp/app.tgz app.tgz
       - name: Envia app.tgz al servidor
@@ -91,6 +91,15 @@ jobs:
             sed -i "s/DB_DATABASE=laravel/DB_DATABASE=${{ secrets.DB_DB }}/g" .env
             sed -i "s/DB_USERNAME=sail/DB_USERNAME=${{ secrets.DB_USERNAME }}/g" .env
             sed -i "s/DB_PASSWORD=password/DB_PASSWORD=${{ secrets.DB_PASSWORD }}/g" .env
+            sed -i "s/MAIL_USERNAME=your-email@yourdomain.com/MAIL_USERNAME=${{ secrets.MAIL_USERNAME }}/g" .env
+            sed -i "s/MAIL_PASSWORD=your-dinahosting-password/MAIL_PASSWORD=${{ secrets.MAIL_PASSWORD }}/g" .env
+            sed -i "s/MAIL_FROM_ADDRESS=\"your-email@yourdomain.com\"/MAIL_FROM_ADDRESS=\"${{ secrets.MAIL_FROM_ADDRESS }}\"/g" .env
+            sed -i "s/MAIL_MAILER=smtp/MAIL_MAILER=${{ secrets.MAIL_MAILER }}/g" .env
+            sed -i "s/MAIL_SCHEME=smtp/MAIL_SCHEME=${{ secrets.MAIL_SCHEME }}/g" .env
+            sed -i "s/MAIL_HOST=smtp.dinahosting.com/MAIL_HOST=${{ secrets.MAIL_HOST }}/g" .env
+            sed -i "s/MAIL_PORT=587/MAIL_PORT=${{ secrets.MAIL_PORT }}/g" .env
+            sed -i "s/TURNSTILE_SITE_KEY=9/TURNSTILE_SITE_KEY=${{ secrets.TURNSTILE_SITE_KEY }}/g" .env
+            sed -i "s/TURNSTILE_SECRET_KEY=9/TURNSTILE_SECRET_KEY=${{ secrets.TURNSTILE_SECRET_KEY }}/g" .env
             $(which php84) artisan config:clear
             $(which php84) artisan key:generate
             echo "Executar migracions, cache i altres operacions de Laravel"
