@@ -254,18 +254,21 @@ function onSuccess() {
                         </button>
                     </div>
                     <!-- Body -->
-                    <div class="space-y-4 py-4 md:space-y-6 md:py-6">
-                        <p class="text-body leading-relaxed">
-                            {{ props.name }}
+                    <div class="py-4">
+                        <p class="text-body text-1xl leading-relaxed font-bold">
+                            Si us plau confirma la vosre encarrec.
                         </p>
                         <p class="text-body leading-relaxed">
-                            {{ props.address }}
+                            <strong>Nom: </strong>{{ props.name }}
                         </p>
                         <p class="text-body leading-relaxed">
-                            {{ props.phone_number }}
+                            <strong>Address: </strong>{{ props.address }}
                         </p>
                         <p class="text-body leading-relaxed">
-                            {{ props.description }}
+                            <strong>Telefón: </strong>{{ props.phone_number }}
+                        </p>
+                        <p class="text-body leading-relaxed">
+                            <strong>Encarrec: </strong>{{ props.description }}
                         </p>
                     </div>
                     <!-- Footer -->
