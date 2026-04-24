@@ -15,6 +15,7 @@ use App\Http\Controllers\Contactans;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\AdminServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\AssignmentsController as AdminAssignmentsController;
+use App\Http\Controllers\Admin\ServiceScheduleController;
 
 
 
@@ -38,6 +39,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
     Route::resource('pharmacyguards', admin_pharmacyguards_controller::class);
     Route::resource('services', AdminServiceController::class);
     Route::resource('adminAssignments', AdminAssignmentsController::class);
+    Route::resource('service-schedules', ServiceScheduleController::class);
 });
 Route::resource('assignments', AssignmentsController::class);
 

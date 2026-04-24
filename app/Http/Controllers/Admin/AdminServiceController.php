@@ -37,8 +37,7 @@ class AdminServiceController extends Controller
     public function create()
     {
         //
-            return Inertia::render('admin/Services/Create');
-
+        return Inertia::render('admin/Services/Create');
     }
 
     /**
@@ -47,30 +46,34 @@ class AdminServiceController extends Controller
     public function store(Request $request)
     {
         //
-        
+
         $validated = $request->validate([
             'name'             => 'required|string|max:255',
             'description'      => 'required|string',
             'duration_minutes' => 'required|integer|min:1',
             'icon'             => 'nullable|string|max:50',
         ]);
- 
+
         Service::create($validated);
- 
+
         Inertia::flash(['message' => 'Servei creat correctament.']);
- 
-           return redirect()
-        ->route('services.index');
-}
-    
-    
+
+        return redirect()
+            ->route('services.index');
+    }
+
+
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show($id)
     {
-        //
+        $service = Service::with('schedules')->findOrFail($id);
+
+        return Inertia::render('admin/ServiceSchedules/Show', [
+            'service' => $service,
+        ]);
     }
 
     /**
@@ -83,7 +86,6 @@ class AdminServiceController extends Controller
         return Inertia::render('admin/Services/Edit', [
             'service' => $service,
         ]);
-            
     }
 
     /**
@@ -92,20 +94,20 @@ class AdminServiceController extends Controller
     public function update(Request $request, string $id)
     {
         //
-     $validated = $request->validate([
-        'name' => 'required|string|max:255',
-        'description' => 'nullable|string',
-        'duration_minutes' => 'required|integer|min:1',
-        'icon' => 'nullable|string',
-    ]);
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'duration_minutes' => 'required|integer|min:1',
+            'icon' => 'nullable|string',
+        ]);
 
-    $service = Service::findOrFail($id);
-    $service->update($validated);
+        $service = Service::findOrFail($id);
+        $service->update($validated);
 
-    return redirect()
-        ->route('services.index')
-        ->with('message', 'Servei actualitzat correctament.');
-}
+        return redirect()
+            ->route('services.index')
+            ->with('message', 'Servei actualitzat correctament.');
+    }
 
     /**
      * Remove the specified resource from storage.
