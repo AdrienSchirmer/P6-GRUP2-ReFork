@@ -85,10 +85,10 @@ class ServiceController extends Controller
             'customer_phone' => $validated['customer_phone'],
             'customer_email' => $validated['customer_email'],
             'appointment_date' => $validated['appointment_date'],
-            'start_time' =>\Carbon\Carbon::parse($validated['start_time'])->format('H:i:s'),
+            'start_time' => \Carbon\Carbon::parse($validated['start_time'])->format('H:i:s'),
             'end_time' => \Carbon\Carbon::parse($validated['start_time'])->addMinutes(Service::find($validated['service_id'])->duration_minutes)->format('H:i'),
             'status' => 'pending',
-          
+
         ]);
 
         /*   Inertia::flash([
@@ -188,30 +188,30 @@ class ServiceController extends Controller
         return response()->json($times);
     }
     public function getSchedule(Request $request)
-{
-    $request->validate([
-        'service_id' => 'required|exists:services,id',
-    ]);
+    {
+        $request->validate([
+            'service_id' => 'required|exists:services,id',
+        ]);
 
-    $service = Service::with('schedules')->findOrFail($request->service_id);
+        $service = Service::with('schedules')->findOrFail($request->service_id);
 
-    $schedules = $service->schedules->map(function ($schedule) use ($service) {
-        // Generate time slots from start_time to end_time by duration_minutes
-        $slots = [];
-        $current = \Carbon\Carbon::parse($schedule->start_time);
-        $end = \Carbon\Carbon::parse($schedule->end_time);
+        $schedules = $service->schedules->map(function ($schedule) use ($service) {
+            // Generate time slots from start_time to end_time by duration_minutes
+            $slots = [];
+            $current = \Carbon\Carbon::parse($schedule->start_time);
+            $end = \Carbon\Carbon::parse($schedule->end_time);
 
-        while ($current->copy()->addMinutes($service->duration_minutes)->lte($end)) {
-            $slots[] = $current->format('H:i');
-            $current->addMinutes($service->duration_minutes);
-        }
+            while ($current->copy()->addMinutes($service->duration_minutes)->lte($end)) {
+                $slots[] = $current->format('H:i');
+                $current->addMinutes($service->duration_minutes);
+            }
 
-        return [
-            'day_of_week' => $schedule->day_of_week, 
-            'slots' => $slots,
-        ];
-    });
+            return [
+                'day_of_week' => $schedule->day_of_week,
+                'slots' => $slots,
+            ];
+        });
 
-    return response()->json($schedules);
-}
+        return response()->json($schedules);
+    }
 }
