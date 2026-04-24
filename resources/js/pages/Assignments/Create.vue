@@ -6,7 +6,13 @@ import { Form } from '@inertiajs/vue3';
 import { onMounted } from 'vue';
 import { ref } from 'vue';
 
-const props = defineProps<{ turnstileSiteKey: string | null }>();
+const props = defineProps<{
+    turnstileSiteKey: string | null;
+    name: string | null;
+    address: string | null;
+    phone_number: number | null;
+    description: string | null;
+}>();
 
 function renderTurnstile() {
     const el = document.querySelector('.cf-turnstile') as HTMLElement | null;
@@ -43,8 +49,8 @@ const formRef = ref<HTMLFormElement | null>(null);
 const showModal = ref(false);
 
 function onSuccess() {
-    formRef.value?.reset();
     showModal.value = true;
+    formRef.value?.reset();
 }
 </script>
 <template>
@@ -248,10 +254,21 @@ function onSuccess() {
                         </button>
                     </div>
                     <!-- Body -->
-                    <div class="space-y-4 py-4 md:space-y-6 md:py-6">
+                    <div class="py-4">
+                        <p class="text-body text-1xl leading-relaxed font-bold">
+                            Si us plau confirma la vosre encarrec.
+                        </p>
                         <p class="text-body leading-relaxed">
-                            El teu encàrrec s'ha creat correctament. Rebràs un
-                            correu electrònic de confirmació en breu.
+                            <strong>Nom: </strong>{{ props.name }}
+                        </p>
+                        <p class="text-body leading-relaxed">
+                            <strong>Address: </strong>{{ props.address }}
+                        </p>
+                        <p class="text-body leading-relaxed">
+                            <strong>Telefón: </strong>{{ props.phone_number }}
+                        </p>
+                        <p class="text-body leading-relaxed">
+                            <strong>Encarrec: </strong>{{ props.description }}
                         </p>
                     </div>
                     <!-- Footer -->
