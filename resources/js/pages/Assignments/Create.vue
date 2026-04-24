@@ -43,8 +43,8 @@ const formRef = ref<HTMLFormElement | null>(null);
 const showModal = ref(false);
 
 function onSuccess() {
-    formRef.value?.reset();
     showModal.value = true;
+    formRef.value?.reset();
 }
 </script>
 <template>
