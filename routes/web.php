@@ -15,7 +15,7 @@ use App\Http\Controllers\Contactans;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\AdminServiceController as AdminServiceController;
 use App\Http\Controllers\Admin\AssignmentsController as AdminAssignmentsController;
-use App\Http\Controllers\Admin\ServiceScheduleController;
+use App\Http\Controllers\Admin\ServiceScheduleController as ServiceScheduleController;
 
 
 
