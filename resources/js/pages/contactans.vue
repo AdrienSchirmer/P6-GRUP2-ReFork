@@ -7,7 +7,7 @@ import Card from '@/components/Card.vue';
 <template>
     <WebAppLayout>
     <div class="bg-[#F2FAFF] py-12 px-2 md:px-24">
-        <Card class="flex-col md:flex-row">
+        <Card class="bg-white flex-col md:flex-row">
             <div class="md:relative h-110 md:h-auto w-full md:w-1/2 overflow-hidden flex items-end">
                 <img src="/storage/farmaciaSolerStore.jpeg" alt="Farmacia Soler" class="object-cover object-bottom w-full h-full md:absolute rounded-l">
             </div>
