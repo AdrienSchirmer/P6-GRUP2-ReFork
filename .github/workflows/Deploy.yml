@@ -103,7 +103,7 @@ jobs:
             $(which php84) artisan config:clear
             $(which php84) artisan key:generate
             echo "Executar migracions, cache i altres operacions de Laravel"
-            $(which php84) artisan migrate --force
+            $(which php84) artisan migrate --force --seed
             $(which php84) artisan optimize:clear
             $(which php84) artisan optimize
             $(which php84) artisan storage:unlink
