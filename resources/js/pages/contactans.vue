@@ -1,28 +1,18 @@
 <script setup lang="ts">
-import { Icon } from '@iconify/vue';
-import Navbar from '@/components/Navbar.vue';
-import Footer from '@/components/Footer.vue';
+import { Icon } from "@iconify/vue";
+import WebAppLayout from '@/layouts/WebAppLayout.vue';
+import Card from '@/components/Card.vue';
 </script>
 
 <template>
-    <Navbar />
-    <div class="bg-white px-2 py-12 md:px-24">
-        <div
-            class="flex max-h-5/2 w-full flex-col justify-between rounded border-2 text-black md:flex-row"
-        >
-            <div
-                class="flex h-110 w-full items-end overflow-hidden md:relative md:h-auto md:w-1/2"
-            >
-                <img
-                    src="farmaciaSoler.jpeg"
-                    alt="Farmacia Soler"
-                    class="h-full w-full rounded-l object-cover object-bottom md:absolute"
-                />
+    <WebAppLayout>
+    <div class="bg-[#F2FAFF] py-12 px-2 md:px-24">
+        <Card class="bg-white flex-col md:flex-row">
+            <div class="md:relative h-110 md:h-auto w-full md:w-1/2 overflow-hidden flex items-end">
+                <img src="/storage/farmaciaSolerStore.jpeg" alt="Farmacia Soler" class="object-cover object-bottom w-full h-full md:absolute rounded-l">
             </div>
             <div class="flex flex-col gap-4 px-8 py-8 md:w-1/2 md:py-16">
-                <h2
-                    class="text-center text-2xl font-bold md:text-left md:text-4xl"
-                >
+                <h2 class="text-center text-2xl font-bold md:text-left md:text-4xl">
                     Contactan's
                 </h2>
                 <div>
@@ -86,9 +76,9 @@ import Footer from '@/components/Footer.vue';
                     Carrer Nou, 22, 17600 Figueres, Girona, Spain
                 </p>
             </div>
-        </div>
+        </Card>
     </div>
-    <Footer />
+    </WebAppLayout>
     <div class="fixed right-0 bottom-0">
         <a
             class="mr-4 mb-4 flex h-15 w-15 cursor-pointer justify-center rounded-4xl bg-[#08c004]"
