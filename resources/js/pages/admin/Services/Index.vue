@@ -201,7 +201,7 @@ function deleteService(id: number) {
                             <td class="p-3">
                                 <div class="flex justify-end gap-2 flex-wrap">
 
-                                    <Link :href="`/admin/services/${service.id}`"
+                                    <Link  :href="`/admin/services/${service.id}`"
                                         class="p-2 rounded hover:bg-green-100">
                                         <Eye class="w-4 h-4 text-green-600" />
                                     </Link>
