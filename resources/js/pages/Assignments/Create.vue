@@ -256,7 +256,7 @@ function onSuccess() {
                     <!-- Body -->
                     <div class="py-4">
                         <p class="text-body text-1xl leading-relaxed font-bold">
-                            Si us plau confirma la vosre encarrec.
+                            Si us plau, confirmeu la vostra comanda.
                         </p>
                         <p class="text-body leading-relaxed">
                             <strong>Nom: </strong>{{ props.name }}
@@ -269,6 +269,9 @@ function onSuccess() {
                         </p>
                         <p class="text-body leading-relaxed">
                             <strong>Encarrec: </strong>{{ props.description }}
+                        </p>
+                        <p class="text-body text-1xl leading-relaxed font-bold">
+                            Rebreu una confirmació per correu electrònic.
                         </p>
                     </div>
                     <!-- Footer -->
