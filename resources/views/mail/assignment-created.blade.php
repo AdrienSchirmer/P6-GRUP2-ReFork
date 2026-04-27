@@ -191,15 +191,10 @@
         <div class="header-inner">
             <div class="header-left">
 
-             
-                <img
-                    src="{{ storage_path('app/public/FarmaciaSolerLogoTallDark.png') }}"
-                    alt="Logo Farmàcia Soler"
-                    style="height: 52px; width: auto; object-fit: contain;"
-                />
+            
 
                 <div class="header-text">
-                    <div class="subtitle">ADDRESS AND PHONE</div>
+                    <div class="subtitle">Carrer Nou, 22, 17600 Figueres, Girona, Spain</div>
                 </div>
             </div>
 
@@ -235,8 +230,8 @@
         </tr>
     </table>
     <div class="notice">
-        <strong>Recordeu:</strong> Si no podeu assistir a la cita, si us plau cancel·leu-la amb
-        almenys <strong>24 hores</strong> d'antelació trucant al <strong>PHARMACY PHONE</strong>
+        <strong>Recordeu:</strong> Si no podeu assistir a recolir l'encarrec, si us plau cancel·leu-la amb
+        almenys <strong>24 hores</strong> d'antelació trucant al <strong>972 50 02 99</strong>
         o visitant la farmàcia en persona. Gràcies per la vostra col·laboració.
     </div>
 
