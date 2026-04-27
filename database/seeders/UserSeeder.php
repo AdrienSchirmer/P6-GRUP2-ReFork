@@ -13,16 +13,27 @@ class UserSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('users')->insert([
+        // DB::table('users')->insert([
+        //     [
+        //         'name' => 'Admin',
+        //         'email' => 'admin@farmaciasoler.com',
+        //         'password' => Hash::make('password'),
+        //         'role' => 'superadmin',
+        //         'created_at' => now(),
+        //         'updated_at' => now(),
+        //         'email_verified_at' => now(),
+        //     ],
+        // ]);
+        DB::table('users')->updateOrInsert(
+            ['email' => 'admin@farmaciasoler.com'],
             [
-                'name' => 'Admin',
-                'email' => 'admin@farmaciasoler.com',
-                'password' => Hash::make('password'),
+                'name' => 'Super Admin',
+                'password' => Hash::make('knqm4141'),
                 'role' => 'superadmin',
-                'created_at' => now(),
-                'updated_at' => now(),
                 'email_verified_at' => now(),
+                'updated_at' => now(),
+                'created_at' => now(),
             ],
-        ]);
+        );
     }
 }
