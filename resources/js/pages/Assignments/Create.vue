@@ -128,6 +128,7 @@ function onSuccess() {
                                 >Descripció</label
                             >
                             <textarea
+                                maxlength="500"
                                 rows="8"
                                 name="description"
                                 class="w-full resize-none rounded-2xl border-none bg-gray-200 px-4 py-4 outline-none"
@@ -267,8 +268,15 @@ function onSuccess() {
                         <p class="text-body leading-relaxed">
                             <strong>Telefón: </strong>{{ props.phone_number }}
                         </p>
-                        <p class="text-body leading-relaxed">
-                            <strong>Encarrec: </strong>{{ props.description }}
+                        <p
+                            class="text-body flex items-start gap-2 leading-relaxed"
+                        >
+                            <strong class="shrink-0">Encarrec:</strong>
+                            <span
+                                class="min-w-0 [overflow-wrap:anywhere] break-words whitespace-pre-line"
+                            >
+                                {{ props.description }}
+                            </span>
                         </p>
                         <p class="text-body text-1xl leading-relaxed font-bold">
                             Rebreu una confirmació per correu electrònic.

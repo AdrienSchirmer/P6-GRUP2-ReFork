@@ -78,9 +78,8 @@
         .row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 7px 0;
-            border-bottom: 1px solid #f1f5f9;
+            align-items: flex-start;
+            gap: 10px;
         }
         .row:last-child {
             border-bottom: none;
@@ -90,6 +89,7 @@
             padding-top: 0;
         }
         .row .lbl {
+            flex: 0 0 110px;
             color: #64748b;
             font-size: 12px;
         }
@@ -97,11 +97,15 @@
             font-weight: bold;
             color: #0f172a;
             font-size: 12px;
-            text-align: right;
+            text-align: left;
+            white-space: pre-line;
+            overflow-wrap: anywhere;       
+            word-break: break-word;
+            line-height: 1.45;
         }
         .row-highlight .val {
             color: #0f5f7f;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .two-col {
