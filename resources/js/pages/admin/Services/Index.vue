@@ -158,7 +158,8 @@ function deleteService(id: number) {
                     <input :value="search" @input="handleSearch" type="text" placeholder="Cercar servei..."
                         class="border rounded-lg px-4 py-2 focus:ring focus:ring-blue-200" />
 
-                    <Link :href="`/admin/services/create`" class="flex items-center gap-2 px-4 py-2 rounded-lg text-white"
+                    <Link :href="`/admin/services/create`"
+                        class="flex items-center gap-2 px-4 py-2 rounded-lg text-white"
                         style="background-color: #aadbf0">
                         <Plus class="w-4 h-4" />
                         Nou servei
@@ -201,9 +202,9 @@ function deleteService(id: number) {
                             <td class="p-3">
                                 <div class="flex justify-end gap-2 flex-wrap">
 
-                                    <Link  :href="`/admin/services/${service.id}`"
+                                    <Link :href="`/admin/services/${service.id}`"
                                         class="p-2 rounded hover:bg-green-100">
-                                        <Eye class="w-4 h-4 text-green-600" />
+                                        <CalendarPlus class="w-4 h-4 text-blue-600" />
                                     </Link>
 
                                     <Link :href="`/admin/services/${service.id}/edit`"
@@ -211,10 +212,10 @@ function deleteService(id: number) {
                                         <SquarePen class="w-4 h-4 text-orange-600" />
                                     </Link>
 
-                                    <Link :href="`/admin/service-schedules/create?service_id=${service.id}`"
+                                 <!---   <Link :href="`/admin/service-schedules/create?service_id=${service.id}`"
                                         class="p-2 rounded hover:bg-blue-100">
                                         <CalendarPlus class="w-4 h-4 text-blue-600" />
-                                    </Link>
+                                    </Link>--->
 
                                     <button @click="openDeleteModal(service)" class="p-2 rounded hover:bg-red-100">
                                         <Trash2 class="w-4 h-4 text-red-600" />
