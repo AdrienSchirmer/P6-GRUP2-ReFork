@@ -3,7 +3,7 @@ import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { store } from '@/routes/assignments';
 import { show } from '@/routes/users';
 import { Form } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { ref } from 'vue';
 
 const props = defineProps<{
@@ -43,6 +43,13 @@ onMounted(() => {
     s.defer = true;
     s.onload = renderTurnstile;
     document.head.appendChild(s);
+});
+
+onUnmounted(() => {
+    const s = document.getElementById('cf-turnstile-api');
+    if (s) {
+        s.remove();
+    }
 });
 
 const formRef = ref<HTMLFormElement | null>(null);

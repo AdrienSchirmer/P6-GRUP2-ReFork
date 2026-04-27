@@ -30,6 +30,7 @@ import { index as mailIndex } from '@/routes/mail';
 import { index as servicesIndex } from '@/routes/services';
 import { index as assignmentsIndex } from '@/routes/adminAssignments';
 import { index as pharmacyguardsIndex } from '@/routes/pharmacyguards';
+import { index as pharmaciesIndex } from '@/routes/pharmacies';
 
 import type { NavItem } from '@/types';
 
@@ -64,6 +65,11 @@ const mainNavItems: NavItem[] = [
         title: 'Guardies',
         href: pharmacyguardsIndex(),
         icon: Shield,
+    },
+    {
+        title: 'Farmacies',
+        href: pharmaciesIndex(),
+        icon: UserCog,
     },
 ];
 
