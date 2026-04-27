@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
-class admin_pharmacyguards_controller extends Controller
+class admin_pharmacies_controller extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,24 +15,12 @@ class admin_pharmacyguards_controller extends Controller
     public function index()
     {
         $pharmacies = DB::table('pharmacies')
-            ->select('id', 'name')
+            ->select('id', 'name', 'latitude', 'longitude', 'created_at')
             ->orderBy('name')
             ->get();
 
-        $guards = DB::table('pharmacy_guards')
-            ->join('pharmacies', 'pharmacy_guards.pharmacy_id', '=', 'pharmacies.id')
-            ->select(
-                'pharmacy_guards.id',
-                'pharmacy_guards.date',
-                'pharmacy_guards.pharmacy_id',
-                'pharmacies.name as pharmacy_name',
-            )
-            ->orderBy('pharmacy_guards.date')
-            ->get();
-
-        return Inertia::render('admin/PharmacyGuards/Index', [
+        return Inertia::render('admin/Pharmacies/Index', [
             'pharmacies' => $pharmacies,
-            'guards' => $guards,
         ]);
     }
 
@@ -50,19 +38,21 @@ class admin_pharmacyguards_controller extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'date' => ['required', 'date', 'unique:pharmacy_guards,date'],
-            'pharmacy_id' => ['required', 'exists:pharmacies,id'],
+            'name' => ['required', 'string', 'max:255', 'unique:pharmacies,name'],
+            'latitude' => ['required', 'numeric', 'between:-90,90'],
+            'longitude' => ['required', 'numeric', 'between:-180,180'],
         ]);
 
-        DB::table('pharmacy_guards')->insert([
-            'date' => $validated['date'],
-            'pharmacy_id' => $validated['pharmacy_id'],
+        DB::table('pharmacies')->insert([
+            'name' => $validated['name'],
+            'latitude' => $validated['latitude'],
+            'longitude' => $validated['longitude'],
             'created_at' => now(),
             'updated_at' => now(),
         ]);
 
-        return to_route('pharmacyguards.index')
-            ->with('message', 'Guàrdia creada correctament.');
+        return to_route('pharmacies.index')
+            ->with('message', 'Farmàcia creada correctament.');
     }
 
     /**

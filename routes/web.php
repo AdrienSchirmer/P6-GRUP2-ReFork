@@ -11,6 +11,7 @@ use App\Http\Controllers\AssignmentsController;
 use App\Http\Controllers\Admin\admin_index_controller;
 use App\Http\Controllers\Admin\admin_users_controller;
 use App\Http\Controllers\Admin\admin_pharmacyguards_controller;
+use App\Http\Controllers\Admin\admin_pharmacies_controller;
 use App\Http\Controllers\Contactans;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\AdminServiceController as AdminServiceController;
@@ -37,6 +38,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
     Route::resource('users', admin_users_controller::class);
     Route::resource('mail', MailController::class);
     Route::resource('pharmacyguards', admin_pharmacyguards_controller::class);
+    Route::resource('pharmacies', admin_pharmacies_controller::class)->only(['index', 'store', 'destroy']);
     Route::resource('services', AdminServiceController::class);
     Route::resource('adminAssignments', AdminAssignmentsController::class);
     Route::resource('service-schedules', ServiceScheduleController::class);
