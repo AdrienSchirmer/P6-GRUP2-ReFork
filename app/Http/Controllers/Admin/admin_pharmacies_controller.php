@@ -84,11 +84,11 @@ class admin_pharmacies_controller extends Controller
      */
     public function destroy(string $id)
     {
-        DB::table('pharmacy_guards')
+        DB::table('pharmacies')
             ->where('id', $id)
             ->delete();
 
-        return to_route('pharmacyguards.index')
-            ->with('message', 'Guàrdia eliminada correctament.');
+        return to_route('pharmacies.index')
+            ->with('message', 'Farmàcia eliminada correctament.');
     }
 }
