@@ -210,7 +210,7 @@
                 <div class="card">
                     <div class="row row-highlight">
                         <span class="lbl">Encarrec: </span>
-                        <span class="val">DESCRIPTION</span>
+                        <span class="val">{{ $assignment['description'] }}</span>
                     </div>
                 </div>
             </td>
@@ -220,11 +220,11 @@
                 <div class="card">
                     <div class="row">
                         <span class="lbl">Nom</span>
-                        <span class="val">NAME</span>
+                        <span class="val">{{ $assignment['name'] }}</span>
                     </div>
                     <div class="row">
-                        <span class="lbl">Correu</span>
-                        <span class="val">EMAIL</span>
+                        <span class="lbl">Telefón</span>
+                        <span class="val">{{ $assignment['phone_number'] }}</span>
                     </div>
                 </div>
             </td>
