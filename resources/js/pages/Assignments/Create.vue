@@ -2,7 +2,7 @@
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { store } from '@/routes/assignments';
 import { show } from '@/routes/users';
-import { Form } from '@inertiajs/vue3';
+import { Form, Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted } from 'vue';
 import { ref } from 'vue';
 
@@ -70,7 +70,7 @@ function onSuccess() {
                     Encàrrecs
                 </h1>
             </div>
-            <div class="flex items-start gap-3 pb-5">
+            <div class="flex items-center gap-3 pb-5">
                 <h2
                     class="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-[#00617E] text-3xl leading-none font-extrabold text-white italic"
                 >
@@ -79,6 +79,11 @@ function onSuccess() {
                 <p class="text-lg italic sm:text-xl lg:text-2xl">
                     Demana el que necessitis.
                 </p>
+                <Link
+                    class="ml-auto rounded-lg bg-[#00617E] p-2 text-xl font-bold text-white"
+                    href="/assignments"
+                    >Consultar Encarrecs
+                </Link>
             </div>
             <div class="grid grid-cols-1 gap-5 lg:grid-cols-3">
                 <div
