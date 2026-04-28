@@ -77,8 +77,9 @@ class ServiceController extends Controller
             ]);
         }
 
-        Mail::to($validated['customer_email'])->send(new ReservationCreated());
+        
 
+        $service = Service::findOrFail($validated['service_id']);
         ServiceAppointment::create([
             'service_id' => $validated['service_id'],
             'customer_name' => $validated['customer_name'],
@@ -90,12 +91,23 @@ class ServiceController extends Controller
             'status' => 'pending',
 
         ]);
+         $mailData = [
+        'name'         => $validated['customer_name'],
+        'email'        => $validated['customer_email'],
+        'service_name' => $service->name,
+        'duration'     => $service->duration_minutes . ' min',
+        'date'         => $validated['appointment_date'],
+        'time'         => $validated['start_time'],
+        'pharmacy'     => 'Farmàcia Soler',
+        'address'      => 'Carrer Nou, 22, 17600 Figueres, Girona',
+        'phone'        => '972 50 02 99',
+    ];
+    Mail::to($validated['customer_email'])->send(new ReservationCreated($mailData));
 
         /*   Inertia::flash([
             'message' => 'Reservació creada amb èxit! Rebràs una confirmació per correu electrònic aviat.',
 
         ]);*/
-
         return to_route('pedir-cita')->with('success', [
             'message' => 'Reservació creada amb èxit! Rebràs una confirmació aviat.',
             'service' => $validated['service_id'],
