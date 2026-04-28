@@ -1,5 +1,11 @@
 <script setup lang="ts">
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
+import { Form } from '@inertiajs/vue3';
+import { ref } from 'vue';
+const formRef = ref<HTMLFormElement | null>(null);
+function onSuccess() {
+    formRef.value?.reset();
+}
 </script>
 
 <template>
@@ -39,7 +45,7 @@ import WebAppLayout from '@/layouts/WebAppLayout.vue';
 
                         <input
                             id="search"
-                            type="search"
+                            type="email"
                             placeholder="Consulta per corréu electrònic"
                             required
                             class="w-full rounded-2xl border border-gray-200 bg-gray-50 py-3 ps-11 pe-28 text-sm text-gray-900 transition outline-none placeholder:text-gray-500 focus:border-[#00617E] focus:bg-white focus:ring-2 focus:ring-[#00617E]/20"
@@ -49,7 +55,7 @@ import WebAppLayout from '@/layouts/WebAppLayout.vue';
                             type="button"
                             class="absolute end-1.5 top-1/2 -translate-y-1/2 rounded-xl bg-[#00617E] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#004f66] focus:ring-2 focus:ring-[#00617E]/30 focus:outline-none"
                         >
-                            Search
+                            Enviar Codi
                         </button>
                     </div>
                 </form>
