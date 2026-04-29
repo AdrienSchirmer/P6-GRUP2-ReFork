@@ -28,7 +28,7 @@ class AssignmentListCode extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Assignment List Code',
+            subject: 'FarmaciaSoler Code',
         );
     }
 
@@ -38,14 +38,14 @@ class AssignmentListCode extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mail.assignment-list-code',
         );
     }
 
     /**
      * Get the attachments for the message.
      *
-     * @return array<int, Atta¡chment>
+     * @return array<int, Attachment>
      */
     public function attachments(): array
     {

@@ -18,7 +18,13 @@ function onSuccess() {
                     Consultar encàrrecs
                 </h1>
 
-                <form class="w-full">
+                <Form
+                    ref="formRef"
+                    action="/assignments/code"
+                    method="post"
+                    class="w-full"
+                    @success="onSuccess"
+                >
                     <label for="search" class="sr-only"> Search </label>
 
                     <div class="relative">
@@ -46,19 +52,21 @@ function onSuccess() {
                         <input
                             id="search"
                             type="email"
+                            name="email"
                             placeholder="Consulta per corréu electrònic"
                             required
                             class="w-full rounded-2xl border border-gray-200 bg-gray-50 py-3 ps-11 pe-28 text-sm text-gray-900 transition outline-none placeholder:text-gray-500 focus:border-[#00617E] focus:bg-white focus:ring-2 focus:ring-[#00617E]/20"
                         />
 
                         <button
-                            type="button"
+                            preserve-scroll
+                            type="submit"
                             class="absolute end-1.5 top-1/2 -translate-y-1/2 rounded-xl bg-[#00617E] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#004f66] focus:ring-2 focus:ring-[#00617E]/30 focus:outline-none"
                         >
                             Enviar Codi
                         </button>
                     </div>
-                </form>
+                </Form>
             </div>
         </section>
     </WebAppLayout>

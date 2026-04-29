@@ -7,6 +7,7 @@ use Inertia\Inertia;
 use App\Actions\Assignments\CreateAssignmentAction;
 use App\Http\Requests\CreateAssignmentRequest;
 use App\Mail\AssignmentCreated;
+use App\Mail\AssignmentListCode;
 use App\Models\Link;
 use Illuminate\Support\Facades\Mail;
 use App\Rules\TurnstileRule;
@@ -85,5 +86,12 @@ class AssignmentsController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function code(Request $request)
+    {
+        Mail::to($request['email'])->send(new AssignmentListCode());
+
+        return back()->with('message', 'Codi enviat correctament');
     }
 }
