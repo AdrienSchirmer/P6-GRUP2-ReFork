@@ -1,1 +1,1 @@
-your code is 67
+{{ $code }}

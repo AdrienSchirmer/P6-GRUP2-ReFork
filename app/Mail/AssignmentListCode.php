@@ -17,7 +17,7 @@ class AssignmentListCode extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
+    public function __construct(public string $code)
     {
         //
     }
@@ -39,6 +39,7 @@ class AssignmentListCode extends Mailable
     {
         return new Content(
             view: 'mail.assignment-list-code',
+            with: ['code' => $this->code],
         );
     }
 
