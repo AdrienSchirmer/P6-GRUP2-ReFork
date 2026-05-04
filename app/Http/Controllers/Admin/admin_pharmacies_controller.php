@@ -12,6 +12,24 @@ class admin_pharmacies_controller extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function filter(Request $request)
+    {
+        $query = DB::table('pharmacies')
+            ->select('id', 'name', 'latitude', 'longitude', 'created_at');
+
+        if ($request->filled('search')) {
+            $query->where('name', 'like', '%' . $request->search . '%');
+        }
+
+        $pharmacies = $query
+            ->orderBy('name')
+            ->get();
+
+        return response()->json([
+            'pharmacies' => $pharmacies,
+        ]);
+    }
     public function index()
     {
         $pharmacies = DB::table('pharmacies')

@@ -40,6 +40,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
     Route::get('pharmacyguards/filter', [admin_pharmacyguards_controller::class, 'filter'])->name('pharmacyguards.filter');
     Route::resource('pharmacyguards', admin_pharmacyguards_controller::class);
 
+    Route::get('pharmacies/filter', [admin_pharmacies_controller::class, 'filter'])->name('pharmacies.filter');
     Route::resource('pharmacies', admin_pharmacies_controller::class);
     Route::resource('services', AdminServiceController::class);
     Route::resource('adminAssignments', AdminAssignmentsController::class);
