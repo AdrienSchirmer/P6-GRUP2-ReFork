@@ -2,16 +2,30 @@
 import { Icon } from "@iconify/vue";
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import Card from '@/components/Card.vue';
+import "leaflet";
+import "leaflet/dist/leaflet.css";
+import { onMounted, ref } from "vue";
+
+const map = ref();
+
+onMounted(() => {
+    // Setup Map
+    map.value = L.map('map').setView(['42.2655267', '2.9631527'], 19);
+    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+    }).addTo(map.value);
+    L.marker(['42.2655267', '2.9631527']).addTo(map.value);
+});
+
 </script>
 
 <template>
     <WebAppLayout>
     <div class="bg-[#F2FAFF] py-12 px-2 md:px-24">
         <Card class="bg-white flex-col md:flex-row">
-            <div class="md:relative h-110 md:h-auto w-full md:w-1/2 overflow-hidden flex items-end">
-                <img src="/storage/farmaciaSolerStore.jpeg" alt="Farmacia Soler" class="object-cover object-bottom w-full h-full md:absolute rounded-l">
+            <div id="map" class="md:relative h-110 md:h-auto w-full md:w-1/2 overflow-hidden flex items-end rounded-xl">
             </div>
-            <div class="flex flex-col gap-4 px-8 py-8 md:w-1/2 md:py-16">
+            <div class="flex flex-col gap-4 px-8 py-8 md:w-1/2 md:py-16 h-160">
                 <h2 class="text-center text-2xl font-bold md:text-left md:text-4xl">
                     Contactan's
                 </h2>
