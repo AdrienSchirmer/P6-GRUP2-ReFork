@@ -12,6 +12,30 @@ class admin_pharmacyguards_controller extends Controller
     /**
      * Display a listing of the resource.
      */
+
+    public function filter(Request $request)
+    {
+        $query = DB::table('pharmacy_guards')
+            ->join('pharmacies', 'pharmacy_guards.pharmacy_id', '=', 'pharmacies.id')
+            ->select(
+                'pharmacy_guards.id',
+                'pharmacy_guards.date',
+                'pharmacy_guards.pharmacy_id',
+                'pharmacies.name as pharmacy_name',
+            );
+
+        if ($request->filled('search')) {
+            $query->where('pharmacies.name', 'like', '%' . $request->search . '%');
+        }
+
+        $guards = $query
+            ->orderBy('pharmacy_guards.date')
+            ->get();
+
+        return response()->json([
+            'pharmacyguards' => $guards,
+        ]);
+    }
     public function index()
     {
         $pharmacies = DB::table('pharmacies')

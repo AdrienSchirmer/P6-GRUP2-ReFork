@@ -191,7 +191,7 @@ const removePharmacy = (pharmacyId: number) => {
                                 <td class="px-4 py-3">
                                     <button
                                         type="button"
-                                        class="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-100"
+                                        class="cursor-pointer rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-100"
                                         @click="removePharmacy(pharmacy.id)"
                                     >
                                         Eliminar
