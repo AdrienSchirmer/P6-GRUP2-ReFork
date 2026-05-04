@@ -25,10 +25,14 @@ class AssignmentsController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         return Inertia::render('Assignments/Create', [
             'turnstileSiteKey' => config('services.turnstile.site_key'),
+            'name' => $request->query('name'),
+            'address' => $request->query('address'),
+            'phone_number' => $request->query('phone_number'),
+            'description' => $request->query('description'),
         ]);
     }
 
@@ -39,12 +43,16 @@ class AssignmentsController extends Controller
     {
         $validated = $request->validated();
         $assignment = $createAssignment->execute($validated);
-        Mail::to($validated['address'])->send(new AssignmentCreated());
+        Mail::to($validated['address'])->send(new AssignmentCreated($validated));
         Inertia::flash([
             'message' => 'Ecarrec creat correctament',
         ]);
-
-        return to_route('assignments.create');
+        return to_route('assignments.create', [
+            'name' => $validated['name'] ?? null,
+            'address' => $validated['address'] ?? null,
+            'phone_number' => $validated['phone_number'] ?? null,
+            'description' => $validated['description'] ?? null,
+        ]);
     }
 
     /**

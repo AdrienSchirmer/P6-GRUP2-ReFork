@@ -1,92 +1,75 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
-import { Form, Head, usePage, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
+import { Form, Head, router, usePage } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type { BreadcrumbItem } from '@/types';
 import {
-    destroy as destroyPharmacyGuard,
-    index as pharmacyguardsIndex,
-    store as storePharmacyGuard,
-} from '@/routes/pharmacyguards';
+    destroy as pharmaciesDestroy,
+    index as pharmaciesIndex,
+    store as pharmaciesStore,
+} from '@/routes/pharmacies';
+import { type BreadcrumbItem } from '@/types';
 
 interface Pharmacy {
     id: number;
     name: string;
-}
-
-interface Guard {
-    id: number;
-    date: string;
-    pharmacy_id: number;
-    pharmacy_name: string;
+    latitude: number;
+    longitude: number;
+    created_at?: string | null;
 }
 
 const props = defineProps<{
     pharmacies: Pharmacy[];
-    guards: Guard[];
 }>();
 
 const page = usePage<{ flash?: { message?: string } }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Panell de guardies', href: pharmacyguardsIndex().url },
+    { title: 'Farmàcies', href: pharmaciesIndex().url },
 ];
 
-const removeGuard = (guardId: number) => {
-    router.delete(destroyPharmacyGuard(guardId).url, {
-        preserveScroll: true,
-    });
-};
-
 const searchquery = ref<string>('');
-const pharmacyguardsData = ref<Guard[]>(props.guards);
-const dateFrom = ref<string>('');
-const dateTo = ref<string>('');
+const pharmaciesData = ref<Pharmacy[]>(props.pharmacies);
 
-const filterGuards = () => {
-    const params = new URLSearchParams();
+const filterPharmacies = () => {
+    const searchqueryquery = searchquery.value
+        ? `?search=${encodeURIComponent(searchquery.value)}`
+        : '';
 
-    if (searchquery.value.trim()) {
-        params.append('search', searchquery.value.trim());
-    }
-
-    if (dateFrom.value) {
-        params.append('date_from', dateFrom.value);
-    }
-
-    if (dateTo.value) {
-        params.append('date_to', dateTo.value);
-    }
-
-    const queryString = params.toString();
-
-    fetch(`/admin/pharmacyguards/filter${queryString ? `?${queryString}` : ''}`)
+    fetch(`/admin/pharmacies/filter${searchqueryquery}`)
         .then((response) => response.json())
         .then((data) => {
-            pharmacyguardsData.value = data.pharmacyguards ?? [];
+            pharmaciesData.value = data.pharmacies ?? [];
         })
         .catch((error) => {
             console.error('Error', error);
         });
 };
 
-const resetDateFilter = () => {
-    dateFrom.value = '';
-    dateTo.value = '';
-    filterGuards();
+const removePharmacy = (pharmacyId: number) => {
+    router.delete(pharmaciesDestroy(pharmacyId).url, {
+        preserveScroll: true,
+    });
 };
 </script>
-<template>
-    <Head title="Panell de guardies" />
 
+<template>
     <AppLayout :breadcrumbs="breadcrumbs">
+        <Head title="Farmàcies" />
+
         <div
             class="relative flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4 md:p-6"
         >
+            <div
+                class="pointer-events-none absolute top-0 right-8 h-48 w-48 rounded-full bg-muted/70 blur-3xl"
+            ></div>
+            <div
+                class="pointer-events-none absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/60 blur-3xl"
+            ></div>
+
             <div
                 class="relative rounded-2xl border border-sidebar-border/70 bg-gradient-to-br from-background to-muted/70 p-7 shadow-sm"
             >
@@ -98,11 +81,10 @@ const resetDateFilter = () => {
                 <h1
                     class="mt-2 text-3xl font-semibold tracking-tight text-foreground"
                 >
-                    Panell de guardies
+                    Farmàcies
                 </h1>
-                <p class="mt-2 max-w-2xl text-sm text-muted-foreground">
-                    Aquí podràs gestionar les guardies de la farmàcia, i
-                    assegurar-te que tot estigui cobert de manera eficient.
+                <p class="mt-2 text-sm text-muted-foreground">
+                    Gestió bàsica de farmàcies: crear i eliminar.
                 </p>
             </div>
 
@@ -117,41 +99,49 @@ const resetDateFilter = () => {
             <div
                 class="relative rounded-2xl border border-sidebar-border/70 bg-background/95 p-6 shadow-sm"
             >
-                <h2 class="text-lg font-semibold text-foreground">
-                    Crear guàrdia
-                </h2>
-
                 <Form
-                    v-bind="storePharmacyGuard.form()"
-                    :reset-on-success="['date', 'pharmacy_id']"
-                    @success="filterGuards"
+                    v-bind="pharmaciesStore.form()"
+                    :reset-on-success="['name', 'latitude', 'longitude']"
                     v-slot="{ errors, processing }"
-                    class="mt-4 grid gap-5"
+                    class="grid gap-5"
                 >
                     <div class="grid gap-2">
-                        <Label for="date">Data</Label>
-                        <Input id="date" type="date" name="date" required />
-                        <InputError :message="errors.date" />
+                        <Label for="name">Nom</Label>
+                        <Input
+                            id="name"
+                            type="text"
+                            name="name"
+                            required
+                            autofocus
+                            placeholder="Nom de la farmàcia"
+                        />
+                        <InputError :message="errors.name" />
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="pharmacy_id">Farmàcia</Label>
-                        <select
-                            id="pharmacy_id"
-                            name="pharmacy_id"
+                        <Label for="latitude">Latitud</Label>
+                        <Input
+                            id="latitude"
+                            type="number"
+                            step="0.0000001"
+                            name="latitude"
                             required
-                            class="w-full rounded-xl border border-sidebar-border/80 bg-background px-3 py-2 text-sm shadow-xs transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
-                        >
-                            <option value="">Selecciona una farmàcia</option>
-                            <option
-                                v-for="pharmacy in props.pharmacies"
-                                :key="pharmacy.id"
-                                :value="pharmacy.id.toString()"
-                            >
-                                {{ pharmacy.name }}
-                            </option>
-                        </select>
-                        <InputError :message="errors.pharmacy_id" />
+                            placeholder="42.2655337"
+                        />
+                        <InputError :message="errors.latitude" />
+                    </div>
+
+                    <div class="grid gap-2">
+                        <Label for="longitude">Longitud</Label>
+                        <Input
+                            id="longitude"
+                            type="number"
+                            step="0.0000001"
+                            name="longitude"
+                            required
+                            placeholder="2.9631538"
+                        />
+                        <InputError :message="errors.longitude" />
                     </div>
 
                     <div class="mt-2 flex items-center justify-end gap-3">
@@ -160,7 +150,7 @@ const resetDateFilter = () => {
                             :disabled="processing"
                             class="bg-primary text-primary-foreground hover:bg-primary/90"
                         >
-                            {{ processing ? 'Creant...' : 'Afegir guàrdia' }}
+                            {{ processing ? 'Creant...' : 'Crear farmàcia' }}
                         </Button>
                     </div>
                 </Form>
@@ -170,47 +160,8 @@ const resetDateFilter = () => {
                 class="relative rounded-2xl border border-sidebar-border/70 bg-background/95 p-5 shadow-sm"
             >
                 <h2 class="text-lg font-semibold text-foreground">
-                    Guàrdies programades
+                    Farmàcies registrades
                 </h2>
-
-                <div class="mt-3 rounded-xl border border-sidebar-border/70 bg-muted/25 p-4">
-                    <p class="mb-3 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
-                        Filtres
-                    </p>
-
-                    <div class="grid gap-3 md:grid-cols-3">
-                        <div class="grid gap-1.5">
-                            <Label for="date_from">Des de</Label>
-                            <Input
-                                id="date_from"
-                                v-model="dateFrom"
-                                type="date"
-                                @change="filterGuards"
-                            />
-                        </div>
-
-                        <div class="grid gap-1.5">
-                            <Label for="date_to">Fins a</Label>
-                            <Input
-                                id="date_to"
-                                v-model="dateTo"
-                                type="date"
-                                @change="filterGuards"
-                            />
-                        </div>
-
-                        <div class="flex items-end">
-                            <Button
-                                type="button"
-                                variant="outline"
-                                class="w-full"
-                                @click="resetDateFilter"
-                            >
-                                Netejar dates
-                            </Button>
-                        </div>
-                    </div>
-                </div>
 
                 <div class="relative mt-2">
                     <svg
@@ -229,7 +180,7 @@ const resetDateFilter = () => {
                     </svg>
                     <input
                         v-model="searchquery"
-                        @keyup="filterGuards()"
+                        @keyup="filterPharmacies()"
                         aria-labelledby="search"
                         type="search"
                         placeholder="Filtra pel nom d'una farmàcia"
@@ -247,12 +198,17 @@ const resetDateFilter = () => {
                                 <th
                                     class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
                                 >
-                                    Data
+                                    Nom
                                 </th>
                                 <th
                                     class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
                                 >
-                                    Farmàcia
+                                    Latitud
+                                </th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
+                                >
+                                    Longitud
                                 </th>
                                 <th
                                     class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
@@ -263,37 +219,36 @@ const resetDateFilter = () => {
                         </thead>
                         <tbody class="divide-y divide-sidebar-border/70">
                             <tr
-                                v-for="guard in pharmacyguardsData"
-                                :key="guard.id"
+                                v-for="pharmacy in pharmaciesData"
+                                :key="pharmacy.id"
                                 class="transition-colors hover:bg-muted/30"
                             >
-                                <td class="px-4 py-3 text-muted-foreground">
-                                    {{
-                                        new Date(guard.date).toLocaleDateString(
-                                            'ca-ES',
-                                        )
-                                    }}
-                                </td>
                                 <td class="px-4 py-3 font-medium">
-                                    {{ guard.pharmacy_name }}
+                                    {{ pharmacy.name }}
+                                </td>
+                                <td class="px-4 py-3 text-muted-foreground">
+                                    {{ pharmacy.latitude }}
+                                </td>
+                                <td class="px-4 py-3 text-muted-foreground">
+                                    {{ pharmacy.longitude }}
                                 </td>
                                 <td class="px-4 py-3">
                                     <button
                                         type="button"
                                         class="cursor-pointer rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-100"
-                                        @click="removeGuard(guard.id)"
+                                        @click="removePharmacy(pharmacy.id)"
                                     >
                                         Eliminar
                                     </button>
                                 </td>
                             </tr>
 
-                            <tr v-if="pharmacyguardsData.length === 0">
+                            <tr v-if="pharmaciesData.length === 0">
                                 <td
-                                    colspan="3"
+                                    colspan="4"
                                     class="px-4 py-8 text-center text-muted-foreground"
                                 >
-                                    Encara no hi ha guàrdies creades.
+                                    Encara no hi ha farmàcies.
                                 </td>
                             </tr>
                         </tbody>

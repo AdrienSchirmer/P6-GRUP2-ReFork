@@ -3,10 +3,16 @@ import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { store } from '@/routes/assignments';
 import { show } from '@/routes/users';
 import { Form } from '@inertiajs/vue3';
-import { onMounted } from 'vue';
+import { onMounted, onUnmounted } from 'vue';
 import { ref } from 'vue';
 
-const props = defineProps<{ turnstileSiteKey: string | null }>();
+const props = defineProps<{
+    turnstileSiteKey: string | null;
+    name: string | null;
+    address: string | null;
+    phone_number: number | null;
+    description: string | null;
+}>();
 
 function renderTurnstile() {
     const el = document.querySelector('.cf-turnstile') as HTMLElement | null;
@@ -39,12 +45,19 @@ onMounted(() => {
     document.head.appendChild(s);
 });
 
+onUnmounted(() => {
+    const s = document.getElementById('cf-turnstile-api');
+    if (s) {
+        s.remove();
+    }
+});
+
 const formRef = ref<HTMLFormElement | null>(null);
 const showModal = ref(false);
 
 function onSuccess() {
-    formRef.value?.reset();
     showModal.value = true;
+    formRef.value?.reset();
 }
 </script>
 <template>
@@ -122,6 +135,7 @@ function onSuccess() {
                                 >Descripció</label
                             >
                             <textarea
+                                maxlength="500"
                                 rows="8"
                                 name="description"
                                 class="w-full resize-none rounded-2xl border-none bg-gray-200 px-4 py-4 outline-none"
@@ -248,10 +262,31 @@ function onSuccess() {
                         </button>
                     </div>
                     <!-- Body -->
-                    <div class="space-y-4 py-4 md:space-y-6 md:py-6">
+                    <div class="py-4">
+                        <p class="text-body text-1xl leading-relaxed font-bold">
+                            Si us plau, confirmeu la vostra comanda.
+                        </p>
                         <p class="text-body leading-relaxed">
-                            El teu encàrrec s'ha creat correctament. Rebràs un
-                            correu electrònic de confirmació en breu.
+                            <strong>Nom: </strong>{{ props.name }}
+                        </p>
+                        <p class="text-body leading-relaxed">
+                            <strong>Address: </strong>{{ props.address }}
+                        </p>
+                        <p class="text-body leading-relaxed">
+                            <strong>Telefón: </strong>{{ props.phone_number }}
+                        </p>
+                        <p
+                            class="text-body flex items-start gap-2 leading-relaxed"
+                        >
+                            <strong class="shrink-0">Encarrec:</strong>
+                            <span
+                                class="min-w-0 [overflow-wrap:anywhere] break-words whitespace-pre-line"
+                            >
+                                {{ props.description }}
+                            </span>
+                        </p>
+                        <p class="text-body text-1xl leading-relaxed font-bold">
+                            Rebreu una confirmació per correu electrònic.
                         </p>
                     </div>
                     <!-- Footer -->
