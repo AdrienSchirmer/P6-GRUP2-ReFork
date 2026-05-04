@@ -6,6 +6,7 @@ use Laravel\Fortify\Features;
 use Inertia\Inertia;
 use App\Http\Resources\ServiceResource;
 
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\AssignmentsController;
 use App\Http\Controllers\Admin\admin_index_controller;
@@ -25,6 +26,9 @@ use App\Http\Controllers\Admin\ServiceScheduleController as ServiceScheduleContr
 Route::inertia('/', 'Welcome', [
     'canRegister' => Features::enabled(Features::registration()),
 ])->name('home');
+// Home Page
+Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/pharmacyguard/{data}', [HomeController::class, 'getpg'])->name('getpg');
 //pedir cita 
 //Route::get('/pedir-cita', function () { return Inertia::render('PedirCita');})->name('pedir-cita');
 Route::get('/pedir-cita', [ServiceController::class, 'index'])->name('pedir-cita');
