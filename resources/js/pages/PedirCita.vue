@@ -194,6 +194,7 @@ const availableDaysOfWeek = computed(
     () => new Set(serviceSchedules.value.map((s) => s.day_of_week)),
 );
 
+
 const availableTimes = computed(() => {
     if (!selectedDate.value) return [];
 
@@ -202,11 +203,35 @@ const availableTimes = computed(() => {
         currentMonth.value,
         selectedDate.value,
     );
-    const iso = date.getDay() === 0 ? 7 : date.getDay();
 
+    const iso = date.getDay() === 0 ? 7 : date.getDay();
     const schedule = serviceSchedules.value.find((s) => s.day_of_week === iso);
-    return schedule?.slots ?? [];
+
+    if (!schedule) return [];
+
+    let slots = schedule.slots;
+
+    const isToday =
+        currentYear.value === todayYear &&
+        currentMonth.value === todayMonth &&
+        selectedDate.value === todayDate;
+
+    if (isToday) {
+        const now = new Date();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+        slots = slots.filter((time: string) => {
+            const [h, m] = time.split(':').map(Number);
+            const slotMinutes = h * 60 + m;
+
+            return slotMinutes > currentMinutes;
+        });
+    }
+
+    return slots;
 });
+
+
 
 function isDayAvailable(cell: CalendarCell): boolean {
     if (!cell.isCurrentMonth) return false;
