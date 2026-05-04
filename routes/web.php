@@ -37,8 +37,10 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
     Route::get('/', [admin_index_controller::class, 'index'])->name('admindashboard');
     Route::resource('users', admin_users_controller::class);
     Route::resource('mail', MailController::class);
+    Route::get('pharmacyguards/filter', [admin_pharmacyguards_controller::class, 'filter'])->name('pharmacyguards.filter');
     Route::resource('pharmacyguards', admin_pharmacyguards_controller::class);
-    Route::resource('pharmacies', admin_pharmacies_controller::class)->only(['index', 'store', 'destroy']);
+
+    Route::resource('pharmacies', admin_pharmacies_controller::class);
     Route::resource('services', AdminServiceController::class);
     Route::resource('adminAssignments', AdminAssignmentsController::class);
     Route::resource('service-schedules', ServiceScheduleController::class);

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
 import { Form, Head, usePage, router } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -9,6 +9,7 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import {
     destroy as destroyPharmacyGuard,
+    filter,
     index as pharmacyguardsIndex,
     store as storePharmacyGuard,
 } from '@/routes/pharmacyguards';
@@ -40,6 +41,23 @@ const removeGuard = (guardId: number) => {
     router.delete(destroyPharmacyGuard(guardId).url, {
         preserveScroll: true,
     });
+};
+
+const searchquery = ref<string>('');
+const pharmacyguardsData = ref<Guard[]>(props.guards);
+
+const filterGuards = () => {
+    const searchqueryquery = searchquery.value
+        ? `?search=${encodeURIComponent(searchquery.value)}`
+        : '';
+    fetch(`/admin/pharmacyguards/filter${searchqueryquery}`)
+        .then((response) => response.json())
+        .then((data) => {
+            pharmacyguardsData.value = data.pharmacyguards ?? [];
+        })
+        .catch((error) => {
+            console.error('Error', error);
+        });
 };
 </script>
 <template>
@@ -86,6 +104,7 @@ const removeGuard = (guardId: number) => {
                 <Form
                     v-bind="storePharmacyGuard.form()"
                     :reset-on-success="['date', 'pharmacy_id']"
+                    @success="filterGuards"
                     v-slot="{ errors, processing }"
                     class="mt-4 grid gap-5"
                 >
@@ -134,6 +153,32 @@ const removeGuard = (guardId: number) => {
                     Guàrdies programades
                 </h2>
 
+                <div class="relative mt-2">
+                    <svg
+                        class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="2"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="m21 21-4.35-4.35m1.85-5.15a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                        />
+                    </svg>
+                    <input
+                        v-model="searchquery"
+                        @keyup="filterGuards()"
+                        aria-labelledby="search"
+                        type="search"
+                        placeholder="Filtra pel nom d'una farmàcia"
+                        class="w-full rounded-xl border border-sidebar-border/80 bg-background py-2.5 pr-4 pl-10 text-sm text-foreground shadow-xs transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
+                        aria-label="Cercar farmàcies de guàrdia"
+                    />
+                </div>
+
                 <div class="mt-4 overflow-x-auto">
                     <table
                         class="min-w-full divide-y divide-sidebar-border/70 text-sm"
@@ -159,7 +204,7 @@ const removeGuard = (guardId: number) => {
                         </thead>
                         <tbody class="divide-y divide-sidebar-border/70">
                             <tr
-                                v-for="guard in props.guards"
+                                v-for="guard in pharmacyguardsData"
                                 :key="guard.id"
                                 class="transition-colors hover:bg-muted/30"
                             >
@@ -176,7 +221,7 @@ const removeGuard = (guardId: number) => {
                                 <td class="px-4 py-3">
                                     <button
                                         type="button"
-                                        class="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-100"
+                                        class="cursor-pointer rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 transition hover:bg-red-100"
                                         @click="removeGuard(guard.id)"
                                     >
                                         Eliminar
@@ -184,7 +229,7 @@ const removeGuard = (guardId: number) => {
                                 </td>
                             </tr>
 
-                            <tr v-if="props.guards.length === 0">
+                            <tr v-if="pharmacyguardsData.length === 0">
                                 <td
                                     colspan="3"
                                     class="px-4 py-8 text-center text-muted-foreground"
