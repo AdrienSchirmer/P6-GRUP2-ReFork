@@ -28,6 +28,14 @@ class admin_pharmacyguards_controller extends Controller
             $query->where('pharmacies.name', 'like', '%' . $request->search . '%');
         }
 
+        if ($request->filled('date_from')) {
+            $query->whereDate('pharmacy_guards.date', '>=', $request->date_from);
+        }
+
+        if ($request->filled('date_to')) {
+            $query->whereDate('pharmacy_guards.date', '<=', $request->date_to);
+        }
+
         $guards = $query
             ->orderBy('pharmacy_guards.date')
             ->get();

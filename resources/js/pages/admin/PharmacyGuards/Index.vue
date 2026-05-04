@@ -9,7 +9,6 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import {
     destroy as destroyPharmacyGuard,
-    filter,
     index as pharmacyguardsIndex,
     store as storePharmacyGuard,
 } from '@/routes/pharmacyguards';
@@ -45,12 +44,27 @@ const removeGuard = (guardId: number) => {
 
 const searchquery = ref<string>('');
 const pharmacyguardsData = ref<Guard[]>(props.guards);
+const dateFrom = ref<string>('');
+const dateTo = ref<string>('');
 
 const filterGuards = () => {
-    const searchqueryquery = searchquery.value
-        ? `?search=${encodeURIComponent(searchquery.value)}`
-        : '';
-    fetch(`/admin/pharmacyguards/filter${searchqueryquery}`)
+    const params = new URLSearchParams();
+
+    if (searchquery.value.trim()) {
+        params.append('search', searchquery.value.trim());
+    }
+
+    if (dateFrom.value) {
+        params.append('date_from', dateFrom.value);
+    }
+
+    if (dateTo.value) {
+        params.append('date_to', dateTo.value);
+    }
+
+    const queryString = params.toString();
+
+    fetch(`/admin/pharmacyguards/filter${queryString ? `?${queryString}` : ''}`)
         .then((response) => response.json())
         .then((data) => {
             pharmacyguardsData.value = data.pharmacyguards ?? [];
@@ -58,6 +72,12 @@ const filterGuards = () => {
         .catch((error) => {
             console.error('Error', error);
         });
+};
+
+const resetDateFilter = () => {
+    dateFrom.value = '';
+    dateTo.value = '';
+    filterGuards();
 };
 </script>
 <template>
@@ -152,6 +172,45 @@ const filterGuards = () => {
                 <h2 class="text-lg font-semibold text-foreground">
                     Guàrdies programades
                 </h2>
+
+                <div class="mt-3 rounded-xl border border-sidebar-border/70 bg-muted/25 p-4">
+                    <p class="mb-3 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
+                        Filtres
+                    </p>
+
+                    <div class="grid gap-3 md:grid-cols-3">
+                        <div class="grid gap-1.5">
+                            <Label for="date_from">Des de</Label>
+                            <Input
+                                id="date_from"
+                                v-model="dateFrom"
+                                type="date"
+                                @change="filterGuards"
+                            />
+                        </div>
+
+                        <div class="grid gap-1.5">
+                            <Label for="date_to">Fins a</Label>
+                            <Input
+                                id="date_to"
+                                v-model="dateTo"
+                                type="date"
+                                @change="filterGuards"
+                            />
+                        </div>
+
+                        <div class="flex items-end">
+                            <Button
+                                type="button"
+                                variant="outline"
+                                class="w-full"
+                                @click="resetDateFilter"
+                            >
+                                Netejar dates
+                            </Button>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="relative mt-2">
                     <svg

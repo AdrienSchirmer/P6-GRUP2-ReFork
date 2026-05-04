@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref } from 'vue';
 import { Form, Head, router, usePage } from '@inertiajs/vue3';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
@@ -30,6 +30,24 @@ const page = usePage<{ flash?: { message?: string } }>();
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Farmàcies', href: pharmaciesIndex().url },
 ];
+
+const searchquery = ref<string>('');
+const pharmaciesData = ref<Pharmacy[]>(props.pharmacies);
+
+const filterPharmacies = () => {
+    const searchqueryquery = searchquery.value
+        ? `?search=${encodeURIComponent(searchquery.value)}`
+        : '';
+
+    fetch(`/admin/pharmacies/filter${searchqueryquery}`)
+        .then((response) => response.json())
+        .then((data) => {
+            pharmaciesData.value = data.pharmacies ?? [];
+        })
+        .catch((error) => {
+            console.error('Error', error);
+        });
+};
 
 const removePharmacy = (pharmacyId: number) => {
     router.delete(pharmaciesDestroy(pharmacyId).url, {
@@ -145,6 +163,32 @@ const removePharmacy = (pharmacyId: number) => {
                     Farmàcies registrades
                 </h2>
 
+                <div class="relative mt-2">
+                    <svg
+                        class="pointer-events-none absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke-width="2"
+                        stroke="currentColor"
+                    >
+                        <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            d="m21 21-4.35-4.35m1.85-5.15a7 7 0 1 1-14 0 7 7 0 0 1 14 0Z"
+                        />
+                    </svg>
+                    <input
+                        v-model="searchquery"
+                        @keyup="filterPharmacies()"
+                        aria-labelledby="search"
+                        type="search"
+                        placeholder="Filtra pel nom d'una farmàcia"
+                        class="w-full rounded-xl border border-sidebar-border/80 bg-background py-2.5 pr-4 pl-10 text-sm text-foreground shadow-xs transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
+                        aria-label="Cercar farmàcies de guàrdia"
+                    />
+                </div>
+
                 <div class="mt-4 overflow-x-auto">
                     <table
                         class="min-w-full divide-y divide-sidebar-border/70 text-sm"
@@ -175,7 +219,7 @@ const removePharmacy = (pharmacyId: number) => {
                         </thead>
                         <tbody class="divide-y divide-sidebar-border/70">
                             <tr
-                                v-for="pharmacy in props.pharmacies"
+                                v-for="pharmacy in pharmaciesData"
                                 :key="pharmacy.id"
                                 class="transition-colors hover:bg-muted/30"
                             >
@@ -199,7 +243,7 @@ const removePharmacy = (pharmacyId: number) => {
                                 </td>
                             </tr>
 
-                            <tr v-if="props.pharmacies.length === 0">
+                            <tr v-if="pharmaciesData.length === 0">
                                 <td
                                     colspan="4"
                                     class="px-4 py-8 text-center text-muted-foreground"
