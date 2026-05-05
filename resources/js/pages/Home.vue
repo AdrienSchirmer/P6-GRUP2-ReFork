@@ -15,7 +15,10 @@ onMounted(() => {
     const date = new Date();
 
     selectedDay.value = date.getDate();
-    idWeekDay.value = date.getDay()-1;
+    const jsDay = date.getDay(); // 0..6 (domingo..sábado)
+    idWeekDay.value = jsDay === 0 ? 6 : jsDay - 1; // 0..6 (lunes..domingo)
+    startWeekDay.value = idWeekDay.value;
+    selectedWeekIndex.value = 0;
     idMonth.value = selectedMonth.value.num = date.getMonth();
     numYear.value = selectedYear.value = date.getFullYear();
 
@@ -50,7 +53,7 @@ const address = ref();
 
 const pharmacy = {
     // Test Information
-    name: ref('Farmacia Soler'),
+    name: ref(''),
     dia: ref(''),
     description: ref(''),
     lat: ref('42.2655267'),
@@ -61,6 +64,8 @@ const pharmacy = {
 const selectedDay = ref();
 const selectedYear = ref();
 const idWeekDay = ref();
+const startWeekDay = ref();
+const selectedWeekIndex = ref(0);
 const idMonth = ref();
 const numYear = ref();
 
@@ -116,7 +121,8 @@ function getMaxDay() : number {
 // Button Select Day
 function setSelectDate(idWeek : number, day : number) {
     selectedDay.value = day;
-    idWeekDay.value = idWeek;
+    selectedWeekIndex.value = idWeek;
+    idWeekDay.value = (startWeekDay.value + idWeek) % 7;
     selectedMonth.value.num = (selectedMonth.value.double && day < 7) ? getNextMonth() : idMonth.value;
     selectedYear.value = (selectedMonth.value.double && selectedMonth.value.num == 0) ? numYear.value + 1 : numYear.value;
     getPharmacyInfo(selectedDay.value, selectedMonth.value.num + 1, selectedYear.value);
@@ -215,7 +221,7 @@ function setDays() {
     const maxDay = getMaxDay();
     let count = 0;
     for (const [key, value] of Object.entries(week)) {
-        value.value = selectedDay.value - idWeekDay.value + count;
+        value.value = selectedDay.value + count;
         if (value.value > maxDay) {
             value.value -= maxDay;
         }
@@ -236,6 +242,16 @@ function setMonthName() {
 function checkDoubleMonth() : boolean {
     return week.tue.value == 1 || week.wed.value == 1 || week.thu.value == 1 || week.fri.value == 1 || week.sat.value == 1 || week.sun.value == 1 ? true : false;
 };
+
+function getDayButtonClass(idWeek: number, day: number) : string {
+    const baseClass = 'h-12 w-12 rounded-xl text-center content-center cursor-pointer text-sm font-semibold transition';
+
+    if (selectedWeekIndex.value === idWeek && selectedDay.value === day) {
+        return `${baseClass} bg-[#01617F] text-white shadow-sm`;
+    }
+
+    return `${baseClass} bg-white text-[#1F2937] hover:bg-[#DDF3FB]`;
+}
 </script>
 
 <template>
@@ -248,7 +264,7 @@ function checkDoubleMonth() : boolean {
             <div class="swiper-pagination"></div>
         </section>
 
-        <section class="bg-[#F2FAFF] py-12 px-2 md:px-24">
+        <section id="qui-som" class="bg-[#F2FAFF] py-12 px-2 md:px-24 scroll-mt-24">
             <Card class="bg-white flex-col md:flex-row">
                 <div class="md:relative h-110 md:h-auto w-full md:w-1/2 overflow-hidden flex items-end">
                     <img src="/storage/farmaciaSolerStore.jpeg"
@@ -262,37 +278,45 @@ function checkDoubleMonth() : boolean {
             </Card>
         </section>
 
-        <section class="bg-[#F2FAFF] pb-12 px-2 md:px-24 flex flex-col gap-4">
-            <h2 class="text-center text-3xl">Farmaciés de Guardia</h2>
-            <Card class="flex-col">
-                <div class="bg-[#01617F] flex flex-col gap-2 py-4 rounded-t w-full">
+        <section id="farmacies-guardia" class="bg-[#F2FAFF] px-2 pb-14 md:px-24 scroll-mt-24">
+            <div class="mb-4">
+                <h2 class="text-center text-3xl font-semibold text-[#124559] md:text-4xl">Farmàcies de guàrdia</h2>
+                <p class="mt-2 text-center text-sm text-[#3B6A7A]">Consulta la farmàcia de guàrdia per dia i obre la ubicació al mapa.</p>
+            </div>
+            <Card class="flex-col overflow-hidden rounded-2xl border border-[#D0EAF3] shadow-lg shadow-[#01617F]/8">
+                <div class="w-full rounded-t bg-gradient-to-r from-[#015873] to-[#01789E] px-4 py-5">
                     <div class="text-white">
-                        <p class="text-center text-sm font-bold">{{ numYear }}</p>
+                        <p class="text-center text-xs tracking-[0.16em] uppercase opacity-90">{{ numYear }}</p>
                         <h3 class="text-center text-2xl font-bold">{{ selectedMonth.name }}</h3>
                     </div>
-                    <div class="flex items-end justify-center gap-2 text-black">
+                    <div class="mt-3 overflow-x-auto pb-1">
+                        <div class="mx-auto flex min-w-max items-end justify-center gap-2 text-black">
                         <!-- iconamoon:player-previous -->
-                        <button @click="setPreviousWeek()" class="h-12 cursor-pointer"><Icon icon="iconamoon:player-play" class="text-[#9DDCF2] rotate-180" width="24" height="24"></Icon></button>
-                        <button @click="setSelectDate(0, week.mon.value)" class="h-12 w-12 bg-white rounded-xl text-center content-center cursor-pointer">{{ week.mon }}</button>
-                        <button @click="setSelectDate(1, week.tue.value)" class="h-12 w-12 bg-white rounded-xl text-center content-center cursor-pointer">{{ week.tue }}</button>
-                        <button @click="setSelectDate(2, week.wed.value)" class="h-12 w-12 bg-white rounded-xl text-center content-center cursor-pointer">{{ week.wed }}</button>
-                        <button @click="setSelectDate(3, week.thu.value)" class="h-12 w-12 bg-white rounded-xl text-center content-center cursor-pointer">{{ week.thu }}</button>
-                        <button @click="setSelectDate(4, week.fri.value)" class="h-12 w-12 bg-white rounded-xl text-center content-center cursor-pointer">{{ week.fri }}</button>
-                        <button @click="setSelectDate(5, week.sat.value)" class="h-12 w-12 bg-white rounded-xl text-center content-center cursor-pointer">{{ week.sat }}</button>
-                        <button @click="setSelectDate(6, week.sun.value)" class="h-12 w-12 bg-white rounded-xl text-center content-center cursor-pointer">{{ week.sun }}</button>
-                        <button @click="setNextWeek()" class="h-12 cursor-pointer"><Icon icon="iconamoon:player-play" class="text-[#9DDCF2]" width="24" height="24"></Icon></button>
+                        <button @click="setPreviousWeek()" class="h-12 cursor-pointer rounded-lg px-1 hover:bg-white/10"><Icon icon="iconamoon:player-play" class="text-[#C8F1FF] rotate-180" width="24" height="24"></Icon></button>
+                        <button @click="setSelectDate(0, week.mon.value)" :class="getDayButtonClass(0, week.mon.value)">{{ week.mon }}</button>
+                        <button @click="setSelectDate(1, week.tue.value)" :class="getDayButtonClass(1, week.tue.value)">{{ week.tue }}</button>
+                        <button @click="setSelectDate(2, week.wed.value)" :class="getDayButtonClass(2, week.wed.value)">{{ week.wed }}</button>
+                        <button @click="setSelectDate(3, week.thu.value)" :class="getDayButtonClass(3, week.thu.value)">{{ week.thu }}</button>
+                        <button @click="setSelectDate(4, week.fri.value)" :class="getDayButtonClass(4, week.fri.value)">{{ week.fri }}</button>
+                        <button @click="setSelectDate(5, week.sat.value)" :class="getDayButtonClass(5, week.sat.value)">{{ week.sat }}</button>
+                        <button @click="setSelectDate(6, week.sun.value)" :class="getDayButtonClass(6, week.sun.value)">{{ week.sun }}</button>
+                        <button @click="setNextWeek()" class="h-12 cursor-pointer rounded-lg px-1 hover:bg-white/10"><Icon icon="iconamoon:player-play" class="text-[#C8F1FF]" width="24" height="24"></Icon></button>
                         <!-- iconamoon:player-next -->
+                        </div>
                     </div>
                 </div>
                 <div class="bg-white flex flex-col md:flex-row rounded-b w-full">
-                    <div class="md:w-2/3 bg-gray-200">
-                        <div id="map" class="h-100 w-full z-0"></div>
+                    <div class="md:w-2/3 bg-[#E9F7FC]">
+                        <div id="map" class="z-0 h-100 w-full md:h-full"></div>
                     </div>
-                    <div class="md:w-1/3 md:p-2 py-6 px-4 bg-gray-200">
-                        <h4 class="text-2xl text-center">{{ pharmacy.name }}</h4>
-                        <p class="">Data: {{ nameWeekDay[idWeekDay] }}, {{ selectedDay }} {{ nameMonth[selectedMonth.num] }} {{ selectedYear }}</p>
-                        <p class="">{{ pharmacy.description }}</p>
-                        <a id="address" class="cursor-pointer rounded px-2 bg-violet-400">Obrir direcció</a>
+                    <div class="border-[#D0EAF3] bg-[#E9F7FC] px-4 py-6 md:w-1/3 md:border-t-0 md:border-l md:p-6">
+                        <h4 class="text-center text-2xl font-semibold text-[#0E3C4D] md:text-left">{{ pharmacy.name || "Carregant farmàcia..." }}</h4>
+                        <p class="mt-3 rounded-lg bg-white/80 px-3 py-2 text-sm text-[#335B69] border border-[#D8EEF6]">
+                            <span class="font-semibold">Data:</span>
+                            {{ nameWeekDay[idWeekDay] }}, {{ selectedDay }} {{ nameMonth[selectedMonth.num] }} {{ selectedYear }}
+                        </p>
+                        <p class="mt-3 min-h-12 text-sm leading-relaxed text-[#335B69]">{{ pharmacy.description || "Sense informació addicional per aquest dia." }}</p>
+                        <a id="address" class="mt-5 inline-flex cursor-pointer rounded-lg bg-[#01617F] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#014F67]">Obrir direcció</a>
                     </div>
                 </div>
             </Card>
