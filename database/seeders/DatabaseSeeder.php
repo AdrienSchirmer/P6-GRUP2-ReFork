@@ -21,7 +21,6 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             AssignmentsSeeder::class,
             ServiceSchedulesSeeder::class,
-            PharmacySeeder::class,
             PharmacyGuardSeeder::class,
         ]);
     }
