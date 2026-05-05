@@ -46,7 +46,7 @@ onMounted(() => {
 
     setDays();
     setMonthName();
-    getPharmacyInfo(selectedDay.value, selectedMonth.value.num + 1, selectedYear.value);
+    setSelectDate(idWeekDay.value, selectedDay.value);
 });
 
 const address = ref();
@@ -182,8 +182,8 @@ async function getPharmacyInfo(day : number, month : number, year : number) {
         console.log(data.response);
 
         address.value.setAttribute('href', "https://www.google.com/maps/@" + pharmacy.lat.value + "," + pharmacy.long.value + ",17z");
-        marker.value.setLatLng([pharmacy.lat.value, pharmacy.long.value])
-        map.value.flyTo([pharmacy.lat.value, pharmacy.long.value]);
+        marker.value.setLatLng([pharmacy.lat.value, pharmacy.long.value]);
+        map.value.flyTo([pharmacy.lat.value, pharmacy.long.value], 19);
     } else {
         pharmacy.description.value = "";
         pharmacy.name.value = "No s'ha trobat cap farmacia."

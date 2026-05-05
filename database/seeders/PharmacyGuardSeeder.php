@@ -15,11 +15,47 @@ class PharmacyGuardSeeder extends Seeder
     {
         DB::table('pharmacy_guards')->insert([
             [
-                'date' => '2026-04-27',
+                'date' => '2026-05-04',
+                'pharmacy_id' => 12,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'date' => '2026-05-05',
+                'pharmacy_id' => 13,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'date' => '2026-05-06',
+                'pharmacy_id' => 10,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'date' => '2026-05-07',
+                'pharmacy_id' => 6,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'date' => '2026-05-08',
+                'pharmacy_id' => 5,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'date' => '2026-05-09',
+                'pharmacy_id' => 14,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'date' => '2026-05-10',
                 'pharmacy_id' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
-        ]);   
+        ]);
     }
 }
