@@ -12,7 +12,7 @@ function onSuccess() {
     <WebAppLayout>
         <section class="min-h-screen bg-blue-50 px-4 py-8 sm:px-6 lg:px-10">
             <div
-                class="mx-auto w-full max-w-3xl rounded-2xl bg-white p-4 shadow-lg sm:p-6"
+                class="mx-auto mb-5 w-full max-w-3xl rounded-2xl bg-white p-4 shadow-lg sm:p-6"
             >
                 <h1 class="mb-4 text-xl font-bold text-[#00617E] sm:text-2xl">
                     Consultar encàrrecs
@@ -64,6 +64,42 @@ function onSuccess() {
                             class="absolute end-1.5 top-1/2 -translate-y-1/2 rounded-xl bg-[#00617E] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#004f66] focus:ring-2 focus:ring-[#00617E]/30 focus:outline-none"
                         >
                             Enviar Codi
+                        </button>
+                    </div>
+                </Form>
+            </div>
+            <div
+                class="mx-auto w-full max-w-3xl rounded-2xl bg-white p-4 shadow-lg sm:p-6"
+            >
+                <h1 class="mb-4 text-xl font-bold text-[#00617E] sm:text-2xl">
+                    Verifica el codi
+                </h1>
+
+                <Form
+                    ref="formRef"
+                    action="/assignments/code"
+                    method="post"
+                    class="w-full"
+                    @success="onSuccess"
+                >
+                    <label for="search" class="sr-only"> Search </label>
+
+                    <div class="relative">
+                        <input
+                            id="search"
+                            type="email"
+                            name="code"
+                            placeholder="Codi"
+                            required
+                            class="w-full rounded-2xl border border-gray-200 bg-gray-50 py-3 ps-11 pe-28 text-sm text-gray-900 transition outline-none placeholder:text-gray-500 focus:border-[#00617E] focus:bg-white focus:ring-2 focus:ring-[#00617E]/20"
+                        />
+
+                        <button
+                            preserve-scroll
+                            type="submit"
+                            class="absolute end-1.5 top-1/2 -translate-y-1/2 rounded-xl bg-[#00617E] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#004f66] focus:ring-2 focus:ring-[#00617E]/30 focus:outline-none"
+                        >
+                            Aceptarº
                         </button>
                     </div>
                 </Form>
