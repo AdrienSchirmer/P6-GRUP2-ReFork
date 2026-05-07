@@ -7,9 +7,12 @@ use Inertia\Inertia;
 use App\Actions\Assignments\CreateAssignmentAction;
 use App\Http\Requests\CreateAssignmentRequest;
 use App\Mail\AssignmentCreated;
+use App\Mail\AssignmentListCode;
 use App\Models\Link;
 use Illuminate\Support\Facades\Mail;
 use App\Rules\TurnstileRule;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 
 
 class AssignmentsController extends Controller
@@ -85,5 +88,24 @@ class AssignmentsController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function code(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => ['required'],
+        ]);
+
+        $otp = (string) random_int(100000, 999999);
+
+        Cache::put(
+            'assignment_code:' . strtolower($validated['email']),
+            Hash::make($otp),
+            now()->addMinutes(1)
+        );
+
+        Mail::to($validated['email'])->send(new AssignmentListCode($otp));
+
+        return back()->with('message', 'Codi enviat correctament');
     }
 }

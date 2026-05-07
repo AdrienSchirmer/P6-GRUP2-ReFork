@@ -51,6 +51,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
     Route::resource('service-schedules', ServiceScheduleController::class);
 });
 Route::resource('assignments', AssignmentsController::class);
+Route::post('/assignments/code', [AssignmentsController::class, 'code'])->name('assignments.code');
 
 Route::get('/contactans', [Contactans::class, 'index'])->name('contactans');
 
