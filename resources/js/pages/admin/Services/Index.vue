@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Link, Head, useForm } from '@inertiajs/vue3'
-import { ref, computed } from 'vue'
-import { Eye, SquarePen, Trash2, Plus, CalendarPlus } from 'lucide-vue-next'
+import { ref } from 'vue'
+import { SquarePen, Trash2, Plus, CalendarPlus } from 'lucide-vue-next'
 import { admindashboard as dashboard } from '@/routes'
 import { type BreadcrumbItem } from '@/types'
 import AppLayout from '@/layouts/AppLayout.vue'
