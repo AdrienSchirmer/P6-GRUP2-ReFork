@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue';
-import 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Swiper from 'swiper';
 import { Autoplay, Pagination } from 'swiper/modules';
@@ -11,7 +10,9 @@ import WebAppLayout from '@/layouts/WebAppLayout.vue';
 const map = ref();
 const marker = ref();
 
-onMounted(() => {
+onMounted(async () => {
+    const LModule = await import('leaflet');
+    const L = LModule.default ?? LModule;
     const date = new Date();
 
     selectedDay.value = date.getDate();
