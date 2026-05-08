@@ -167,7 +167,9 @@ function setPreviousWeek() {
         if ((value.value -= 7) < 1) {
             value.value += limitDay;
         }
-        value.value == 1 ? setMonthName() : null;
+        if (value.value === 1) {
+            setMonthName();
+        }
     }
     if (selectedMonth.value.double || week.sun.value == limitDay) {
         setMonthName();
@@ -236,12 +238,16 @@ function getNextMonth(): number {
 // Function Set Previous Month
 function setPreviousMonth() {
     idMonth.value = getPreviousMonth();
-    idMonth.value == 11 ? setPreviousYear() : null;
+    if (idMonth.value === 11) {
+        setPreviousYear();
+    }
 }
 // Function Set Next Month
 function setNextMonth() {
     idMonth.value = getNextMonth();
-    idMonth.value == 0 ? setNextYear() : null;
+    if (idMonth.value === 0) {
+        setNextYear();
+    }
 }
 // Function Set Previous Year
 function setPreviousYear() {
