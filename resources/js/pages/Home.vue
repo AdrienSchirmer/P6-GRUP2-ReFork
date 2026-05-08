@@ -163,7 +163,7 @@ function setPreviousWeek() {
         setPreviousMonth();
     }
     const limitDay = getMaxDay();
-    for (const [key, value] of Object.entries(week)) {
+    for (const [, value] of Object.entries(week)) {
         if ((value.value -= 7) < 1) {
             value.value += limitDay;
         }
@@ -177,7 +177,7 @@ function setPreviousWeek() {
 // Button Next Week
 function setNextWeek() {
     const limitDay = getMaxDay();
-    for (const [key, value] of Object.entries(week)) {
+    for (const [, value] of Object.entries(week)) {
         if ((value.value += 7) > limitDay) {
             if ((value.value -= limitDay) == 1) {
                 setMonthName();
@@ -255,7 +255,7 @@ function setNextYear() {
 function setDays() {
     const maxDay = getMaxDay();
     let count = 0;
-    for (const [key, value] of Object.entries(week)) {
+    for (const [, value] of Object.entries(week)) {
         value.value = selectedDay.value + count;
         if (value.value > maxDay) {
             value.value -= maxDay;
