@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { Icon } from '@iconify/vue';
-import { onMounted, ref } from 'vue';
-import Card from '@/components/Card.vue';
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Swiper from 'swiper';
-import { Pagination, Autoplay } from 'swiper/modules';
+import { Autoplay, Pagination } from 'swiper/modules';
+import { onMounted, ref } from 'vue';
+import Card from '@/components/Card.vue';
+import WebAppLayout from '@/layouts/WebAppLayout.vue';
 
 const map = ref();
 const marker = ref();
@@ -34,7 +34,17 @@ onMounted(() => {
             ',17z',
     );
 
-    const swiper = new Swiper('.swiper', {
+    // const swiper = new Swiper('.swiper', {
+    //     modules: [Pagination, Autoplay],
+    //     autoplay: {
+    //         delay: 3000,
+    //     },
+    //     pagination: {
+    //         el: '.swiper-pagination',
+    //     },
+    // });
+
+    new Swiper('.swiper', {
         modules: [Pagination, Autoplay],
         autoplay: {
             delay: 3000,
