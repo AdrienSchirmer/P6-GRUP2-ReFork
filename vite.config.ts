@@ -25,4 +25,14 @@ export default defineConfig({
             formVariants: true,
         }),
     ],
+
+    // 🔥 ADD THIS BLOCK
+    server: {
+        host: '0.0.0.0',
+        port: 5175,
+        strictPort: true,
+        hmr: {
+            host: 'localhost',
+        },
+    },
 });
