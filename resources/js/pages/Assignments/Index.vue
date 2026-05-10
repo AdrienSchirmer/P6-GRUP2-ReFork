@@ -99,7 +99,7 @@ function onSuccess() {
                             type="submit"
                             class="absolute end-1.5 top-1/2 -translate-y-1/2 rounded-xl bg-[#00617E] px-4 py-2 text-sm font-semibold text-white transition hover:bg-[#004f66] focus:ring-2 focus:ring-[#00617E]/30 focus:outline-none"
                         >
-                            Aceptarº
+                            Aceptar
                         </button>
                     </div>
                 </Form>
