@@ -56,6 +56,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
 //
 Route::resource('assignments', AssignmentsController::class);
 Route::post('/assignments/code', [AssignmentsController::class, 'code'])->name('assignments.code');
+Route::post('/assignments/verify-code', [AssignmentsController::class, 'verifyCode'])->name('assignments.verify-code');
 
 //
 // CONTACT

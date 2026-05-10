@@ -93,20 +93,49 @@ class AssignmentsController extends Controller
     public function code(Request $request)
     {
         $validated = $request->validate([
-            'email' => ['required'],
+            'email' => ['required', 'email'],
         ]);
 
         $otpExpiresInMinutes = 10;
         $otp = (string) random_int(100000, 999999);
+        $normalizedEmail = strtolower($validated['email']);
 
         Cache::put(
-            'assignment_code:' . strtolower($validated['email']),
+            'assignment_code:' . $normalizedEmail,
             Hash::make($otp),
             now()->addMinutes($otpExpiresInMinutes)
         );
 
+        $request->session()->put('assignment_code_email', $normalizedEmail);
+
         Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
 
-        return back()->with('message', 'Codi enviat correctament');
+        return back()->with('success', 'Codi enviat correctament');
+    }
+
+    public function verifyCode(Request $request)
+    {
+        $validated = $request->validate([
+            'code' => ['required', 'digits:6'],
+        ]);
+
+        $email = $request->session()->get('assignment_code_email');
+
+        if (!$email) {
+            return back()->withErrors([
+                'code' => 'Primer envia el codi al teu correu',
+            ]);
+        }
+
+        $cacheKey = 'assignment_code:' . $email;
+        $hashedOtp = Cache::get($cacheKey);
+
+        if (!$hashedOtp || !Hash::check($validated['code'], $hashedOtp)) {
+            return back()->withErrors([
+                'code' => 'Codi invalid o caducat',
+            ]);
+        }
+
+        return back()->with('success', 'code valid');
     }
 }
