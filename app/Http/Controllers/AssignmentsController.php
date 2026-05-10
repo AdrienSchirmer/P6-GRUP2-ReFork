@@ -101,7 +101,7 @@ class AssignmentsController extends Controller
         Cache::put(
             'assignment_code:' . strtolower($validated['email']),
             Hash::make($otp),
-            now()->addMinutes(1)
+            now()->addMinutes(10)
         );
 
         Mail::to($validated['email'])->send(new AssignmentListCode($otp));
