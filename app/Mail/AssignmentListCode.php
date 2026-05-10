@@ -17,7 +17,7 @@ class AssignmentListCode extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct(public string $code)
+    public function __construct(public string $code, public int $expiresInMinutes)
     {
         //
     }
@@ -39,7 +39,10 @@ class AssignmentListCode extends Mailable
     {
         return new Content(
             view: 'mail.assignment-list-code',
-            with: ['code' => $this->code],
+            with: [
+                'code' => $this->code,
+                'expiresInMinutes' => $this->expiresInMinutes,
+            ],
         );
     }
 

@@ -96,15 +96,16 @@ class AssignmentsController extends Controller
             'email' => ['required'],
         ]);
 
+        $otpExpiresInMinutes = 10;
         $otp = (string) random_int(100000, 999999);
 
         Cache::put(
             'assignment_code:' . strtolower($validated['email']),
             Hash::make($otp),
-            now()->addMinutes(10)
+            now()->addMinutes($otpExpiresInMinutes)
         );
 
-        Mail::to($validated['email'])->send(new AssignmentListCode($otp));
+        Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
 
         return back()->with('message', 'Codi enviat correctament');
     }
