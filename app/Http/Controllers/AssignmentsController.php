@@ -8,12 +8,10 @@ use App\Actions\Assignments\CreateAssignmentAction;
 use App\Http\Requests\CreateAssignmentRequest;
 use App\Mail\AssignmentCreated;
 use App\Mail\AssignmentListCode;
-use App\Models\Link;
 use Illuminate\Support\Facades\Mail;
-use App\Rules\TurnstileRule;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
-use App\Models\assignments;
+use App\Models\assignments as Assignment;
 
 
 class AssignmentsController extends Controller
@@ -137,12 +135,14 @@ class AssignmentsController extends Controller
             ]);
         }
 
-        $assignments = assignments::where('address', $email)->get();
+        Cache::forget($cacheKey);
 
+        $assignments = [];
+        if ($email) {
+            $assignments = Assignment::where('address', $email)->get()->values();
+        }
         return Inertia::render('Assignments/Index', [
             'assignments' => $assignments,
         ]);
-
-        return back()->with('success', 'code valid');
     }
 }
