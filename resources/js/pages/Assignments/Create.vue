@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { store } from '@/routes/assignments';
-import { show } from '@/routes/users';
+// import { show } from '@/routes/users';
 import { Form, Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted } from 'vue';
 import { ref } from 'vue';
@@ -95,7 +95,7 @@ function onSuccess() {
                         method="POST"
                         class="space-y-4"
                         @success="onSuccess"
-                        #default="{ errors, invalid, validate, validating }"
+                        #default="{ errors, validating }"
                     >
                         <div>
                             <label

@@ -12,7 +12,9 @@ import Brands from '@/components/Brands.vue';
 const map = ref();
 const marker = ref();
 
-onMounted(() => {
+onMounted(async () => {
+    const LModule = await import('leaflet');
+    const L = LModule.default ?? LModule;
     const date = new Date();
 
     selectedDay.value = date.getDate();
@@ -151,7 +153,7 @@ function setPreviousWeek() {
         setPreviousMonth();
     }
     const limitDay = getMaxDay();
-    for (const [key, value] of Object.entries(week)) {
+    for (const [, value] of Object.entries(week)) {
         if ((value.value -= 7) < 1) {
             value.value += limitDay;
         }
@@ -243,7 +245,7 @@ function setNextYear() {
 function setDays() {
     const maxDay = getMaxDay();
     let count = 0;
-    for (const [key, value] of Object.entries(week)) {
+    for (const [, value] of Object.entries(week)) {
         value.value = selectedDay.value + count;
         if (value.value > maxDay) {
             value.value -= maxDay;
