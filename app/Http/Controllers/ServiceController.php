@@ -32,7 +32,7 @@ class ServiceController extends Controller
                     'id' => $service->id,
                     'nom' => $service->name,
                     'descripció' => $service->description,
-                    'durada' => $service->duration_minutes.' min',
+                    'durada' => $service->duration_minutes . ' min',
                     'icon' => $service->icon,
                 ];
             }),
@@ -67,7 +67,7 @@ class ServiceController extends Controller
             'cf-turnstile-response.required' => 'Por favor, completa la verificación.',
         ]);
         $appointmentDateTime = Carbon::parse(
-            $validated['appointment_date'].' '.$validated['start_time']
+            $validated['appointment_date'] . ' ' . $validated['start_time']
         );
 
         if ($appointmentDateTime->isPast()) {
@@ -102,7 +102,7 @@ class ServiceController extends Controller
             'name' => $validated['customer_name'],
             'email' => $validated['customer_email'],
             'service_name' => $service->name,
-            'duration' => $service->duration_minutes.' min',
+            'duration' => $service->duration_minutes . ' min',
             'date' => $validated['appointment_date'],
             'time' => $validated['start_time'],
             'pharmacy' => 'Farmàcia Soler',
@@ -111,10 +111,10 @@ class ServiceController extends Controller
         ];
         Mail::to($validated['customer_email'])->send(new ReservationCreated($mailData));
 
-        /*   Inertia::flash([
-            'message' => 'Reservació creada amb èxit! Rebràs una confirmació per correu electrònic aviat.',
+        // Inertia::flash([
+        //     'message' => 'Reservació creada amb èxit! Rebràs una confirmació per correu electrònic aviat.',
+        // ]);
 
-        ]);*/
         return to_route('pedir-cita')->with('success', [
             'message' => 'Reservació creada amb èxit! Rebràs una confirmació aviat.',
             'service' => $validated['service_id'],
@@ -171,7 +171,7 @@ class ServiceController extends Controller
 
         $data = [
             'service_name' => $service->name,
-            'duration' => $service->duration_minutes.' min',
+            'duration' => $service->duration_minutes . ' min',
             'date' => $request->date,
             'time' => $request->time,
             'name' => $request->name,
@@ -184,7 +184,7 @@ class ServiceController extends Controller
         $pdf = Pdf::loadView('pdf.appointment', $data)
             ->setPaper('a4', 'portrait');
 
-        $filename = 'cita-'.str_replace(' ', '-', $request->name).'-'.$request->date.'.pdf';
+        $filename = 'cita-' . str_replace(' ', '-', $request->name) . '-' . $request->date . '.pdf';
 
         return $pdf->download($filename);
     }
