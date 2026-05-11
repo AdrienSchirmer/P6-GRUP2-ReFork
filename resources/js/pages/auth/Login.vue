@@ -43,7 +43,9 @@ defineProps<{
     >
         <div class="grid gap-5">
             <div class="space-y-1">
-                <h2 class="text-lg font-semibold text-[#0f5f7f] dark:text-foreground">
+                <h2
+                    class="text-lg font-semibold text-[#0f5f7f] dark:text-foreground"
+                >
                     Benvingut de nou
                 </h2>
                 <p class="text-sm text-muted-foreground">

@@ -3,22 +3,17 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-
-
 class ReservationCreated extends Mailable
 {
     use Queueable, SerializesModels;
 
     public array $data;
-
-
 
     /**
      * Create a new message instance.
@@ -35,7 +30,7 @@ class ReservationCreated extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Confirmació de la teva cita – ' . $this->data['pharmacy'],
+            subject: 'Confirmació de la teva cita – '.$this->data['pharmacy'],
 
         );
     }
@@ -45,7 +40,7 @@ class ReservationCreated extends Mailable
      */
     public function content(): Content
     {
-       return new Content(
+        return new Content(
             view: 'mail.reservation-created',
             with: ['data' => $this->data],
         );

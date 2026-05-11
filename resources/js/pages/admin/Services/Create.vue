@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import { Head, Link, useForm } from '@inertiajs/vue3'
-import { admindashboard as dashboard } from '@/routes'
-import { type BreadcrumbItem } from '@/types'
-import AppLayout from '@/layouts/AppLayout.vue'
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import {
     Pill,
     HeartPulse,
@@ -18,13 +15,15 @@ import {
     Brain,
     Bandage,
     Thermometer,
-} from 'lucide-vue-next'
-
+} from 'lucide-vue-next';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type {BreadcrumbItem} from '@/types';
+import { admindashboard as dashboard } from '@/routes';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Administració de serveis', href: dashboard().url },
     { title: 'Nou servei', href: '#' },
-]
+];
 
 const iconOptions = [
     { value: 'pill', label: 'Medicació', icon: Pill },
@@ -41,7 +40,7 @@ const iconOptions = [
     { value: 'brain', label: 'Benestar mental', icon: Brain },
     { value: 'bandage', label: 'Cures', icon: Bandage },
     { value: 'thermometer', label: 'Control temperatura', icon: Thermometer },
-]
+];
 
 // FORM
 const form = useForm({
@@ -49,61 +48,71 @@ const form = useForm({
     description: '',
     duration_minutes: 30,
     icon: '',
-})
+});
 
 const submit = () => {
-    form.post('/admin/services')
-}
+    form.post('/admin/services');
+};
 </script>
 
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-
         <Head title="Nou servei" />
 
-
-        <div class="p-6 w-full max-w-5xl space-y-6">
-
+        <div class="w-full max-w-5xl space-y-6 p-6">
             <!-- HEADER -->
             <div>
                 <h1 class="text-2xl font-bold">Nou Servei</h1>
-                <p class="text-gray-500 text-sm">
+                <p class="text-sm text-gray-500">
                     Crea un nou servei disponible per als pacients
                 </p>
             </div>
 
             <!-- FORM CARD -->
-            <div class="bg-white rounded-xl shadow border p-6">
-
+            <div class="rounded-xl border bg-white p-6 shadow">
                 <form @submit.prevent="submit" class="space-y-6">
-
-
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-
+                    <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
                         <!-- NAME -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">
+                            <label
+                                class="block text-sm font-medium text-gray-700"
+                            >
                                 Nom del servei
                             </label>
-                            <input v-model="form.name" type="text" placeholder="Ex.: Consulta general"
-                                class="mt-1 w-full rounded-lg border px-3 py-2 text-sm" />
-                            <p v-if="form.errors.name" class="text-xs text-red-500 mt-1">
+                            <input
+                                v-model="form.name"
+                                type="text"
+                                placeholder="Ex.: Consulta general"
+                                class="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
+                            />
+                            <p
+                                v-if="form.errors.name"
+                                class="mt-1 text-xs text-red-500"
+                            >
                                 {{ form.errors.name }}
                             </p>
                         </div>
 
                         <!-- DURATION -->
                         <div>
-                            <label class="block text-sm font-medium text-gray-700">
+                            <label
+                                class="block text-sm font-medium text-gray-700"
+                            >
                                 Durada (minuts)
                             </label>
-                            <input v-model="form.duration_minutes" type="number" min="1"
-                                class="mt-1 w-full rounded-lg border px-3 py-2 text-sm" />
-                            <p v-if="form.errors.duration_minutes" class="text-xs text-red-500 mt-1">
+                            <input
+                                v-model="form.duration_minutes"
+                                type="number"
+                                min="1"
+                                class="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
+                            />
+                            <p
+                                v-if="form.errors.duration_minutes"
+                                class="mt-1 text-xs text-red-500"
+                            >
                                 {{ form.errors.duration_minutes }}
                             </p>
                         </div>
-
                     </div>
 
                     <!-- DESCRIPTION-->
@@ -111,53 +120,72 @@ const submit = () => {
                         <label class="block text-sm font-medium text-gray-700">
                             Descripció
                         </label>
-                        <textarea v-model="form.description" rows="3" placeholder="Descripció breu del servei..."
-                            class="mt-1 w-full rounded-lg border px-3 py-2 text-sm"></textarea>
-                        <p v-if="form.errors.description" class="text-xs text-red-500 mt-1">
+                        <textarea
+                            v-model="form.description"
+                            rows="3"
+                            placeholder="Descripció breu del servei..."
+                            class="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
+                        ></textarea>
+                        <p
+                            v-if="form.errors.description"
+                            class="mt-1 text-xs text-red-500"
+                        >
                             {{ form.errors.description }}
                         </p>
                     </div>
 
                     <!-- ICON -->
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                        <label
+                            class="mb-2 block text-sm font-medium text-gray-700"
+                        >
                             Icona
                         </label>
 
                         <div class="flex flex-wrap gap-3">
-                            <button v-for="opt in iconOptions" :key="opt.value" type="button"
-                                @click="form.icon = opt.value" :class="[
-                                    'flex items-center gap-2 px-3 py-2 rounded-lg border text-sm transition',
+                            <button
+                                v-for="opt in iconOptions"
+                                :key="opt.value"
+                                type="button"
+                                @click="form.icon = opt.value"
+                                :class="[
+                                    'flex items-center gap-2 rounded-lg border px-3 py-2 text-sm transition',
                                     form.icon === opt.value
                                         ? 'border-blue-500 bg-blue-50 text-blue-700'
-                                        : 'border-gray-200 hover:bg-gray-50 text-gray-600',
-                                ]">
-                                <component :is="opt.icon" class="w-4 h-4" />
+                                        : 'border-gray-200 text-gray-600 hover:bg-gray-50',
+                                ]"
+                            >
+                                <component :is="opt.icon" class="h-4 w-4" />
                                 {{ opt.label }}
                             </button>
                         </div>
 
-                        <p v-if="form.errors.icon" class="text-xs text-red-500 mt-1">
+                        <p
+                            v-if="form.errors.icon"
+                            class="mt-1 text-xs text-red-500"
+                        >
                             {{ form.errors.icon }}
                         </p>
                     </div>
 
                     <!-- ACTIONS -->
-                    <div class="flex justify-end gap-3 pt-4 border-t">
-
-                        <Link href="/admin/services" class="text-sm font-medium text-gray-600 hover:text-gray-900">
+                    <div class="flex justify-end gap-3 border-t pt-4">
+                        <Link
+                            href="/admin/services"
+                            class="text-sm font-medium text-gray-600 hover:text-gray-900"
+                        >
                             Cancel·lar
                         </Link>
 
-                        <button type="submit" :disabled="form.processing"
-                            class="rounded-lg px-6 py-2 text-sm font-medium text-white bg-blue-400 disabled:opacity-50">
+                        <button
+                            type="submit"
+                            :disabled="form.processing"
+                            class="rounded-lg bg-blue-400 px-6 py-2 text-sm font-medium text-white disabled:opacity-50"
+                        >
                             {{ form.processing ? 'Desant...' : 'Crear servei' }}
                         </button>
-
                     </div>
-
                 </form>
-
             </div>
         </div>
     </AppLayout>

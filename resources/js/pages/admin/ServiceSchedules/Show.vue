@@ -1,7 +1,5 @@
 <script setup lang="ts">
 import { Head, Link, router } from '@inertiajs/vue3';
-import { ref } from 'vue';
-import AppLayout from '@/layouts/AppLayout.vue';
 import { CalendarPlus, Trash2 } from 'lucide-vue-next';
 import {
     Pill,
@@ -10,6 +8,8 @@ import {
     ShieldCheck,
     ScanFace,
 } from 'lucide-vue-next';
+import { ref } from 'vue';
+import AppLayout from '@/layouts/AppLayout.vue';
 
 // ICON MAP
 const iconMap: Record<string, any> = {
@@ -65,7 +65,9 @@ function closeDeleteModal() {
 const schedules = ref<Schedule[]>([...props.service.schedules]);
 
 function deleteSchedule() {
-    if (!selectedSchedule.value) return;
+    if (!selectedSchedule.value) {
+return;
+}
 
     const id = selectedSchedule.value.id;
 

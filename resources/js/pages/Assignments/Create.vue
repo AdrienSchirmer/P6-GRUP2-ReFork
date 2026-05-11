@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import WebAppLayout from '@/layouts/WebAppLayout.vue';
-import { store } from '@/routes/assignments';
 // import { show } from '@/routes/users';
 import { Form, Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted } from 'vue';
 import { ref } from 'vue';
+import WebAppLayout from '@/layouts/WebAppLayout.vue';
+import { store } from '@/routes/assignments';
 
 const props = defineProps<{
     turnstileSiteKey: string | null;
@@ -18,7 +18,9 @@ function renderTurnstile() {
     const el = document.querySelector('.cf-turnstile') as HTMLElement | null;
     const t = (window as any).turnstile;
 
-    if (!el || !props.turnstileSiteKey || !t) return;
+    if (!el || !props.turnstileSiteKey || !t) {
+return;
+}
 
     el.innerHTML = '';
     t.render(el, {
@@ -28,10 +30,13 @@ function renderTurnstile() {
 }
 
 onMounted(() => {
-    if (!props.turnstileSiteKey) return;
+    if (!props.turnstileSiteKey) {
+return;
+}
 
     if (document.getElementById('cf-turnstile-api')) {
         renderTurnstile();
+
         return;
     }
 
@@ -47,6 +52,7 @@ onMounted(() => {
 
 onUnmounted(() => {
     const s = document.getElementById('cf-turnstile-api');
+
     if (s) {
         s.remove();
     }

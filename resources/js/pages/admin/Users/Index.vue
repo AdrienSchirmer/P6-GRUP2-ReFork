@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
+import { computed, ref } from 'vue';
+import AppLayout from '@/layouts/AppLayout.vue';
+import type {BreadcrumbItem} from '@/types';
 import { admindashboard as dashboard } from '@/routes';
 import { create as usersCreate } from '@/routes/users';
-import { type BreadcrumbItem } from '@/types';
-import AppLayout from '@/layouts/AppLayout.vue';
 
 type User = {
     id: number;
@@ -37,7 +37,10 @@ const filteredUsers = computed(() => {
     return props.users
         .filter((user) => user.id !== props.currentUser.id)
         .filter((user) => {
-            if (!query) return true;
+            if (!query) {
+return true;
+}
+
             return (
                 user.name.toLowerCase().includes(query) ||
                 user.email.toLowerCase().includes(query) ||
@@ -45,7 +48,10 @@ const filteredUsers = computed(() => {
             );
         })
         .filter((user) => {
-            if (!selectedRole.value) return true;
+            if (!selectedRole.value) {
+return true;
+}
+
             return (user.role ?? '') === selectedRole.value;
         });
 });
@@ -56,6 +62,7 @@ const totalPages = computed(() =>
 
 const visibleUsers = computed(() => {
     const start = (currentPage.value - 1) * perPage;
+
     return filteredUsers.value.slice(start, start + perPage);
 });
 
@@ -63,11 +70,15 @@ const canGoPrev = computed(() => currentPage.value > 1);
 const canGoNext = computed(() => currentPage.value < totalPages.value);
 
 const goPrev = () => {
-    if (canGoPrev.value) currentPage.value -= 1;
+    if (canGoPrev.value) {
+currentPage.value -= 1;
+}
 };
 
 const goNext = () => {
-    if (canGoNext.value) currentPage.value += 1;
+    if (canGoNext.value) {
+currentPage.value += 1;
+}
 };
 
 const resetPage = () => {
@@ -87,8 +98,14 @@ const roleBadgeClass = (role?: string | null) => {
 };
 
 const roleLabel = (role?: string | null) => {
-    if (role === 'superadmin') return 'Superadmin';
-    if (role === 'admin') return 'Admin';
+    if (role === 'superadmin') {
+return 'Superadmin';
+}
+
+    if (role === 'admin') {
+return 'Admin';
+}
+
     return '—';
 };
 </script>
@@ -97,15 +114,32 @@ const roleLabel = (role?: string | null) => {
     <AppLayout :breadcrumbs="breadcrumbs">
         <Head title="Administració d'usuaris" />
 
-        <div class="relative flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4 md:p-6">
-            <div class="pointer-events-none absolute top-0 right-8 h-48 w-48 rounded-full bg-muted/70 blur-3xl"></div>
-            <div class="pointer-events-none absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/60 blur-3xl"></div>
+        <div
+            class="relative flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4 md:p-6"
+        >
+            <div
+                class="pointer-events-none absolute top-0 right-8 h-48 w-48 rounded-full bg-muted/70 blur-3xl"
+            ></div>
+            <div
+                class="pointer-events-none absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/60 blur-3xl"
+            ></div>
 
-            <div class="relative rounded-2xl border border-sidebar-border/70 bg-gradient-to-br from-background to-muted/70 p-7 shadow-sm">
-                <p class="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Farmacia Soler</p>
-                <h1 class="mt-2 text-3xl font-semibold tracking-tight text-foreground">Administració d'usuaris</h1>
+            <div
+                class="relative rounded-2xl border border-sidebar-border/70 bg-gradient-to-br from-background to-muted/70 p-7 shadow-sm"
+            >
+                <p
+                    class="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase"
+                >
+                    Farmacia Soler
+                </p>
+                <h1
+                    class="mt-2 text-3xl font-semibold tracking-tight text-foreground"
+                >
+                    Administració d'usuaris
+                </h1>
                 <p class="mt-2 text-sm text-muted-foreground">
-                    Visualitza i gestiona els usuaris interns de manera ràpida i clara.
+                    Visualitza i gestiona els usuaris interns de manera ràpida i
+                    clara.
                 </p>
             </div>
 
@@ -117,8 +151,12 @@ const roleLabel = (role?: string | null) => {
                 {{ page.props.flash?.message }}
             </div>
 
-            <div class="relative rounded-2xl border border-sidebar-border/70 bg-background/95 p-5 shadow-sm">
-                <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div
+                class="relative rounded-2xl border border-sidebar-border/70 bg-background/95 p-5 shadow-sm"
+            >
+                <div
+                    class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center"
+                >
                     <input
                         v-model="searchQuery"
                         @input="resetPage"
@@ -146,14 +184,36 @@ const roleLabel = (role?: string | null) => {
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-sidebar-border/70 text-sm">
+                    <table
+                        class="min-w-full divide-y divide-sidebar-border/70 text-sm"
+                    >
                         <thead class="bg-muted/40">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Nom</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Email</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Usuari</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Rol</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Creat el</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
+                                >
+                                    Nom
+                                </th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
+                                >
+                                    Email
+                                </th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
+                                >
+                                    Usuari
+                                </th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
+                                >
+                                    Rol
+                                </th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
+                                >
+                                    Creat el
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-sidebar-border/70">
@@ -162,9 +222,15 @@ const roleLabel = (role?: string | null) => {
                                 :key="user.id"
                                 class="transition-colors hover:bg-muted/30"
                             >
-                                <td class="px-4 py-3 font-medium">{{ user.name }}</td>
-                                <td class="px-4 py-3 text-muted-foreground">{{ user.email }}</td>
-                                <td class="px-4 py-3 text-muted-foreground">{{ user.nickname || '—' }}</td>
+                                <td class="px-4 py-3 font-medium">
+                                    {{ user.name }}
+                                </td>
+                                <td class="px-4 py-3 text-muted-foreground">
+                                    {{ user.email }}
+                                </td>
+                                <td class="px-4 py-3 text-muted-foreground">
+                                    {{ user.nickname || '—' }}
+                                </td>
                                 <td class="px-4 py-3 text-muted-foreground">
                                     <span
                                         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold"
@@ -176,14 +242,19 @@ const roleLabel = (role?: string | null) => {
                                 <td class="px-4 py-3 text-muted-foreground">
                                     {{
                                         user.created_at
-                                            ? new Date(user.created_at).toLocaleString('ca-ES')
+                                            ? new Date(
+                                                  user.created_at,
+                                              ).toLocaleString('ca-ES')
                                             : '—'
                                     }}
                                 </td>
                             </tr>
 
                             <tr v-if="visibleUsers.length === 0">
-                                <td colspan="5" class="px-4 py-8 text-center text-muted-foreground">
+                                <td
+                                    colspan="5"
+                                    class="px-4 py-8 text-center text-muted-foreground"
+                                >
                                     No s'han trobat usuaris amb aquests filtres.
                                 </td>
                             </tr>

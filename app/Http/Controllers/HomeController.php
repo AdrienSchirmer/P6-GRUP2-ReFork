@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PharmacyGuard;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-use App\Models\PharmacyGuard;
 
 class HomeController extends Controller
 {
@@ -47,7 +47,7 @@ class HomeController extends Controller
     {
         //
     }
-    
+
     /**
      * Update the specified resource in storage.
      */

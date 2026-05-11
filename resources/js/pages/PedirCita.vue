@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import WebAppLayout from '@/layouts/WebAppLayout.vue';
-import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
 import { useForm, usePage, router } from '@inertiajs/vue3';
 import {
     ScanFace,
@@ -15,6 +13,8 @@ import {
     Pill,
     HeartPulse,
 } from 'lucide-vue-next';
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
+import WebAppLayout from '@/layouts/WebAppLayout.vue';
 
 defineOptions({
     layout: WebAppLayout,
@@ -130,7 +130,10 @@ const selectedServiceObj = computed(() =>
 );
 
 const successServiceName = computed(() => {
-    if (!successData.value?.service) return '—';
+    if (!successData.value?.service) {
+return '—';
+}
+
     return (
         props.services.find((s) => s.id === successData.value?.service)?.nom ??
         '—'
@@ -138,7 +141,10 @@ const successServiceName = computed(() => {
 });
 
 const formattedDate = computed(() => {
-    if (!selectedDate.value) return '';
+    if (!selectedDate.value) {
+return '';
+}
+
     return `${currentYear.value}-${String(currentMonth.value + 1).padStart(2, '0')}-${String(selectedDate.value).padStart(2, '0')}`;
 });
 
@@ -169,6 +175,7 @@ const calendarDays = computed<CalendarCell[]>(() => {
     }
 
     const remaining = 42 - cells.length;
+
     for (let d = 1; d <= remaining; d++) {
         cells.push({ day: d, isCurrentMonth: false });
     }
@@ -181,6 +188,7 @@ const serviceSchedules = ref<{ day_of_week: number; slots: string[] }[]>([]);
 async function fetchSchedule() {
     if (!selectedService.value) {
         serviceSchedules.value = [];
+
         return;
     }
 
@@ -194,9 +202,10 @@ const availableDaysOfWeek = computed(
     () => new Set(serviceSchedules.value.map((s) => s.day_of_week)),
 );
 
-
 const availableTimes = computed(() => {
-    if (!selectedDate.value) return [];
+    if (!selectedDate.value) {
+return [];
+}
 
     const date = new Date(
         currentYear.value,
@@ -207,7 +216,9 @@ const availableTimes = computed(() => {
     const iso = date.getDay() === 0 ? 7 : date.getDay();
     const schedule = serviceSchedules.value.find((s) => s.day_of_week === iso);
 
-    if (!schedule) return [];
+    if (!schedule) {
+return [];
+}
 
     let slots = schedule.slots;
 
@@ -231,17 +242,19 @@ const availableTimes = computed(() => {
     return slots;
 });
 
-
-
 function isDayAvailable(cell: CalendarCell): boolean {
-    if (!cell.isCurrentMonth) return false;
+    if (!cell.isCurrentMonth) {
+return false;
+}
 
     const isPast =
         currentYear.value === todayYear &&
         currentMonth.value === todayMonth &&
         cell.day < todayDate;
 
-    if (isPast) return false;
+    if (isPast) {
+return false;
+}
 
     const date = new Date(currentYear.value, currentMonth.value, cell.day);
     const iso = date.getDay() === 0 ? 7 : date.getDay();
@@ -250,7 +263,10 @@ function isDayAvailable(cell: CalendarCell): boolean {
 }
 
 function selectDay(cell: CalendarCell) {
-    if (!isDayAvailable(cell)) return;
+    if (!isDayAvailable(cell)) {
+return;
+}
+
     selectedDate.value = cell.day;
     selectedTime.value = '';
 }
@@ -259,7 +275,9 @@ function prevMonth() {
     const isCurrentRealMonth =
         currentYear.value === todayYear && currentMonth.value === todayMonth;
 
-    if (isCurrentRealMonth) return;
+    if (isCurrentRealMonth) {
+return;
+}
 
     if (currentMonth.value === 0) {
         currentMonth.value = 11;
@@ -285,7 +303,9 @@ function nextMonth() {
 }
 
 const pdfDownloadUrl = computed(() => {
-    if (!successData.value) return '#';
+    if (!successData.value) {
+return '#';
+}
 
     const params = new URLSearchParams({
         service: String(successData.value.service),
@@ -301,6 +321,7 @@ const pdfDownloadUrl = computed(() => {
 async function fetchBookedTimes() {
     if (!selectedService.value || !selectedDate.value) {
         bookedTimes.value = [];
+
         return;
     }
 
@@ -314,19 +335,28 @@ async function fetchBookedTimes() {
 function renderTurnstile() {
     const el = document.querySelector('.cf-turnstile') as HTMLElement | null;
     const t = (window as any).turnstile;
-    if (!el || !props.turnstileSiteKey || !t) return;
+
+    if (!el || !props.turnstileSiteKey || !t) {
+return;
+}
+
     el.innerHTML = '';
     t.render(el, { sitekey: props.turnstileSiteKey, language: 'es' });
 }
 
 function nextStep() {
-    if (step.value < 3) step.value++;
+    if (step.value < 3) {
+step.value++;
+}
 
     if (step.value === 3) {
-        if (!props.turnstileSiteKey) return;
+        if (!props.turnstileSiteKey) {
+return;
+}
 
         if (document.getElementById('cf-turnstile-api')) {
             renderTurnstile();
+
             return;
         }
 
@@ -342,7 +372,9 @@ function nextStep() {
 }
 
 function prevStep() {
-    if (step.value > 1) step.value--;
+    if (step.value > 1) {
+step.value--;
+}
 }
 
 function submitReservation() {
@@ -389,7 +421,10 @@ watch([selectedDate, currentMonth, currentYear], async () => {
 watch(
     () => page.props.flash?.success,
     (val) => {
-        if (!val) return;
+        if (!val) {
+return;
+}
+
         showModal.value = true;
     },
 );
@@ -403,7 +438,10 @@ onMounted(async () => {
 
 onUnmounted(() => {
     const script = document.getElementById('cf-turnstile-api');
-    if (script) script.remove();
+
+    if (script) {
+script.remove();
+}
 });
 </script>
 

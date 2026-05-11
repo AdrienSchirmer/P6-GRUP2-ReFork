@@ -2,17 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Actions\Assignments\CreateAssignmentAction;
 use App\Http\Requests\CreateAssignmentRequest;
 use App\Mail\AssignmentCreated;
 use App\Mail\AssignmentListCode;
-use Illuminate\Support\Facades\Mail;
+use App\Models\assignments as Assignment;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
-use App\Models\assignments as Assignment;
-
+use Illuminate\Support\Facades\Mail;
+use Inertia\Inertia;
 
 class AssignmentsController extends Controller
 {
@@ -49,6 +48,7 @@ class AssignmentsController extends Controller
         Inertia::flash([
             'message' => 'Ecarrec creat correctament',
         ]);
+
         return to_route('assignments.create', [
             'name' => $validated['name'] ?? null,
             'address' => $validated['address'] ?? null,
@@ -100,7 +100,7 @@ class AssignmentsController extends Controller
         $normalizedEmail = strtolower($validated['email']);
 
         Cache::put(
-            'assignment_code:' . $normalizedEmail,
+            'assignment_code:'.$normalizedEmail,
             Hash::make($otp),
             now()->addMinutes($otpExpiresInMinutes)
         );
@@ -120,16 +120,16 @@ class AssignmentsController extends Controller
 
         $email = $request->session()->get('assignment_code_email');
 
-        if (!$email) {
+        if (! $email) {
             return back()->withErrors([
                 'code' => 'Primer envia el codi al teu correu',
             ]);
         }
 
-        $cacheKey = 'assignment_code:' . $email;
+        $cacheKey = 'assignment_code:'.$email;
         $hashedOtp = Cache::get($cacheKey);
 
-        if (!$hashedOtp || !Hash::check($validated['code'], $hashedOtp)) {
+        if (! $hashedOtp || ! Hash::check($validated['code'], $hashedOtp)) {
             return back()->withErrors([
                 'code' => 'Codi invalid o caducat',
             ]);
@@ -141,6 +141,7 @@ class AssignmentsController extends Controller
         if ($email) {
             $assignments = Assignment::where('address', $email)->get()->values();
         }
+
         return Inertia::render('Assignments/Index', [
             'assignments' => $assignments,
         ]);

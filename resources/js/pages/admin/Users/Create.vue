@@ -6,8 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { create as usersCreate, index as usersIndex, store as usersStore } from '@/routes/users';
-import { type BreadcrumbItem } from '@/types';
+import type {BreadcrumbItem} from '@/types';
+import {
+    create as usersCreate,
+    index as usersIndex,
+    store as usersStore,
+} from '@/routes/users';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: "Administració d'usuaris", href: usersIndex().url },
@@ -19,19 +23,37 @@ const breadcrumbs: BreadcrumbItem[] = [
     <AppLayout :breadcrumbs="breadcrumbs">
         <Head title="Crear usuari" />
 
-        <div class="relative flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4 md:p-6">
-            <div class="pointer-events-none absolute top-0 right-8 h-48 w-48 rounded-full bg-muted/70 blur-3xl"></div>
-            <div class="pointer-events-none absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/60 blur-3xl"></div>
+        <div
+            class="relative flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4 md:p-6"
+        >
+            <div
+                class="pointer-events-none absolute top-0 right-8 h-48 w-48 rounded-full bg-muted/70 blur-3xl"
+            ></div>
+            <div
+                class="pointer-events-none absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/60 blur-3xl"
+            ></div>
 
-            <div class="relative rounded-2xl border border-sidebar-border/70 bg-gradient-to-br from-background to-muted/70 p-7 shadow-sm">
-                <p class="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Farmacia Soler</p>
-                <h1 class="mt-2 text-3xl font-semibold tracking-tight text-foreground">Crear usuari</h1>
+            <div
+                class="relative rounded-2xl border border-sidebar-border/70 bg-gradient-to-br from-background to-muted/70 p-7 shadow-sm"
+            >
+                <p
+                    class="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase"
+                >
+                    Farmacia Soler
+                </p>
+                <h1
+                    class="mt-2 text-3xl font-semibold tracking-tight text-foreground"
+                >
+                    Crear usuari
+                </h1>
                 <p class="mt-2 text-sm text-muted-foreground">
                     Dona d'alta un nou perfil amb rol d'admin o superadmin.
                 </p>
             </div>
 
-            <div class="relative rounded-2xl border border-sidebar-border/70 bg-background/95 p-6 shadow-sm">
+            <div
+                class="relative rounded-2xl border border-sidebar-border/70 bg-background/95 p-6 shadow-sm"
+            >
                 <Form
                     v-bind="usersStore.form()"
                     :reset-on-success="['password', 'password_confirmation']"
@@ -90,7 +112,9 @@ const breadcrumbs: BreadcrumbItem[] = [
                     </div>
 
                     <div class="grid gap-2">
-                        <Label for="password_confirmation">Confirmar contrasenya</Label>
+                        <Label for="password_confirmation"
+                            >Confirmar contrasenya</Label
+                        >
                         <PasswordInput
                             id="password_confirmation"
                             name="password_confirmation"
