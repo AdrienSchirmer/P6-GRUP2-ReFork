@@ -2,6 +2,7 @@
 import { Link } from '@inertiajs/vue3';
 import {
     Globe,
+    GraduationCap,
     HeartPulse,
     LayoutGrid,
     UserCog,
@@ -31,6 +32,7 @@ import { index as servicesIndex } from '@/routes/services';
 import { index as assignmentsIndex } from '@/routes/adminAssignments';
 import { index as pharmacyguardsIndex } from '@/routes/pharmacyguards';
 import { index as pharmaciesIndex } from '@/routes/pharmacies';
+import { index as workshopsIndex } from '@/routes/workshops';
 
 import type { NavItem } from '@/types';
 
@@ -70,6 +72,11 @@ const mainNavItems: NavItem[] = [
         title: 'Farmacies',
         href: pharmaciesIndex(),
         icon: UserCog,
+    },
+    {
+        title: 'Tallers',
+        href: workshopsIndex(),
+        icon: GraduationCap,
     },
 ];
 
