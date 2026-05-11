@@ -41,7 +41,7 @@ function isActive(path: string): boolean {
               href="/pedir-cita"
               :class="[
                 'rounded-lg px-2 py-2 whitespace-nowrap transition lg:px-3',
-                isActive('/pedir-cita') ? 'bg-[#E6F5FB] text-[#01617F]' : 'hover:bg-[#E6F5FB] hover:text-[#01617F]'
+                isActive('/pedir-cita') ? 'bg-[#E6F5FB] text-[#005975]' : 'hover:bg-[#E6F5FB] hover:text-[#01617F]'
               ]"
             >
               Demanar cita
