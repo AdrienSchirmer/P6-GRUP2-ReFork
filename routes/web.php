@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\admin_pharmacies_controller;
 use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\AdminServiceController;
 use App\Http\Controllers\Admin\AssignmentsController as AdminAssignmentsController;
+use App\Http\Controllers\Admin\admin_workshops_controller;
 use App\Http\Controllers\Admin\ServiceScheduleController;
 
 //
@@ -47,6 +48,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
     Route::resource('pharmacies', admin_pharmacies_controller::class);
 
     Route::resource('services', AdminServiceController::class);
+    Route::resource('workshops', admin_workshops_controller::class);
     Route::resource('adminAssignments', AdminAssignmentsController::class);
     Route::resource('service-schedules', ServiceScheduleController::class);
 });
