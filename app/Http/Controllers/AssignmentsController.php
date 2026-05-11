@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Mail;
 use App\Rules\TurnstileRule;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use App\Models\assignments;
 
 
 class AssignmentsController extends Controller
@@ -135,6 +136,12 @@ class AssignmentsController extends Controller
                 'code' => 'Codi invalid o caducat',
             ]);
         }
+
+        $assignments = assignments::where('address', $email)->get();
+
+        return Inertia::render('Assignments/Index', [
+            'assignments' => $assignments,
+        ]);
 
         return back()->with('success', 'code valid');
     }

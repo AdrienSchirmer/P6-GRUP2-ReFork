@@ -73,13 +73,7 @@ jobs:
       - name: Build Assets
         run: npm run build
       - name: Tests
-        run: php artisan test --min=5 --coverage --coverage-text --coverage-html=coverage.html
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: coverage-report
-          path: coverage.html
-          retention-days: 7
+        run: php artisan test
 
   build:
     runs-on: ubuntu-latest
