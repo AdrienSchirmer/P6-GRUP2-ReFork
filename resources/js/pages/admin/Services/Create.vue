@@ -83,6 +83,7 @@ const submit = () => {
                                 v-model="form.name"
                                 type="text"
                                 placeholder="Ex.: Consulta general"
+                                aria-label="Nom del servei"
                                 class="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
                             />
                             <p
@@ -104,6 +105,7 @@ const submit = () => {
                                 v-model="form.duration_minutes"
                                 type="number"
                                 min="1"
+                                aria-label="Durada (minuts)"
                                 class="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
                             />
                             <p
@@ -124,6 +126,7 @@ const submit = () => {
                             v-model="form.description"
                             rows="3"
                             placeholder="Descripció breu del servei..."
+                            aria-label="Descripció del servei"
                             class="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
                         ></textarea>
                         <p
