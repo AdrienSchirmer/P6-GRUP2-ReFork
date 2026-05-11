@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Service;
-use Inertia\Inertia;
 use App\Http\Resources\ServiceResource;
-use App\Http\Controllers\Controller;
-use App\Models\ServiceAppointment;
-use Barryvdh\DomPDF\Facade\Pdf;
-use App\Rules\TurnstileRule;
-use Illuminate\Support\Facades\Mail;
 use App\Mail\ReservationCreated;
+use App\Models\Service;
+use App\Models\ServiceAppointment;
+use App\Rules\TurnstileRule;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
+use Inertia\Inertia;
 
 class ServiceController extends Controller
 {
@@ -32,10 +32,10 @@ class ServiceController extends Controller
                     'id' => $service->id,
                     'nom' => $service->name,
                     'descripció' => $service->description,
-                    'durada' => $service->duration_minutes . ' min',
+                    'durada' => $service->duration_minutes.' min',
                     'icon' => $service->icon,
                 ];
-            })
+            }),
         ]);
     }
 
@@ -66,8 +66,8 @@ class ServiceController extends Controller
         ], [
             'cf-turnstile-response.required' => 'Por favor, completa la verificación.',
         ]);
-        $appointmentDateTime = \Carbon\Carbon::parse(
-            $validated['appointment_date'] . ' ' . $validated['start_time']
+        $appointmentDateTime = Carbon::parse(
+            $validated['appointment_date'].' '.$validated['start_time']
         );
 
         if ($appointmentDateTime->isPast()) {
@@ -86,8 +86,6 @@ class ServiceController extends Controller
             ]);
         }
 
-
-
         $service = Service::findOrFail($validated['service_id']);
         ServiceAppointment::create([
             'service_id' => $validated['service_id'],
@@ -95,21 +93,21 @@ class ServiceController extends Controller
             'customer_phone' => $validated['customer_phone'],
             'customer_email' => $validated['customer_email'],
             'appointment_date' => $validated['appointment_date'],
-            'start_time' => \Carbon\Carbon::parse($validated['start_time'])->format('H:i:s'),
-            'end_time' => \Carbon\Carbon::parse($validated['start_time'])->addMinutes(Service::find($validated['service_id'])->duration_minutes)->format('H:i'),
+            'start_time' => Carbon::parse($validated['start_time'])->format('H:i:s'),
+            'end_time' => Carbon::parse($validated['start_time'])->addMinutes(Service::find($validated['service_id'])->duration_minutes)->format('H:i'),
             'status' => 'pending',
 
         ]);
         $mailData = [
-            'name'         => $validated['customer_name'],
-            'email'        => $validated['customer_email'],
+            'name' => $validated['customer_name'],
+            'email' => $validated['customer_email'],
             'service_name' => $service->name,
-            'duration'     => $service->duration_minutes . ' min',
-            'date'         => $validated['appointment_date'],
-            'time'         => $validated['start_time'],
-            'pharmacy'     => 'Farmàcia Soler',
-            'address'      => 'Carrer Nou, 22, 17600 Figueres, Girona',
-            'phone'        => '972 50 02 99',
+            'duration' => $service->duration_minutes.' min',
+            'date' => $validated['appointment_date'],
+            'time' => $validated['start_time'],
+            'pharmacy' => 'Farmàcia Soler',
+            'address' => 'Carrer Nou, 22, 17600 Figueres, Girona',
+            'phone' => '972 50 02 99',
         ];
         Mail::to($validated['customer_email'])->send(new ReservationCreated($mailData));
 
@@ -158,6 +156,7 @@ class ServiceController extends Controller
     {
         //
     }
+
     public function downloadPdf(Request $request)
     {
         $request->validate([
@@ -172,7 +171,7 @@ class ServiceController extends Controller
 
         $data = [
             'service_name' => $service->name,
-            'duration' => $service->duration_minutes . ' min',
+            'duration' => $service->duration_minutes.' min',
             'date' => $request->date,
             'time' => $request->time,
             'name' => $request->name,
@@ -185,7 +184,7 @@ class ServiceController extends Controller
         $pdf = Pdf::loadView('pdf.appointment', $data)
             ->setPaper('a4', 'portrait');
 
-        $filename = 'cita-' . str_replace(' ', '-', $request->name) . '-' . $request->date . '.pdf';
+        $filename = 'cita-'.str_replace(' ', '-', $request->name).'-'.$request->date.'.pdf';
 
         return $pdf->download($filename);
     }
@@ -201,13 +200,14 @@ class ServiceController extends Controller
             ->where('service_id', $request->service_id)
             ->get()
             ->map(function ($appointment) {
-                return \Carbon\Carbon::parse($appointment->start_time)->format('H:i');
+                return Carbon::parse($appointment->start_time)->format('H:i');
             })
             ->unique()
             ->values();
 
         return response()->json($times);
     }
+
     public function getSchedule(Request $request)
     {
         $request->validate([
@@ -219,8 +219,8 @@ class ServiceController extends Controller
         $schedules = $service->schedules->map(function ($schedule) use ($service) {
             // Generate time slots from start_time to end_time by duration_minutes
             $slots = [];
-            $current = \Carbon\Carbon::parse($schedule->start_time);
-            $end = \Carbon\Carbon::parse($schedule->end_time);
+            $current = Carbon::parse($schedule->start_time);
+            $end = Carbon::parse($schedule->end_time);
 
             while ($current->copy()->addMinutes($service->duration_minutes)->lte($end)) {
                 $slots[] = $current->format('H:i');

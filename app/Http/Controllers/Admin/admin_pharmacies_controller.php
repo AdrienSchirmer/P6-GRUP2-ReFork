@@ -12,14 +12,13 @@ class admin_pharmacies_controller extends Controller
     /**
      * Display a listing of the resource.
      */
-
     public function filter(Request $request)
     {
         $query = DB::table('pharmacies')
             ->select('id', 'name', 'latitude', 'longitude', 'created_at');
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%' . $request->search . '%');
+            $query->where('name', 'like', '%'.$request->search.'%');
         }
 
         $pharmacies = $query
@@ -30,6 +29,7 @@ class admin_pharmacies_controller extends Controller
             'pharmacies' => $pharmacies,
         ]);
     }
+
     public function index()
     {
         $pharmacies = DB::table('pharmacies')

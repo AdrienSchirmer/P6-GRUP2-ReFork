@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
 import { Icon } from '@iconify/vue';
-import WebAppLayout from '@/layouts/WebAppLayout.vue';
+import { onMounted, ref } from 'vue';
 import Card from '@/components/Card.vue';
+import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
 

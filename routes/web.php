@@ -1,20 +1,19 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ServiceController;
-use App\Http\Controllers\AssignmentsController;
-use App\Http\Controllers\Contactans;
-
 use App\Http\Controllers\Admin\admin_index_controller;
-use App\Http\Controllers\Admin\admin_users_controller;
-use App\Http\Controllers\Admin\admin_pharmacyguards_controller;
 use App\Http\Controllers\Admin\admin_pharmacies_controller;
-use App\Http\Controllers\Admin\MailController;
+use App\Http\Controllers\Admin\admin_pharmacyguards_controller;
+use App\Http\Controllers\Admin\admin_users_controller;
+use App\Http\Controllers\Admin\admin_workshops_controller;
 use App\Http\Controllers\Admin\AdminServiceController;
 use App\Http\Controllers\Admin\AssignmentsController as AdminAssignmentsController;
-use App\Http\Controllers\Admin\admin_workshops_controller;
+use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\ServiceScheduleController;
+use App\Http\Controllers\AssignmentsController;
+use App\Http\Controllers\Contactans;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ServiceController;
+use Illuminate\Support\Facades\Route;
 
 //
 // ✅ MAIN HOME ROUTE (ONLY ONE)
@@ -58,10 +57,11 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
 //
 Route::resource('assignments', AssignmentsController::class);
 Route::post('/assignments/code', [AssignmentsController::class, 'code'])->name('assignments.code');
+Route::post('/assignments/verify-code', [AssignmentsController::class, 'verifyCode'])->name('assignments.verify-code');
 
 //
 // CONTACT
 //
 Route::get('/contactans', [Contactans::class, 'index'])->name('contactans');
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

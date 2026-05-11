@@ -1,10 +1,13 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { Plus } from 'lucide-vue-next';
+import { computed, ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import { create as workshopsCreate, index as workshopsIndex } from '@/routes/workshops';
-import { type BreadcrumbItem } from '@/types';
+import type { BreadcrumbItem } from '@/types';
+import {
+    create as workshopsCreate,
+    index as workshopsIndex,
+} from '@/routes/workshops';
 
 type Workshop = {
     id: number;
@@ -52,13 +55,29 @@ const formatTime = (time: string) => time.slice(0, 5);
     <AppLayout :breadcrumbs="breadcrumbs">
         <Head title="Tallers" />
 
-        <div class="relative flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4 md:p-6">
-            <div class="pointer-events-none absolute top-0 right-8 h-48 w-48 rounded-full bg-muted/70 blur-3xl"></div>
-            <div class="pointer-events-none absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/60 blur-3xl"></div>
+        <div
+            class="relative flex h-full flex-1 flex-col gap-4 overflow-x-auto p-4 md:p-6"
+        >
+            <div
+                class="pointer-events-none absolute top-0 right-8 h-48 w-48 rounded-full bg-muted/70 blur-3xl"
+            ></div>
+            <div
+                class="pointer-events-none absolute bottom-0 left-0 h-56 w-56 rounded-full bg-secondary/60 blur-3xl"
+            ></div>
 
-            <div class="relative rounded-2xl border border-sidebar-border/70 bg-gradient-to-br from-background to-muted/70 p-7 shadow-sm">
-                <p class="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase">Farmacia Soler</p>
-                <h1 class="mt-2 text-3xl font-semibold tracking-tight text-foreground">Tallers</h1>
+            <div
+                class="relative rounded-2xl border border-sidebar-border/70 bg-gradient-to-br from-background to-muted/70 p-7 shadow-sm"
+            >
+                <p
+                    class="text-xs font-semibold tracking-[0.18em] text-muted-foreground uppercase"
+                >
+                    Farmacia Soler
+                </p>
+                <h1
+                    class="mt-2 text-3xl font-semibold tracking-tight text-foreground"
+                >
+                    Tallers
+                </h1>
                 <p class="mt-2 text-sm text-muted-foreground">
                     Gestió inicial dels tallers programats de la farmàcia.
                 </p>
@@ -72,8 +91,12 @@ const formatTime = (time: string) => time.slice(0, 5);
                 {{ page.props.flash?.message }}
             </div>
 
-            <div class="relative rounded-2xl border border-sidebar-border/70 bg-background/95 p-5 shadow-sm">
-                <div class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div
+                class="relative rounded-2xl border border-sidebar-border/70 bg-background/95 p-5 shadow-sm"
+            >
+                <div
+                    class="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center"
+                >
                     <input
                         v-model="searchQuery"
                         type="search"
@@ -91,14 +114,36 @@ const formatTime = (time: string) => time.slice(0, 5);
                 </div>
 
                 <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-sidebar-border/70 text-sm">
+                    <table
+                        class="min-w-full divide-y divide-sidebar-border/70 text-sm"
+                    >
                         <thead class="bg-muted/40">
                             <tr>
-                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Nom</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Data</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Horari</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Places</th>
-                                <th class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase">Estat</th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
+                                >
+                                    Nom
+                                </th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
+                                >
+                                    Data
+                                </th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
+                                >
+                                    Horari
+                                </th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
+                                >
+                                    Places
+                                </th>
+                                <th
+                                    class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
+                                >
+                                    Estat
+                                </th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-sidebar-border/70">
@@ -108,32 +153,54 @@ const formatTime = (time: string) => time.slice(0, 5);
                                 class="transition-colors hover:bg-muted/30"
                             >
                                 <td class="px-4 py-3">
-                                    <div class="font-medium">{{ workshop.name }}</div>
-                                    <div class="mt-1 text-xs text-muted-foreground">
+                                    <div class="font-medium">
+                                        {{ workshop.name }}
+                                    </div>
+                                    <div
+                                        class="mt-1 text-xs text-muted-foreground"
+                                    >
                                         {{ workshop.description }}
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 text-muted-foreground">
-                                    {{ new Date(workshop.workshop_date).toLocaleDateString('ca-ES') }}
+                                    {{
+                                        new Date(
+                                            workshop.workshop_date,
+                                        ).toLocaleDateString('ca-ES')
+                                    }}
                                 </td>
                                 <td class="px-4 py-3 text-muted-foreground">
-                                    {{ formatTime(workshop.start_time) }} - {{ formatTime(workshop.end_time) }}
+                                    {{ formatTime(workshop.start_time) }} -
+                                    {{ formatTime(workshop.end_time) }}
                                 </td>
                                 <td class="px-4 py-3 text-muted-foreground">
-                                    {{ workshop.max_attendees ?? 'Sense límit' }}
+                                    {{
+                                        workshop.max_attendees ?? 'Sense límit'
+                                    }}
                                 </td>
                                 <td class="px-4 py-3 text-muted-foreground">
                                     <span
                                         class="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold"
-                                        :class="workshop.is_active ? 'border-green-200 bg-green-50 text-green-700' : 'border-zinc-200 bg-zinc-100 text-zinc-600'"
+                                        :class="
+                                            workshop.is_active
+                                                ? 'border-green-200 bg-green-50 text-green-700'
+                                                : 'border-zinc-200 bg-zinc-100 text-zinc-600'
+                                        "
                                     >
-                                        {{ workshop.is_active ? 'Actiu' : 'Inactiu' }}
+                                        {{
+                                            workshop.is_active
+                                                ? 'Actiu'
+                                                : 'Inactiu'
+                                        }}
                                     </span>
                                 </td>
                             </tr>
 
                             <tr v-if="filteredWorkshops.length === 0">
-                                <td colspan="5" class="px-4 py-8 text-center text-muted-foreground">
+                                <td
+                                    colspan="5"
+                                    class="px-4 py-8 text-center text-muted-foreground"
+                                >
                                     Encara no hi ha tallers registrats.
                                 </td>
                             </tr>

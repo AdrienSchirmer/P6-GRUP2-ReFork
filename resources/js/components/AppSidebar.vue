@@ -25,16 +25,15 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { admindashboard as dashboard } from '@/routes';
-import { index as usersIndex } from '@/routes/users';
-import { index as mailIndex } from '@/routes/mail';
-import { index as servicesIndex } from '@/routes/services';
-import { index as assignmentsIndex } from '@/routes/adminAssignments';
-import { index as pharmacyguardsIndex } from '@/routes/pharmacyguards';
-import { index as pharmaciesIndex } from '@/routes/pharmacies';
-import { index as workshopsIndex } from '@/routes/workshops';
-
 import type { NavItem } from '@/types';
+import { admindashboard as dashboard } from '@/routes';
+import { index as assignmentsIndex } from '@/routes/adminAssignments';
+import { index as mailIndex } from '@/routes/mail';
+import { index as pharmaciesIndex } from '@/routes/pharmacies';
+import { index as pharmacyguardsIndex } from '@/routes/pharmacyguards';
+import { index as servicesIndex } from '@/routes/services';
+import { index as usersIndex } from '@/routes/users';
+import { index as workshopsIndex } from '@/routes/workshops';
 
 const mainNavItems: NavItem[] = [
     {
