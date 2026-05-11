@@ -155,12 +155,19 @@ function deleteService(id: number) {
                 </div>
 
                 <div class="flex items-center gap-3">
-                    <input :value="search" @input="handleSearch" type="text" placeholder="Cercar servei..."
+
+                    <label for="search-services" class="sr-only">
+                        Cercar servei
+                    </label>
+
+                    <input id="search-services" name="search" :value="search" @input="handleSearch" type="text"
+                        placeholder="Cercar servei..." autocomplete="off"
                         class="border rounded-lg px-4 py-2 focus:ring focus:ring-blue-200" />
+
 
                     <Link :href="`/admin/services/create`"
                         class="flex items-center gap-2 px-4 py-2 rounded-lg text-white"
-                        style="background-color: #aadbf0">
+                        style="background-color: #2563eb;" aria-label="Crear nou servei">
                         <Plus class="w-4 h-4" />
                         Nou servei
                     </Link>
@@ -202,22 +209,23 @@ function deleteService(id: number) {
                             <td class="p-3">
                                 <div class="flex justify-end gap-2 flex-wrap">
 
-                                    <Link :href="`/admin/services/${service.id}`"
-                                        class="p-2 rounded hover:bg-green-100">
+                                    <Link :href="`/admin/services/${service.id}`" class="p-2 rounded hover:bg-green-100"
+                                        aria-label="Gestionar horaris del servei">
                                         <CalendarPlus class="w-4 h-4 text-blue-600" />
                                     </Link>
 
                                     <Link :href="`/admin/services/${service.id}/edit`"
-                                        class="p-2 rounded hover:bg-orange-100">
+                                        class="p-2 rounded hover:bg-orange-100" aria-label="Editar servei">
                                         <SquarePen class="w-4 h-4 text-orange-600" />
                                     </Link>
 
-                                 <!---   <Link :href="`/admin/service-schedules/create?service_id=${service.id}`"
+                                    <!---   <Link :href="`/admin/service-schedules/create?service_id=${service.id}`"
                                         class="p-2 rounded hover:bg-blue-100">
                                         <CalendarPlus class="w-4 h-4 text-blue-600" />
                                     </Link>--->
 
-                                    <button @click="openDeleteModal(service)" class="p-2 rounded hover:bg-red-100">
+                                    <button @click="openDeleteModal(service)" 
+                                    class="p-2 rounded hover:bg-red-100" aria-label="Eliminar servei"   >
                                         <Trash2 class="w-4 h-4 text-red-600" />
                                     </button>
 
@@ -235,7 +243,10 @@ function deleteService(id: number) {
 
                 <div class="flex justify-between items-center">
                     <h2 class="text-lg font-bold">Eliminar servei</h2>
-                    <button @click="showDeleteModal = false">✕</button>
+
+                    <button @click="showDeleteModal = false" aria-label="Tancar finestra" type="button">
+                        <span aria-hidden="true">✕</span>
+                    </button>
                 </div>
 
                 <p class="text-gray-600">
