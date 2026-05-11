@@ -18,7 +18,7 @@ import {
 } from 'lucide-vue-next';
 import { computed } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type {BreadcrumbItem} from '@/types';
+import type { BreadcrumbItem } from '@/types';
 import { admindashboard as dashboard } from '@/routes';
 
 const iconOptions = [

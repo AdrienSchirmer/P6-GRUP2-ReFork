@@ -17,7 +17,7 @@ import {
     Thermometer,
 } from 'lucide-vue-next';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type {BreadcrumbItem} from '@/types';
+import type { BreadcrumbItem } from '@/types';
 import { admindashboard as dashboard } from '@/routes';
 
 const breadcrumbs: BreadcrumbItem[] = [

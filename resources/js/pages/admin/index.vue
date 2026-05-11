@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type {BreadcrumbItem} from '@/types';
+import type { BreadcrumbItem } from '@/types';
 import { admindashboard as dashboard } from '@/routes';
 
 const breadcrumbs: BreadcrumbItem[] = [

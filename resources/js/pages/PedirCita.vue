@@ -131,8 +131,8 @@ const selectedServiceObj = computed(() =>
 
 const successServiceName = computed(() => {
     if (!successData.value?.service) {
-return '—';
-}
+        return '—';
+    }
 
     return (
         props.services.find((s) => s.id === successData.value?.service)?.nom ??
@@ -142,8 +142,8 @@ return '—';
 
 const formattedDate = computed(() => {
     if (!selectedDate.value) {
-return '';
-}
+        return '';
+    }
 
     return `${currentYear.value}-${String(currentMonth.value + 1).padStart(2, '0')}-${String(selectedDate.value).padStart(2, '0')}`;
 });
@@ -204,8 +204,8 @@ const availableDaysOfWeek = computed(
 
 const availableTimes = computed(() => {
     if (!selectedDate.value) {
-return [];
-}
+        return [];
+    }
 
     const date = new Date(
         currentYear.value,
@@ -217,8 +217,8 @@ return [];
     const schedule = serviceSchedules.value.find((s) => s.day_of_week === iso);
 
     if (!schedule) {
-return [];
-}
+        return [];
+    }
 
     let slots = schedule.slots;
 
@@ -244,8 +244,8 @@ return [];
 
 function isDayAvailable(cell: CalendarCell): boolean {
     if (!cell.isCurrentMonth) {
-return false;
-}
+        return false;
+    }
 
     const isPast =
         currentYear.value === todayYear &&
@@ -253,8 +253,8 @@ return false;
         cell.day < todayDate;
 
     if (isPast) {
-return false;
-}
+        return false;
+    }
 
     const date = new Date(currentYear.value, currentMonth.value, cell.day);
     const iso = date.getDay() === 0 ? 7 : date.getDay();
@@ -264,8 +264,8 @@ return false;
 
 function selectDay(cell: CalendarCell) {
     if (!isDayAvailable(cell)) {
-return;
-}
+        return;
+    }
 
     selectedDate.value = cell.day;
     selectedTime.value = '';
@@ -276,8 +276,8 @@ function prevMonth() {
         currentYear.value === todayYear && currentMonth.value === todayMonth;
 
     if (isCurrentRealMonth) {
-return;
-}
+        return;
+    }
 
     if (currentMonth.value === 0) {
         currentMonth.value = 11;
@@ -304,8 +304,8 @@ function nextMonth() {
 
 const pdfDownloadUrl = computed(() => {
     if (!successData.value) {
-return '#';
-}
+        return '#';
+    }
 
     const params = new URLSearchParams({
         service: String(successData.value.service),
@@ -337,8 +337,8 @@ function renderTurnstile() {
     const t = (window as any).turnstile;
 
     if (!el || !props.turnstileSiteKey || !t) {
-return;
-}
+        return;
+    }
 
     el.innerHTML = '';
     t.render(el, { sitekey: props.turnstileSiteKey, language: 'es' });
@@ -346,13 +346,13 @@ return;
 
 function nextStep() {
     if (step.value < 3) {
-step.value++;
-}
+        step.value++;
+    }
 
     if (step.value === 3) {
         if (!props.turnstileSiteKey) {
-return;
-}
+            return;
+        }
 
         if (document.getElementById('cf-turnstile-api')) {
             renderTurnstile();
@@ -373,8 +373,8 @@ return;
 
 function prevStep() {
     if (step.value > 1) {
-step.value--;
-}
+        step.value--;
+    }
 }
 
 function submitReservation() {
@@ -422,8 +422,8 @@ watch(
     () => page.props.flash?.success,
     (val) => {
         if (!val) {
-return;
-}
+            return;
+        }
 
         showModal.value = true;
     },
@@ -440,8 +440,8 @@ onUnmounted(() => {
     const script = document.getElementById('cf-turnstile-api');
 
     if (script) {
-script.remove();
-}
+        script.remove();
+    }
 });
 </script>
 

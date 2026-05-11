@@ -19,8 +19,8 @@ function renderTurnstile() {
     const t = (window as any).turnstile;
 
     if (!el || !props.turnstileSiteKey || !t) {
-return;
-}
+        return;
+    }
 
     el.innerHTML = '';
     t.render(el, {
@@ -31,8 +31,8 @@ return;
 
 onMounted(() => {
     if (!props.turnstileSiteKey) {
-return;
-}
+        return;
+    }
 
     if (document.getElementById('cf-turnstile-api')) {
         renderTurnstile();

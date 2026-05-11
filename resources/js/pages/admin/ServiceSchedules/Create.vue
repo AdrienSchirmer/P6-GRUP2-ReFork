@@ -37,8 +37,8 @@ const isValid = computed(
 
 const submit = () => {
     if (!isValid.value) {
-return;
-}
+        return;
+    }
 
     form.post('/admin/service-schedules');
 };

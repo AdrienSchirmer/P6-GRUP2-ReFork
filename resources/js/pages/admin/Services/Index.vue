@@ -19,9 +19,8 @@ import {
 } from 'lucide-vue-next';
 import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type {BreadcrumbItem} from '@/types';
+import type { BreadcrumbItem } from '@/types';
 import { admindashboard as dashboard } from '@/routes';
-
 
 // ICON MAP
 const iconMap: Record<string, any> = {

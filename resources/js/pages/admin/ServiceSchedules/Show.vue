@@ -66,8 +66,8 @@ const schedules = ref<Schedule[]>([...props.service.schedules]);
 
 function deleteSchedule() {
     if (!selectedSchedule.value) {
-return;
-}
+        return;
+    }
 
     const id = selectedSchedule.value.id;
 

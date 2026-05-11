@@ -2,7 +2,7 @@
 import { Head, Link, usePage } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type {BreadcrumbItem} from '@/types';
+import type { BreadcrumbItem } from '@/types';
 import { admindashboard as dashboard } from '@/routes';
 import { create as usersCreate } from '@/routes/users';
 
@@ -38,8 +38,8 @@ const filteredUsers = computed(() => {
         .filter((user) => user.id !== props.currentUser.id)
         .filter((user) => {
             if (!query) {
-return true;
-}
+                return true;
+            }
 
             return (
                 user.name.toLowerCase().includes(query) ||
@@ -49,8 +49,8 @@ return true;
         })
         .filter((user) => {
             if (!selectedRole.value) {
-return true;
-}
+                return true;
+            }
 
             return (user.role ?? '') === selectedRole.value;
         });
@@ -71,14 +71,14 @@ const canGoNext = computed(() => currentPage.value < totalPages.value);
 
 const goPrev = () => {
     if (canGoPrev.value) {
-currentPage.value -= 1;
-}
+        currentPage.value -= 1;
+    }
 };
 
 const goNext = () => {
     if (canGoNext.value) {
-currentPage.value += 1;
-}
+        currentPage.value += 1;
+    }
 };
 
 const resetPage = () => {
@@ -99,12 +99,12 @@ const roleBadgeClass = (role?: string | null) => {
 
 const roleLabel = (role?: string | null) => {
     if (role === 'superadmin') {
-return 'Superadmin';
-}
+        return 'Superadmin';
+    }
 
     if (role === 'admin') {
-return 'Admin';
-}
+        return 'Admin';
+    }
 
     return '—';
 };

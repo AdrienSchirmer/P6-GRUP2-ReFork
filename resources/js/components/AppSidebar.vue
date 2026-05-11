@@ -35,7 +35,6 @@ import { index as servicesIndex } from '@/routes/services';
 import { index as usersIndex } from '@/routes/users';
 import { index as workshopsIndex } from '@/routes/workshops';
 
-
 const mainNavItems: NavItem[] = [
     {
         title: 'Inici',

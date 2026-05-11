@@ -3,7 +3,7 @@ import { Link } from '@inertiajs/vue3';
 import { CheckCheck, ClockArrowDown, Ban } from 'lucide-vue-next';
 import { ref, computed } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
-import type {BreadcrumbItem} from '@/types';
+import type { BreadcrumbItem } from '@/types';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Administració de Encarrecs', href: 'admin/adminAssignments' },
@@ -35,8 +35,8 @@ const filteredAssignments = computed(() => {
     const s = normalize(search.value);
 
     if (!s) {
-return props.assignments;
-}
+        return props.assignments;
+    }
 
     return props.assignments.filter(
         (ass) =>
