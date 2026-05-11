@@ -8,11 +8,10 @@ use App\Actions\Assignments\CreateAssignmentAction;
 use App\Http\Requests\CreateAssignmentRequest;
 use App\Mail\AssignmentCreated;
 use App\Mail\AssignmentListCode;
-use App\Models\Link;
 use Illuminate\Support\Facades\Mail;
-use App\Rules\TurnstileRule;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
+use App\Models\assignments as Assignment;
 
 
 class AssignmentsController extends Controller
@@ -93,19 +92,57 @@ class AssignmentsController extends Controller
     public function code(Request $request)
     {
         $validated = $request->validate([
-            'email' => ['required'],
+            'email' => ['required', 'email'],
         ]);
 
+        $otpExpiresInMinutes = 10;
         $otp = (string) random_int(100000, 999999);
+        $normalizedEmail = strtolower($validated['email']);
 
         Cache::put(
-            'assignment_code:' . strtolower($validated['email']),
+            'assignment_code:' . $normalizedEmail,
             Hash::make($otp),
-            now()->addMinutes(1)
+            now()->addMinutes($otpExpiresInMinutes)
         );
 
-        Mail::to($validated['email'])->send(new AssignmentListCode($otp));
+        $request->session()->put('assignment_code_email', $normalizedEmail);
 
-        return back()->with('message', 'Codi enviat correctament');
+        Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
+
+        return back()->with('success', 'Codi enviat correctament');
+    }
+
+    public function verifyCode(Request $request)
+    {
+        $validated = $request->validate([
+            'code' => ['required', 'digits:6'],
+        ]);
+
+        $email = $request->session()->get('assignment_code_email');
+
+        if (!$email) {
+            return back()->withErrors([
+                'code' => 'Primer envia el codi al teu correu',
+            ]);
+        }
+
+        $cacheKey = 'assignment_code:' . $email;
+        $hashedOtp = Cache::get($cacheKey);
+
+        if (!$hashedOtp || !Hash::check($validated['code'], $hashedOtp)) {
+            return back()->withErrors([
+                'code' => 'Codi invalid o caducat',
+            ]);
+        }
+
+        Cache::forget($cacheKey);
+
+        $assignments = [];
+        if ($email) {
+            $assignments = Assignment::where('address', $email)->get()->values();
+        }
+        return Inertia::render('Assignments/Index', [
+            'assignments' => $assignments,
+        ]);
     }
 }
