@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\assignments;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
-
-use App\Models\assignments;
 
 class AssignmentsController extends Controller
 {
@@ -16,6 +15,7 @@ class AssignmentsController extends Controller
     public function index()
     {
         $assignments = assignments::latest()->get();
+
         return Inertia::render('admin/Assignments/Index', [
             'assignments' => $assignments ?? [],
         ]);

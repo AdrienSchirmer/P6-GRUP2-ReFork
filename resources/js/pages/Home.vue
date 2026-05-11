@@ -152,15 +152,19 @@ function setPreviousWeek() {
     if (week.mon.value < 7) {
         setPreviousMonth();
     }
+
     const limitDay = getMaxDay();
+
     for (const [, value] of Object.entries(week)) {
         if ((value.value -= 7) < 1) {
             value.value += limitDay;
         }
+
         if (value.value === 1) {
             setMonthName();
         }
     }
+
     if (selectedMonth.value.double || week.sun.value == limitDay) {
         setMonthName();
     }
@@ -169,17 +173,20 @@ function setPreviousWeek() {
 // Button Next Week
 function setNextWeek() {
     const limitDay = getMaxDay();
+
     for (const [, value] of Object.entries(week)) {
         if ((value.value += 7) > limitDay) {
             if ((value.value -= limitDay) == 1) {
                 setMonthName();
             }
         }
+
         if (value.value == 8 && selectedMonth.value.double) {
             setNextMonth();
             setMonthName();
         }
     }
+
     if (week.mon.value == 1 && week.sun.value == 7) {
         setNextMonth();
         setMonthName();
@@ -228,6 +235,7 @@ function getNextMonth(): number {
 // Function Set Previous Month
 function setPreviousMonth() {
     idMonth.value = getPreviousMonth();
+
     if (idMonth.value === 11) {
         setPreviousYear();
     }
@@ -235,6 +243,7 @@ function setPreviousMonth() {
 // Function Set Next Month
 function setNextMonth() {
     idMonth.value = getNextMonth();
+
     if (idMonth.value === 0) {
         setNextYear();
     }
@@ -251,11 +260,14 @@ function setNextYear() {
 function setDays() {
     const maxDay = getMaxDay();
     let count = 0;
+
     for (const [, value] of Object.entries(week)) {
         value.value = selectedDay.value + count;
+
         if (value.value > maxDay) {
             value.value -= maxDay;
         }
+
         count++;
     }
 }

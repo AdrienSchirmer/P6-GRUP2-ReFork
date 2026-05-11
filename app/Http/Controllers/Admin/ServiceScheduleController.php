@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\Service;
 use App\Models\ServiceSchedule;
+use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class ServiceScheduleController extends Controller
 {
@@ -26,7 +26,7 @@ class ServiceScheduleController extends Controller
         //
         $serviceId = $request->query('service_id');
 
-        if (!$serviceId) {
+        if (! $serviceId) {
             abort(404);
         }
 
@@ -44,10 +44,10 @@ class ServiceScheduleController extends Controller
     {
         //
         $validated = $request->validate([
-            'service_id'  => 'required|exists:services,id',
+            'service_id' => 'required|exists:services,id',
             'day_of_week' => 'required|integer|between:1,7',
-            'start_time'  => 'required',
-            'end_time'    => 'required',
+            'start_time' => 'required',
+            'end_time' => 'required',
         ]);
 
         ServiceSchedule::create($validated);

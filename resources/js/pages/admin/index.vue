@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { Head } from '@inertiajs/vue3';
-import { admindashboard as dashboard } from '@/routes';
-import { type BreadcrumbItem } from '@/types';
 import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem } from '@/types';
+import { admindashboard as dashboard } from '@/routes';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: "Pantalla d'inici", href: dashboard().url },
