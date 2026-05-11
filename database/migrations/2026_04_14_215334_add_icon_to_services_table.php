@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('services', function (Blueprint $table) {
             //
-                    $table->string('icon')->nullable();
+            $table->string('icon')->nullable();
 
         });
     }
@@ -25,7 +25,7 @@ return new class extends Migration
     {
         Schema::table('services', function (Blueprint $table) {
             //
-                    $table->dropColumn('icon');
+            $table->dropColumn('icon');
 
         });
     }

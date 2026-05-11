@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Workshop;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -78,8 +77,6 @@ class admin_workshops_controller extends Controller
         return to_route('workshops.index')
             ->with('message', 'Taller creat correctament.');
     }
-
-
 
     /**
      * Display the specified resource.

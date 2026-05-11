@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { Form } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import WebAppLayout from '@/layouts/WebAppLayout.vue';
 
 defineProps<{
     assignments?: {

@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Service;
 use App\Models\ServiceSchedule;
+use Illuminate\Database\Seeder;
 
 class ServiceSchedulesSeeder extends Seeder
 {
@@ -15,7 +14,7 @@ class ServiceSchedulesSeeder extends Seeder
     public function run(): void
     {
         //
-         $now = now();
+        $now = now();
 
         // Define base weekly schedule (same for all services)
         $weeklySchedule = [
@@ -58,6 +57,4 @@ class ServiceSchedulesSeeder extends Seeder
             }
         }
     }
-
-    }
-
+}
