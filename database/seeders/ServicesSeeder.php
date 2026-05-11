@@ -64,7 +64,7 @@ class ServicesSeeder extends Seeder
 
         foreach ($services as $service) {
             Service::updateOrCreate(
-                ['name' => $service['name']], // match condition
+                ['name' => $service['name']],
                 [
                     'description' => $service['description'],
                     'duration_minutes' => $service['duration_minutes'],
