@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { Icon } from '@iconify/vue';
-import { onMounted, ref } from 'vue';
-import Card from '@/components/Card.vue';
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import Swiper from 'swiper';
 import { Pagination, Autoplay } from 'swiper/modules';
+import { onMounted, ref } from 'vue';
 import Brands from '@/components/Brands.vue';
+import Card from '@/components/Card.vue';
+import WebAppLayout from '@/layouts/WebAppLayout.vue';
 
 const map = ref();
 const marker = ref();
@@ -157,7 +157,9 @@ function setPreviousWeek() {
         if ((value.value -= 7) < 1) {
             value.value += limitDay;
         }
-        value.value == 1 ? setMonthName() : null;
+        if (value.value === 1) {
+            setMonthName();
+        }
     }
     if (selectedMonth.value.double || week.sun.value == limitDay) {
         setMonthName();
@@ -167,7 +169,7 @@ function setPreviousWeek() {
 // Button Next Week
 function setNextWeek() {
     const limitDay = getMaxDay();
-    for (const [key, value] of Object.entries(week)) {
+    for (const [, value] of Object.entries(week)) {
         if ((value.value += 7) > limitDay) {
             if ((value.value -= limitDay) == 1) {
                 setMonthName();
@@ -226,12 +228,16 @@ function getNextMonth(): number {
 // Function Set Previous Month
 function setPreviousMonth() {
     idMonth.value = getPreviousMonth();
-    idMonth.value == 11 ? setPreviousYear() : null;
+    if (idMonth.value === 11) {
+        setPreviousYear();
+    }
 }
 // Function Set Next Month
 function setNextMonth() {
     idMonth.value = getNextMonth();
-    idMonth.value == 0 ? setNextYear() : null;
+    if (idMonth.value === 0) {
+        setNextYear();
+    }
 }
 // Function Set Previous Year
 function setPreviousYear() {

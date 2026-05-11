@@ -4,7 +4,7 @@ import { Form } from '@inertiajs/vue3';
 import { usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 
-const props = defineProps<{
+defineProps<{
     assignments?: {
         id: number;
         name: string;
