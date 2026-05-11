@@ -145,18 +145,26 @@ function deleteService(id: number) {
                 </div>
 
                 <div class="flex items-center gap-3">
+                    <label for="search-services" class="sr-only">
+                        Cercar servei
+                    </label>
+
                     <input
+                        id="search-services"
+                        name="search"
                         :value="search"
                         @input="handleSearch"
                         type="text"
                         placeholder="Cercar servei..."
+                        autocomplete="off"
                         class="rounded-lg border px-4 py-2 focus:ring focus:ring-blue-200"
                     />
 
                     <Link
                         :href="`/admin/services/create`"
                         class="flex items-center gap-2 rounded-lg px-4 py-2 text-white"
-                        style="background-color: #aadbf0"
+                        style="background-color: #2563eb"
+                        aria-label="Crear nou servei"
                     >
                         <Plus class="h-4 w-4" />
                         Nou servei
@@ -211,6 +219,7 @@ function deleteService(id: number) {
                                     <Link
                                         :href="`/admin/services/${service.id}`"
                                         class="rounded p-2 hover:bg-green-100"
+                                        aria-label="Gestionar horaris del servei"
                                     >
                                         <CalendarPlus
                                             class="h-4 w-4 text-blue-600"
@@ -220,6 +229,7 @@ function deleteService(id: number) {
                                     <Link
                                         :href="`/admin/services/${service.id}/edit`"
                                         class="rounded p-2 hover:bg-orange-100"
+                                        aria-label="Editar servei"
                                     >
                                         <SquarePen
                                             class="h-4 w-4 text-orange-600"
@@ -234,6 +244,7 @@ function deleteService(id: number) {
                                     <button
                                         @click="openDeleteModal(service)"
                                         class="rounded p-2 hover:bg-red-100"
+                                        aria-label="Eliminar servei"
                                     >
                                         <Trash2 class="h-4 w-4 text-red-600" />
                                     </button>
@@ -253,7 +264,14 @@ function deleteService(id: number) {
             <div class="w-full max-w-md space-y-4 rounded-xl bg-white p-6">
                 <div class="flex items-center justify-between">
                     <h2 class="text-lg font-bold">Eliminar servei</h2>
-                    <button @click="showDeleteModal = false">✕</button>
+
+                    <button
+                        @click="showDeleteModal = false"
+                        aria-label="Tancar finestra"
+                        type="button"
+                    >
+                        <span aria-hidden="true">✕</span>
+                    </button>
                 </div>
 
                 <p class="text-gray-600">
