@@ -41,6 +41,12 @@ jobs:
         run: npm run format
       - name: Lint Frontend
         run: npm run lint --fix
+      - name: Configure Git credentials
+        run: |
+          git config --local user.name "github-actions[bot]"
+          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git config --local credential.helper store
+          echo "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
       - name: Commit Changes
         uses: stefanzweifel/git-auto-commit-action@v7
         with:
