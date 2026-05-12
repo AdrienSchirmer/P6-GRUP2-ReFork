@@ -2,6 +2,7 @@ name: Deploy
 
 on:
   pull_request:
+    types: [opened, synchronize, reopened]
     branches:
       - develop
   workflow_dispatch:
@@ -75,3 +76,14 @@ jobs:
         run: npm run build
       - name: Tests
         run: php artisan test
+  claude-review:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: read
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Claude Code Action Official
+        uses: anthropics/claude-code-action@v1
