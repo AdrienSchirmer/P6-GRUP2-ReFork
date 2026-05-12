@@ -58,7 +58,7 @@ onMounted(async () => {
 
     setDays();
     setMonthName();
-    setSelectDate(idWeekDay.value, selectedDay.value);
+    setSelectDate(0, selectedDay.value);
 });
 
 const address = ref();
@@ -259,15 +259,19 @@ function setNextYear() {
 // Function to Set Days
 function setDays() {
     const maxDay = getMaxDay();
+    const prevMaxDay = new Date(numYear.value, idMonth.value, 0).getDate();
     let count = 0;
 
     for (const [, value] of Object.entries(week)) {
-        value.value = selectedDay.value + count;
+        let day = selectedDay.value + count;
 
-        if (value.value > maxDay) {
-            value.value -= maxDay;
+        if (day < 1) {
+            day += prevMaxDay;
+        } else if (day > maxDay) {
+            day -= maxDay;
         }
 
+        value.value = day;
         count++;
     }
 }
@@ -504,7 +508,7 @@ function getDayButtonClass(idWeek: number, day: number): string {
                                                 'Dv',
                                                 'Ds',
                                                 'Dg',
-                                            ][idx]
+                                            ][(startWeekDay + idx) % 7]
                                         }}</span
                                     >
                                     <span class="block text-sm font-bold">{{
