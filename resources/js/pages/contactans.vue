@@ -23,7 +23,7 @@ onMounted(() => {
     <WebAppLayout>
     <div class="bg-[#F2FAFF] py-12 px-2 md:px-24">
         <Card class="bg-white flex-col md:flex-row">
-            <div id="map" class="md:relative h-110 md:h-auto w-full md:w-1/2 overflow-hidden flex items-end rounded-xl">
+            <div id="map" class="md:relative h-110 md:h-auto w-full md:w-1/2 overflow-hidden flex items-end rounded-xl z-0">
             </div>
             <div class="flex flex-col gap-4 px-8 py-8 md:w-1/2 md:py-16 h-160">
                 <h2 class="text-center text-2xl font-bold md:text-left md:text-4xl">
