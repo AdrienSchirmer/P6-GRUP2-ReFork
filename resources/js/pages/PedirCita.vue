@@ -243,8 +243,8 @@ const availableTimes = computed(() => {
 });
 
 function isDayAvailable(cell: CalendarCell): boolean {
-    
-    if (!cell.isCurrentMonth) {
+
+  if (!cell.isCurrentMonth) {
         return false;
     }
 
