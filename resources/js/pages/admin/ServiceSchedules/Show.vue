@@ -154,7 +154,10 @@ function deleteSchedule() {
                         <td class="p-3">{{ s.start_time }}</td>
                         <td class="p-3">{{ s.end_time }}</td>
                         <td class="p-3 text-right">
-                            <button @click="openDeleteModal(s)">
+                            <button
+                                @click="openDeleteModal(s)"
+                                aria-label="Eliminar horari"
+                            >
                                 <Trash2 class="h-4 w-4 text-red-500" />
                             </button>
                         </td>

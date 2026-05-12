@@ -1,13 +1,23 @@
 <script setup lang="ts">
-import { Head, Link, usePage } from '@inertiajs/vue3';
-import { Plus } from 'lucide-vue-next';
+import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import {
     create as workshopsCreate,
+    destroy as workshopsDestroy,
+    edit as workshopsEdit,
     index as workshopsIndex,
 } from '@/routes/workshops';
+
+function deleteWorkshop(id: number) {
+    if (!confirm('Segur que vols eliminar aquest taller?')) {
+        return;
+    }
+
+    useForm({}).delete(workshopsDestroy(id).url);
+}
 
 type Workshop = {
     id: number;
@@ -144,6 +154,7 @@ const formatTime = (time: string) => time.slice(0, 5);
                                 >
                                     Estat
                                 </th>
+                                <th class="px-4 py-3"></th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-sidebar-border/70">
@@ -193,6 +204,23 @@ const formatTime = (time: string) => time.slice(0, 5);
                                                 : 'Inactiu'
                                         }}
                                     </span>
+                                </td>
+                                <td class="px-4 py-3">
+                                    <div class="flex items-center gap-2">
+                                        <Link
+                                            :href="workshopsEdit(workshop.id).url"
+                                            class="inline-flex items-center rounded-lg p-1.5 text-muted-foreground transition hover:bg-muted hover:text-foreground"
+                                        >
+                                            <Pencil class="h-4 w-4" />
+                                        </Link>
+                                        <button
+                                            type="button"
+                                            class="inline-flex items-center rounded-lg p-1.5 text-muted-foreground transition hover:bg-red-50 hover:text-red-600"
+                                            @click="deleteWorkshop(workshop.id)"
+                                        >
+                                            <Trash2 class="h-4 w-4" />
+                                        </button>
+                                    </div>
                                 </td>
                             </tr>
 

@@ -103,6 +103,7 @@ const submit = () => {
                                 <input
                                     type="time"
                                     v-model="form.start_time"
+                                    aria-label="Hora d'inici"
                                     class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                                 />
                             </div>
@@ -116,6 +117,7 @@ const submit = () => {
                                 <input
                                     type="time"
                                     v-model="form.end_time"
+                                    aria-label="Hora de fi"
                                     class="mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm"
                                 />
                             </div>
@@ -135,6 +137,7 @@ const submit = () => {
                                 :disabled="!isValid || form.processing"
                                 class="rounded-lg px-6 py-2 text-sm text-white disabled:opacity-50"
                                 style="background-color: #aadbf0"
+                                aria-label="Crear horari"
                             >
                                 {{
                                     form.processing
@@ -151,7 +154,7 @@ const submit = () => {
                     <div
                         class="sticky top-6 space-y-4 rounded-xl border bg-white p-6 shadow-sm"
                     >
-                        <h3 class="text-sm font-bold text-gray-900">Resum</h3>
+                        <h2 class="text-sm font-bold text-gray-900">Resum</h2>
 
                         <div class="space-y-2 text-sm text-gray-600">
                             <p><strong>Servei:</strong> {{ service.name }}</p>

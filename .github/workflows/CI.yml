@@ -1,7 +1,8 @@
-name: Deploy
+name: CI
 
 on:
-  push:
+  pull_request:
+    types: [opened, synchronize, reopened]
     branches:
       - develop
   workflow_dispatch:
@@ -12,7 +13,6 @@ env:
 
 jobs:
   laravel-pint-lint:
-    if: github.event.pull_request.merged == true || github.event_name == 'push'
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -20,7 +20,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref }}
+          ref: ${{ github.event.pull_request.head.sha }}
       - name: Setup PHP and Composer
         uses: shivammathur/setup-php@v2
         with:
@@ -43,6 +43,7 @@ jobs:
         with:
           commit_message: fix pint code style
           commit_options: '--no-verify'
+          branch: ${{ github.ref_name }}
 
   tests:
     runs-on: ubuntu-latest

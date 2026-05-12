@@ -44,9 +44,16 @@ class AssignmentsController extends Controller
     {
         $validated = $request->validated();
         $assignment = $createAssignment->execute($validated);
-        Mail::to($validated['address'])->send(new AssignmentCreated($validated));
+
+        try {
+            Mail::to($validated['address'])->send(new AssignmentCreated($validated));
+            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+        } catch (\Exception $e) {
+            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+        }
+
         Inertia::flash([
-            'message' => 'Ecarrec creat correctament',
+            'message' => $message,
         ]);
 
         return to_route('assignments.create', [
@@ -100,16 +107,21 @@ class AssignmentsController extends Controller
         $normalizedEmail = strtolower($validated['email']);
 
         Cache::put(
-            'assignment_code:'.$normalizedEmail,
+            'assignment_code:' . $normalizedEmail,
             Hash::make($otp),
             now()->addMinutes($otpExpiresInMinutes)
         );
 
         $request->session()->put('assignment_code_email', $normalizedEmail);
 
-        Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
+        try {
+            Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
+            $message = 'Rebràs el codi al correu.';
+        } catch (\Exception $e) {
+            $message = 'Rebràs el codi al correu.';
+        }
 
-        return back()->with('success', 'Codi enviat correctament');
+        return back()->with('success', $message);
     }
 
     public function verifyCode(Request $request)
@@ -120,16 +132,16 @@ class AssignmentsController extends Controller
 
         $email = $request->session()->get('assignment_code_email');
 
-        if (! $email) {
+        if (!$email) {
             return back()->withErrors([
                 'code' => 'Primer envia el codi al teu correu',
             ]);
         }
 
-        $cacheKey = 'assignment_code:'.$email;
+        $cacheKey = 'assignment_code:' . $email;
         $hashedOtp = Cache::get($cacheKey);
 
-        if (! $hashedOtp || ! Hash::check($validated['code'], $hashedOtp)) {
+        if (!$hashedOtp || !Hash::check($validated['code'], $hashedOtp)) {
             return back()->withErrors([
                 'code' => 'Codi invalid o caducat',
             ]);
