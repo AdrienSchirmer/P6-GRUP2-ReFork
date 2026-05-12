@@ -39,7 +39,6 @@ return [
         'secret_key' => env('TURNSTILE_SECRET_KEY'),
     ],
 
-
     'mailgun' => [
         'domain' => env('MAILGUN_DOMAIN'),
         'secret' => env('MAILGUN_SECRET'),

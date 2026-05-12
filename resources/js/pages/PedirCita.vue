@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import WebAppLayout from '@/layouts/WebAppLayout.vue';
-import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
 import { useForm, usePage, router } from '@inertiajs/vue3';
 import {
     ScanFace,
@@ -15,6 +13,8 @@ import {
     Pill,
     HeartPulse,
 } from 'lucide-vue-next';
+import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
+import WebAppLayout from '@/layouts/WebAppLayout.vue';
 
 defineOptions({
     layout: WebAppLayout,
@@ -130,7 +130,10 @@ const selectedServiceObj = computed(() =>
 );
 
 const successServiceName = computed(() => {
-    if (!successData.value?.service) return '—';
+    if (!successData.value?.service) {
+        return '—';
+    }
+
     return (
         props.services.find((s) => s.id === successData.value?.service)?.nom ??
         '—'
@@ -138,7 +141,10 @@ const successServiceName = computed(() => {
 });
 
 const formattedDate = computed(() => {
-    if (!selectedDate.value) return '';
+    if (!selectedDate.value) {
+        return '';
+    }
+
     return `${currentYear.value}-${String(currentMonth.value + 1).padStart(2, '0')}-${String(selectedDate.value).padStart(2, '0')}`;
 });
 
@@ -169,6 +175,7 @@ const calendarDays = computed<CalendarCell[]>(() => {
     }
 
     const remaining = 42 - cells.length;
+
     for (let d = 1; d <= remaining; d++) {
         cells.push({ day: d, isCurrentMonth: false });
     }
@@ -181,6 +188,7 @@ const serviceSchedules = ref<{ day_of_week: number; slots: string[] }[]>([]);
 async function fetchSchedule() {
     if (!selectedService.value) {
         serviceSchedules.value = [];
+
         return;
     }
 
@@ -194,9 +202,10 @@ const availableDaysOfWeek = computed(
     () => new Set(serviceSchedules.value.map((s) => s.day_of_week)),
 );
 
-
 const availableTimes = computed(() => {
-    if (!selectedDate.value) return [];
+    if (!selectedDate.value) {
+        return [];
+    }
 
     const date = new Date(
         currentYear.value,
@@ -207,7 +216,9 @@ const availableTimes = computed(() => {
     const iso = date.getDay() === 0 ? 7 : date.getDay();
     const schedule = serviceSchedules.value.find((s) => s.day_of_week === iso);
 
-    if (!schedule) return [];
+    if (!schedule) {
+        return [];
+    }
 
     let slots = schedule.slots;
 
@@ -231,17 +242,23 @@ const availableTimes = computed(() => {
     return slots;
 });
 
-
-
 function isDayAvailable(cell: CalendarCell): boolean {
-    if (!cell.isCurrentMonth) return false;
+<<<<<<< Updated upstream
+    if (!cell.isCurrentMonth) {
+        return false;
+    }
+=======
+    if (!cell.isCurrentMonth  ) return false;
+>>>>>>> Stashed changes
 
     const isPast =
         currentYear.value === todayYear &&
         currentMonth.value === todayMonth &&
         cell.day < todayDate;
 
-    if (isPast) return false;
+    if (isPast) {
+        return false;
+    }
 
     const date = new Date(currentYear.value, currentMonth.value, cell.day);
     const iso = date.getDay() === 0 ? 7 : date.getDay();
@@ -250,7 +267,10 @@ function isDayAvailable(cell: CalendarCell): boolean {
 }
 
 function selectDay(cell: CalendarCell) {
-    if (!isDayAvailable(cell)) return;
+    if (!isDayAvailable(cell)) {
+        return;
+    }
+
     selectedDate.value = cell.day;
     selectedTime.value = '';
 }
@@ -259,7 +279,9 @@ function prevMonth() {
     const isCurrentRealMonth =
         currentYear.value === todayYear && currentMonth.value === todayMonth;
 
-    if (isCurrentRealMonth) return;
+    if (isCurrentRealMonth) {
+        return;
+    }
 
     if (currentMonth.value === 0) {
         currentMonth.value = 11;
@@ -285,7 +307,9 @@ function nextMonth() {
 }
 
 const pdfDownloadUrl = computed(() => {
-    if (!successData.value) return '#';
+    if (!successData.value) {
+        return '#';
+    }
 
     const params = new URLSearchParams({
         service: String(successData.value.service),
@@ -301,6 +325,7 @@ const pdfDownloadUrl = computed(() => {
 async function fetchBookedTimes() {
     if (!selectedService.value || !selectedDate.value) {
         bookedTimes.value = [];
+
         return;
     }
 
@@ -314,19 +339,28 @@ async function fetchBookedTimes() {
 function renderTurnstile() {
     const el = document.querySelector('.cf-turnstile') as HTMLElement | null;
     const t = (window as any).turnstile;
-    if (!el || !props.turnstileSiteKey || !t) return;
+
+    if (!el || !props.turnstileSiteKey || !t) {
+        return;
+    }
+
     el.innerHTML = '';
     t.render(el, { sitekey: props.turnstileSiteKey, language: 'es' });
 }
 
 function nextStep() {
-    if (step.value < 3) step.value++;
+    if (step.value < 3) {
+        step.value++;
+    }
 
     if (step.value === 3) {
-        if (!props.turnstileSiteKey) return;
+        if (!props.turnstileSiteKey) {
+            return;
+        }
 
         if (document.getElementById('cf-turnstile-api')) {
             renderTurnstile();
+
             return;
         }
 
@@ -342,7 +376,9 @@ function nextStep() {
 }
 
 function prevStep() {
-    if (step.value > 1) step.value--;
+    if (step.value > 1) {
+        step.value--;
+    }
 }
 
 function submitReservation() {
@@ -389,7 +425,10 @@ watch([selectedDate, currentMonth, currentYear], async () => {
 watch(
     () => page.props.flash?.success,
     (val) => {
-        if (!val) return;
+        if (!val) {
+            return;
+        }
+
         showModal.value = true;
     },
 );
@@ -403,7 +442,10 @@ onMounted(async () => {
 
 onUnmounted(() => {
     const script = document.getElementById('cf-turnstile-api');
-    if (script) script.remove();
+
+    if (script) {
+        script.remove();
+    }
 });
 </script>
 
@@ -415,7 +457,7 @@ onUnmounted(() => {
             >
                 <div>
                     <span
-                        class="mb-3 inline-block rounded-full bg-[#e5e7eb] px-3 py-1 text-[10px] font-semibold tracking-widest text-[#8a6d1a] uppercase"
+                        class="mb-3 inline-block rounded-full bg-[#e5e7eb] px-3 py-1 text-[10px] font-semibold tracking-widest text-[#604700] uppercase"
                     >
                         CITA PRÈVIA A FIGUERES
                     </span>
@@ -483,7 +525,7 @@ onUnmounted(() => {
                                         class="h-5 w-5 text-[#0f5f7f]"
                                     />
                                     <span
-                                        class="text-xs font-semibold text-[#8a6d1a]"
+                                        class="text-xs font-semibold text-[#604700]"
                                     >
                                         {{ service.durada }}
                                     </span>
@@ -514,6 +556,8 @@ onUnmounted(() => {
                                 >
                                     <button
                                         @click="prevMonth"
+                                        aria-label="Mes anterior"
+                                        type="button"
                                         class="rounded-lg p-1.5 text-slate-500 transition hover:bg-white hover:text-[#0f5f7f]"
                                     >
                                         <ChevronLeft class="h-5 w-5" />
@@ -524,6 +568,8 @@ onUnmounted(() => {
                                     >
                                     <button
                                         @click="nextMonth"
+                                        aria-label="Mes següent"
+                                        type="button"
                                         class="rounded-lg p-1.5 text-slate-500 transition hover:bg-white hover:text-[#0f5f7f]"
                                     >
                                         <ChevronRight class="h-5 w-5" />
@@ -562,11 +608,11 @@ onUnmounted(() => {
                             </div>
 
                             <div>
-                                <h4
+                                <h3
                                     class="mb-3 text-xs font-bold tracking-widest text-slate-500 uppercase"
                                 >
                                     Hores Disponibles
-                                </h4>
+                                </h3>
                                 <div
                                     class="grid grid-cols-2 gap-2 sm:grid-cols-3"
                                 >
@@ -616,12 +662,18 @@ onUnmounted(() => {
                             <div class="space-y-4">
                                 <div>
                                     <label
+                                        for="customer_name"
                                         class="mb-1 block text-xs font-semibold text-slate-500"
-                                        >Nom i Cognoms</label
                                     >
+                                        Nom i Cognoms
+                                    </label>
+
                                     <input
+                                        id="customer_name"
                                         v-model="form.customer_name"
                                         type="text"
+                                        name="customer_name"
+                                        autocomplete="name"
                                         required
                                         class="w-full rounded-lg border border-transparent bg-[#f3f4f6] px-3 py-2.5 text-sm transition outline-none focus:bg-white focus:ring-2 focus:ring-[#0f5f7f]"
                                         placeholder="Nom i Cognoms"
@@ -636,12 +688,18 @@ onUnmounted(() => {
 
                                 <div>
                                     <label
+                                        for="customer_phone"
                                         class="mb-1 block text-xs font-semibold text-slate-500"
-                                        >Telèfon</label
                                     >
+                                        Telèfon
+                                    </label>
+
                                     <input
+                                        id="customer_phone"
                                         v-model="form.customer_phone"
                                         type="tel"
+                                        name="customer_phone"
+                                        autocomplete="tel"
                                         pattern="[0-9]{9}"
                                         maxlength="9"
                                         required
@@ -658,12 +716,18 @@ onUnmounted(() => {
 
                                 <div>
                                     <label
+                                        for="customer_email"
                                         class="mb-1 block text-xs font-semibold text-slate-500"
-                                        >Correu Electrònic</label
                                     >
+                                        Correu Electrònic
+                                    </label>
+
                                     <input
+                                        id="customer_email"
                                         v-model="form.customer_email"
                                         type="email"
+                                        name="customer_email"
+                                        autocomplete="email"
                                         required
                                         class="w-full rounded-lg border border-transparent bg-[#f3f4f6] px-3 py-2.5 text-sm transition outline-none focus:bg-white focus:ring-2 focus:ring-[#0f5f7f]"
                                         placeholder="exemple@mail.com"
@@ -755,6 +819,8 @@ onUnmounted(() => {
                         <button
                             v-if="step > 1"
                             @click="prevStep"
+                            aria-label="Enrere"
+                            type="button"
                             class="rounded-lg border border-[#0f5f7f] px-5 py-2.5 text-sm font-medium text-[#0f5f7f] transition hover:bg-[#e3f2f9]"
                         >
                             ← Enrere
@@ -767,6 +833,8 @@ onUnmounted(() => {
                                 (step === 2 && !selectedDate) ||
                                 (step === 2 && !selectedTime)
                             "
+                            aria-label="Següent"
+                            type="button"
                             class="ml-auto rounded-lg bg-[#0f5f7f] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#0c4a63] disabled:opacity-50"
                         >
                             Següent →
@@ -851,6 +919,8 @@ onUnmounted(() => {
                             </h3>
                             <button
                                 @click="showModal = false"
+                                aria-label="Tancar finestra"
+                                type="button"
                                 class="text-gray-400 transition hover:text-black"
                             >
                                 ✕
@@ -931,6 +1001,8 @@ onUnmounted(() => {
 
                             <button
                                 @click="closeSuccessModal"
+                                aria-label="Tancar finestra"
+                                type="button"
                                 class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-600 transition hover:border-gray-400 hover:bg-gray-50"
                             >
                                 Tancar

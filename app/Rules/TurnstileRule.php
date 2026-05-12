@@ -4,8 +4,8 @@ namespace App\Rules;
 
 use Closure;
 use Illuminate\Contracts\Validation\ValidationRule;
-use Illuminate\Translation\PotentiallyTranslatedString;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Translation\PotentiallyTranslatedString;
 
 class TurnstileRule implements ValidationRule
 {
@@ -20,6 +20,7 @@ class TurnstileRule implements ValidationRule
 
         if (! $secret) {
             $fail('Cloudflare turnstile no esta configurado..');
+
             return;
         }
 

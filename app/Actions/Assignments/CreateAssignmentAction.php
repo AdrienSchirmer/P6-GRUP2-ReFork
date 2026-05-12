@@ -8,7 +8,7 @@ class CreateAssignmentAction
 {
     public function execute(array $data): assignments
     {
-        $assignment = new assignments;  
+        $assignment = new assignments;
         $assignment->name = $data['name'];
         $assignment->address = $data['address'];
         $assignment->phone_number = $data['phone_number'];

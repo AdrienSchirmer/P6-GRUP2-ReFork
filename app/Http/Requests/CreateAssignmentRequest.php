@@ -2,9 +2,9 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\TurnstileRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use App\Rules\TurnstileRule;
 
 class CreateAssignmentRequest extends FormRequest
 {

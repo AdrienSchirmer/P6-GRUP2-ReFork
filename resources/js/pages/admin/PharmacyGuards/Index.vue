@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
 import { Form, Head, usePage, router } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -173,8 +173,12 @@ const resetDateFilter = () => {
                     Guàrdies programades
                 </h2>
 
-                <div class="mt-3 rounded-xl border border-sidebar-border/70 bg-muted/25 p-4">
-                    <p class="mb-3 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase">
+                <div
+                    class="mt-3 rounded-xl border border-sidebar-border/70 bg-muted/25 p-4"
+                >
+                    <p
+                        class="mb-3 text-xs font-semibold tracking-[0.14em] text-muted-foreground uppercase"
+                    >
                         Filtres
                     </p>
 

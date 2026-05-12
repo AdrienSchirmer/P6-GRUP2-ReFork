@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Models\Service;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Inertia\Inertia;
 
 class AdminServiceController extends Controller
 {
@@ -48,10 +48,17 @@ class AdminServiceController extends Controller
         //
 
         $validated = $request->validate([
-            'name'             => 'required|string|max:255',
-            'description'      => 'required|string',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s]+$/u',
+            ],
+
+
+            'description' => 'required|string',
             'duration_minutes' => 'required|integer|min:1',
-            'icon'             => 'nullable|string|max:50',
+            'icon' => 'nullable|string|max:50',
         ]);
 
         Service::create($validated);
@@ -61,8 +68,6 @@ class AdminServiceController extends Controller
         return redirect()
             ->route('services.index');
     }
-
-
 
     /**
      * Display the specified resource.
@@ -83,6 +88,7 @@ class AdminServiceController extends Controller
     {
         //
         $service = Service::findOrFail($id);
+
         return Inertia::render('admin/Services/Edit', [
             'service' => $service,
         ]);
@@ -95,7 +101,12 @@ class AdminServiceController extends Controller
     {
         //
         $validated = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s]+$/u',
+            ],
             'description' => 'nullable|string',
             'duration_minutes' => 'required|integer|min:1',
             'icon' => 'nullable|string',
@@ -119,6 +130,7 @@ class AdminServiceController extends Controller
         $service->delete();
 
         Inertia::flash(['message' => 'Servei eliminat correctament.']);
+
         return redirect()->back();
     }
 }

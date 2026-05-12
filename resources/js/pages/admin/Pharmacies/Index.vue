@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { Form, Head, router, usePage } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
+import type { BreadcrumbItem } from '@/types';
 import {
     destroy as pharmaciesDestroy,
     index as pharmaciesIndex,
     store as pharmaciesStore,
 } from '@/routes/pharmacies';
-import { type BreadcrumbItem } from '@/types';
 
 interface Pharmacy {
     id: number;

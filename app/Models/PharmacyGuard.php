@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class PharmacyGuard extends Model
 {
     protected $fillable = [
-        'date', 
+        'date',
         'pharmacy_id',
     ];
 

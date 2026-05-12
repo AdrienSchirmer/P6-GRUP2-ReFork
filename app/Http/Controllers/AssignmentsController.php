@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Inertia\Inertia;
 use App\Actions\Assignments\CreateAssignmentAction;
 use App\Http\Requests\CreateAssignmentRequest;
 use App\Mail\AssignmentCreated;
-use App\Models\Link;
+use App\Mail\AssignmentListCode;
+use App\Models\assignments as Assignment;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use App\Rules\TurnstileRule;
-
+use Inertia\Inertia;
 
 class AssignmentsController extends Controller
 {
@@ -47,6 +48,7 @@ class AssignmentsController extends Controller
         Inertia::flash([
             'message' => 'Ecarrec creat correctament',
         ]);
+
         return to_route('assignments.create', [
             'name' => $validated['name'] ?? null,
             'address' => $validated['address'] ?? null,
@@ -85,5 +87,63 @@ class AssignmentsController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function code(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => ['required', 'email'],
+        ]);
+
+        $otpExpiresInMinutes = 10;
+        $otp = (string) random_int(100000, 999999);
+        $normalizedEmail = strtolower($validated['email']);
+
+        Cache::put(
+            'assignment_code:'.$normalizedEmail,
+            Hash::make($otp),
+            now()->addMinutes($otpExpiresInMinutes)
+        );
+
+        $request->session()->put('assignment_code_email', $normalizedEmail);
+
+        Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
+
+        return back()->with('success', 'Codi enviat correctament');
+    }
+
+    public function verifyCode(Request $request)
+    {
+        $validated = $request->validate([
+            'code' => ['required', 'digits:6'],
+        ]);
+
+        $email = $request->session()->get('assignment_code_email');
+
+        if (! $email) {
+            return back()->withErrors([
+                'code' => 'Primer envia el codi al teu correu',
+            ]);
+        }
+
+        $cacheKey = 'assignment_code:'.$email;
+        $hashedOtp = Cache::get($cacheKey);
+
+        if (! $hashedOtp || ! Hash::check($validated['code'], $hashedOtp)) {
+            return back()->withErrors([
+                'code' => 'Codi invalid o caducat',
+            ]);
+        }
+
+        Cache::forget($cacheKey);
+
+        $assignments = [];
+        if ($email) {
+            $assignments = Assignment::where('address', $email)->get()->values();
+        }
+
+        return Inertia::render('Assignments/Index', [
+            'assignments' => $assignments,
+        ]);
     }
 }

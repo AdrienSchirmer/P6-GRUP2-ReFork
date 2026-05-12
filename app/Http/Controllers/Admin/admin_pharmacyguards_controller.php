@@ -12,7 +12,6 @@ class admin_pharmacyguards_controller extends Controller
     /**
      * Display a listing of the resource.
      */
-
     public function filter(Request $request)
     {
         $query = DB::table('pharmacy_guards')
@@ -25,7 +24,7 @@ class admin_pharmacyguards_controller extends Controller
             );
 
         if ($request->filled('search')) {
-            $query->where('pharmacies.name', 'like', '%' . $request->search . '%');
+            $query->where('pharmacies.name', 'like', '%'.$request->search.'%');
         }
 
         if ($request->filled('date_from')) {
@@ -44,6 +43,7 @@ class admin_pharmacyguards_controller extends Controller
             'pharmacyguards' => $guards,
         ]);
     }
+
     public function index()
     {
         $pharmacies = DB::table('pharmacies')
