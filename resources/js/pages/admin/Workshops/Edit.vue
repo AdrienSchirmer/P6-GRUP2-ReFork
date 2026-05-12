@@ -7,7 +7,11 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
-import { edit as workshopsEdit, index as workshopsIndex, update as workshopsUpdate } from '@/routes/workshops';
+import {
+    edit as workshopsEdit,
+    index as workshopsIndex,
+    update as workshopsUpdate,
+} from '@/routes/workshops';
 
 type Workshop = {
     id: number;
@@ -30,6 +34,7 @@ const breadcrumbs: BreadcrumbItem[] = [
     { title: props.workshop.name, href: workshopsEdit(props.workshop.id).url },
 ];
 
+const isActive = ref(props.workshop.is_active ? '1' : '0');
 const selectedPhoto = ref<File | null>(null);
 
 const photoPreview = computed(() => {
@@ -45,7 +50,9 @@ const photoPreview = computed(() => {
 });
 
 const formattedDate = computed(() => props.workshop.workshop_date.slice(0, 10));
-const formattedStartTime = computed(() => props.workshop.start_time.slice(0, 5));
+const formattedStartTime = computed(() =>
+    props.workshop.start_time.slice(0, 5),
+);
 const formattedEndTime = computed(() => props.workshop.end_time.slice(0, 5));
 
 const handlePhotoChange = (event: Event): void => {
@@ -83,7 +90,8 @@ const handlePhotoChange = (event: Event): void => {
                 </h1>
                 <p class="mt-2 text-sm text-muted-foreground">
                     Modifica la informació del taller
-                    <strong>{{ workshop.name }}</strong>.
+                    <strong>{{ workshop.name }}</strong
+                    >.
                 </p>
             </div>
 
@@ -102,7 +110,7 @@ const handlePhotoChange = (event: Event): void => {
                             id="name"
                             type="text"
                             name="name"
-                            :value="workshop.name"
+                            :default-value="workshop.name"
                             required
                             autofocus
                             placeholder="Títol del taller"
@@ -119,7 +127,8 @@ const handlePhotoChange = (event: Event): void => {
                             required
                             placeholder="Explica de què tracta el taller"
                             class="w-full rounded-xl border border-sidebar-border/80 bg-background px-3 py-2 text-sm shadow-xs transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
-                        >{{ workshop.description }}</textarea>
+                            >{{ workshop.description }}</textarea
+                        >
                         <InputError :message="errors.description" />
                     </div>
 
@@ -161,7 +170,7 @@ const handlePhotoChange = (event: Event): void => {
                                 id="workshop_date"
                                 type="date"
                                 name="workshop_date"
-                                :value="formattedDate"
+                                :default-value="formattedDate"
                                 required
                             />
                             <InputError :message="errors.workshop_date" />
@@ -173,7 +182,7 @@ const handlePhotoChange = (event: Event): void => {
                                 id="max_attendees"
                                 type="number"
                                 name="max_attendees"
-                                :value="workshop.max_attendees ?? ''"
+                                :default-value="workshop.max_attendees ?? ''"
                                 min="1"
                                 placeholder="Ex.: 20"
                             />
@@ -188,7 +197,7 @@ const handlePhotoChange = (event: Event): void => {
                                 id="start_time"
                                 type="time"
                                 name="start_time"
-                                :value="formattedStartTime"
+                                :default-value="formattedStartTime"
                                 required
                             />
                             <InputError :message="errors.start_time" />
@@ -200,7 +209,7 @@ const handlePhotoChange = (event: Event): void => {
                                 id="end_time"
                                 type="time"
                                 name="end_time"
-                                :value="formattedEndTime"
+                                :default-value="formattedEndTime"
                                 required
                             />
                             <InputError :message="errors.end_time" />
@@ -212,14 +221,11 @@ const handlePhotoChange = (event: Event): void => {
                         <select
                             id="is_active"
                             name="is_active"
+                            v-model="isActive"
                             class="w-full rounded-xl border border-sidebar-border/80 bg-background px-3 py-2 text-sm shadow-xs transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
                         >
-                            <option value="1" :selected="workshop.is_active">
-                                Actiu
-                            </option>
-                            <option value="0" :selected="!workshop.is_active">
-                                Inactiu
-                            </option>
+                            <option value="1">Actiu</option>
+                            <option value="0">Inactiu</option>
                         </select>
                         <InputError :message="errors.is_active" />
                     </div>
