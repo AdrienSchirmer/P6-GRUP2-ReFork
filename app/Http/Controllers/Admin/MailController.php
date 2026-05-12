@@ -68,10 +68,6 @@ class MailController extends Controller
         file_put_contents($envPath, $env);
 
         redirect('/admin/mail');
-<<<<<<< HEAD
-=======
-
->>>>>>> 6234702dc4719e1f701b533c9696a8aa6d126163
     }
 
     /**
