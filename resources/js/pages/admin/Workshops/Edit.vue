@@ -125,10 +125,10 @@ const handlePhotoChange = (event: Event): void => {
                             name="description"
                             rows="4"
                             required
+                            :value="workshop.description"
                             placeholder="Explica de què tracta el taller"
                             class="w-full rounded-xl border border-sidebar-border/80 bg-background px-3 py-2 text-sm shadow-xs transition focus-visible:border-ring focus-visible:ring-2 focus-visible:ring-ring/30 focus-visible:outline-none"
-                            >{{ workshop.description }}</textarea
-                        >
+                        ></textarea>
                         <InputError :message="errors.description" />
                     </div>
 
