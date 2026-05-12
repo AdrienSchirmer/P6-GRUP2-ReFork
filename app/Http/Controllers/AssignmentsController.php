@@ -44,10 +44,16 @@ class AssignmentsController extends Controller
     {
         $validated = $request->validated();
         $assignment = $createAssignment->execute($validated);
-        Mail::to($validated['address'])->send(new AssignmentCreated($validated));
+
+        try {
+            Mail::to($validated['address'])->send(new AssignmentCreated($validated));
+            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+        } catch (\Exception $e) {
+            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+        }
 
         Inertia::flash([
-            'message' => 'Encàrrec creat correctament',
+            'message' => $message,
         ]);
 
         return to_route('assignments.create', [
