@@ -55,8 +55,14 @@ class AdminServiceController extends Controller
                 'regex:/^[\pL\s]+$/u',
             ],
 
-
-            'description' => 'required|string',
+            'description' => [
+                'required',
+                function ($attribute, $value, $fail) {
+                    if (trim(strip_tags($value)) === '') {
+                        $fail('La descripció és obligatòria.');
+                    }
+                },
+            ],
             'duration_minutes' => 'required|integer|min:1',
             'icon' => 'nullable|string|max:50',
         ]);
@@ -107,7 +113,15 @@ class AdminServiceController extends Controller
                 'max:255',
                 'regex:/^[\pL\s]+$/u',
             ],
-            'description' => 'nullable|string',
+           'description' => [
+    'required',
+    function ($attribute, $value, $fail) {
+        if (trim(strip_tags($value)) === '') {
+            $fail('La descripció és obligatòria.');
+        }
+    },
+],
+
             'duration_minutes' => 'required|integer|min:1',
             'icon' => 'nullable|string',
         ]);
