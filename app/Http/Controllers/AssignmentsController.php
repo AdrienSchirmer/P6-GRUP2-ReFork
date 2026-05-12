@@ -116,9 +116,9 @@ class AssignmentsController extends Controller
 
         try {
             Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
-            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+            $message = 'Rebràs el codi al correu.';
         } catch (\Exception $e) {
-            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+            $message = 'Rebràs el codi al correu.';
         }
 
         return back()->with('success', $message);
