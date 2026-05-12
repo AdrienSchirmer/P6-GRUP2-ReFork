@@ -243,7 +243,8 @@ const availableTimes = computed(() => {
 });
 
 function isDayAvailable(cell: CalendarCell): boolean {
-    if (!cell.isCurrentMonth) {
+
+  if (!cell.isCurrentMonth) {
         return false;
     }
 
@@ -491,6 +492,16 @@ onUnmounted(() => {
             <div class="rounded-3xl bg-white p-10 shadow-lg">
                 <div>
                     <div v-if="step === 1">
+                        <!-- <div
+                            v-if="$page.flash.message"
+                            class="mx-auto mt-4 mb-4 w-full rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-3xl text-black"
+                            role="alert"
+                        >
+                            <p>
+                                <span class="font-medium">Creat: </span>
+                                {{ $page.flash.message }}
+                            </p>
+                        </div> -->
                         <div class="mb-8 flex items-center gap-3">
                             <span
                                 class="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f5f7f] text-sm font-bold text-white"

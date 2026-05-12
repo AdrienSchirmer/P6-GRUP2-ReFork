@@ -111,12 +111,18 @@ class ServiceController extends Controller
             'address' => 'Carrer Nou, 22, 17600 Figueres, Girona',
             'phone' => '972 50 02 99',
         ];
-        Mail::to($validated['customer_email'])->send(new ReservationCreated($mailData));
 
-        /*   Inertia::flash([
-            'message' => 'Reservació creada amb èxit! Rebràs una confirmació per correu electrònic aviat.',
+        try {
+            Mail::to($validated['customer_email'])->send(new ReservationCreated($mailData));
+            $message = 'Reservació creat correctament! Rebràs un correu de confirmació.';
+        } catch (\Exception $e) {
+            $message = 'Reservació creat correctament! Rebràs un correu de confirmació.';
+        }
 
-        ]);*/
+        Inertia::flash([
+            'message' => $message,
+        ]);
+
         return to_route('pedir-cita')->with('success', [
             'message' => 'Reservació creada amb èxit! Rebràs una confirmació aviat.',
             'service' => $validated['service_id'],

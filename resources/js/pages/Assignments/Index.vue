@@ -158,6 +158,9 @@ function onSuccess() {
                         <p class="mt-1 text-sm text-gray-700">
                             {{ assignment.description }}
                         </p>
+                        <p class="mt-1 text-sm text-gray-700">
+                            {{ assignment.status }}
+                        </p>
                     </div>
                 </div>
             </div>

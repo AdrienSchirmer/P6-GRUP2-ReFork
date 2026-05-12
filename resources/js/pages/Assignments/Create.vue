@@ -71,6 +71,17 @@ function onSuccess() {
         <div
             class="min-h-screen bg-blue-50 px-4 py-6 sm:px-6 lg:px-10 xl:px-16"
         >
+            <div
+                v-if="$page.flash.message"
+                class="mx-auto mt-4 mb-4 w-full rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-3xl text-black"
+                role="alert"
+            >
+                <p>
+                    <span class="font-medium">Creat: </span>
+                    {{ $page.flash.message }}
+                </p>
+            </div>
+
             <div class="pb-10">
                 <h1 class="text-2xl font-extrabold sm:text-3xl lg:text-4xl">
                     Encàrrecs
