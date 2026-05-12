@@ -20,9 +20,10 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.head_ref }}
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}      
+          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup PHP and Composer
         uses: shivammathur/setup-php@v2
         with:
@@ -52,6 +53,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
