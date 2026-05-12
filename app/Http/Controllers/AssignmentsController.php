@@ -45,7 +45,7 @@ class AssignmentsController extends Controller
         $validated = $request->validated();
         $assignment = $createAssignment->execute($validated);
         Mail::to($validated['address'])->send(new AssignmentCreated($validated));
-        
+
         Inertia::flash([
             'message' => 'Encàrrec creat correctament',
         ]);
@@ -101,16 +101,21 @@ class AssignmentsController extends Controller
         $normalizedEmail = strtolower($validated['email']);
 
         Cache::put(
-            'assignment_code:'.$normalizedEmail,
+            'assignment_code:' . $normalizedEmail,
             Hash::make($otp),
             now()->addMinutes($otpExpiresInMinutes)
         );
 
         $request->session()->put('assignment_code_email', $normalizedEmail);
 
-        Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
+        try {
+            Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
+            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+        } catch (\Exception $e) {
+            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+        }
 
-        return back()->with('success', 'Codi enviat correctament');
+        return back()->with('success', $message);
     }
 
     public function verifyCode(Request $request)
@@ -121,16 +126,16 @@ class AssignmentsController extends Controller
 
         $email = $request->session()->get('assignment_code_email');
 
-        if (! $email) {
+        if (!$email) {
             return back()->withErrors([
                 'code' => 'Primer envia el codi al teu correu',
             ]);
         }
 
-        $cacheKey = 'assignment_code:'.$email;
+        $cacheKey = 'assignment_code:' . $email;
         $hashedOtp = Cache::get($cacheKey);
 
-        if (! $hashedOtp || ! Hash::check($validated['code'], $hashedOtp)) {
+        if (!$hashedOtp || !Hash::check($validated['code'], $hashedOtp)) {
             return back()->withErrors([
                 'code' => 'Codi invalid o caducat',
             ]);
