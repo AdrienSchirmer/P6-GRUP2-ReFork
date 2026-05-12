@@ -243,9 +243,13 @@ const availableTimes = computed(() => {
 });
 
 function isDayAvailable(cell: CalendarCell): boolean {
+<<<<<<< Updated upstream
     if (!cell.isCurrentMonth) {
         return false;
     }
+=======
+    if (!cell.isCurrentMonth  ) return false;
+>>>>>>> Stashed changes
 
     const isPast =
         currentYear.value === todayYear &&

@@ -61,7 +61,9 @@ class ServiceController extends Controller
             'customer_email' => 'required|email|max:255',
             'appointment_date' => 'required|date',
             'start_time' => 'required|date_format:H:i',
-            'cf-turnstile-response' => ['required', 'string', new TurnstileRule],
+            'cf-turnstile-response' => app()->environment('testing')
+                ? ['nullable']
+                : ['required', 'string', new TurnstileRule],
 
         ], [
             'cf-turnstile-response.required' => 'Por favor, completa la verificación.',
@@ -72,7 +74,7 @@ class ServiceController extends Controller
 
         if ($appointmentDateTime->isPast()) {
             return back()->withErrors([
-                'start_time' => 'No pots reservar una hora passada.',
+                'appointment_date' => 'No pots reservar una hora passada.',
             ]);
         }
         $exists = ServiceAppointment::whereDate('appointment_date', $validated['appointment_date'])

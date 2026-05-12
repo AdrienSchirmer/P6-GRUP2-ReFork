@@ -99,6 +99,7 @@ const selectedIconComponent = computed(
                                 <input
                                     type="text"
                                     v-model="form.name"
+                                    aria-label="Nom del servei"
                                     class="w-full rounded-lg border px-3 py-2 text-sm"
                                 />
                                 <p
@@ -118,6 +119,7 @@ const selectedIconComponent = computed(
                                 <textarea
                                     v-model="form.description"
                                     rows="3"
+                                    aria-label="Descripció del servei"
                                     class="w-full rounded-lg border px-3 py-2 text-sm"
                                 ></textarea>
                                 <p
@@ -138,6 +140,7 @@ const selectedIconComponent = computed(
                                     type="number"
                                     v-model="form.duration_minutes"
                                     min="1"
+                                    aria-label="Durada (minuts)"
                                     class="w-full rounded-lg border px-3 py-2 text-sm"
                                 />
                                 <p
@@ -160,6 +163,7 @@ const selectedIconComponent = computed(
                                         :key="opt.value"
                                         type="button"
                                         @click="form.icon = opt.value"
+                                        :aria-label="`Seleccionar icona: ${opt.label}`"
                                         :class="[
                                             'flex items-center gap-2 rounded-lg border px-3 py-2 text-sm',
                                             form.icon === opt.value
@@ -212,7 +216,7 @@ const selectedIconComponent = computed(
                     <div
                         class="sticky top-6 space-y-4 rounded-xl border bg-white p-6"
                     >
-                        <h3 class="text-sm font-bold">Previsualització</h3>
+                        <h2 class="text-sm font-bold">Previsualització</h2>
 
                         <div class="flex items-center gap-3">
                             <div class="rounded bg-blue-50 p-3">

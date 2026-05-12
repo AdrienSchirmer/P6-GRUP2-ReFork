@@ -46,13 +46,19 @@ class ServiceScheduleController extends Controller
         $validated = $request->validate([
             'service_id' => 'required|exists:services,id',
             'day_of_week' => 'required|integer|between:1,7',
-            'start_time' => 'required',
-            'end_time' => 'required',
+            'start_time' =>  'required|date_format:H:i',
+            'end_time' => 'required|date_format:H:i|after:start_time',
         ]);
 
-        ServiceSchedule::create($validated);
+        ServiceSchedule::create([
+            'service_id' => $validated['service_id'],
+            'day_of_week' => $validated['day_of_week'],
+            'start_time' => $validated['start_time'],
+            'end_time' => $validated['end_time'],
+        ]);
 
         return redirect()->route('services.show', $validated['service_id']);
+        
     }
 
     /**
@@ -92,5 +98,6 @@ class ServiceScheduleController extends Controller
 
         return to_route('services.show', $serviceId)
             ->with('message', 'Horari eliminat correctament.');
+            
     }
 }
