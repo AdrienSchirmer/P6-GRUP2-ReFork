@@ -49,7 +49,7 @@ class AssignmentsController extends Controller
             Mail::to($validated['address'])->send(new AssignmentCreated($validated));
             $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
         } catch (\Exception $e) {
-            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+            $message = 'Correu no trobat.';
         }
 
         Inertia::flash([
@@ -107,7 +107,7 @@ class AssignmentsController extends Controller
         $normalizedEmail = strtolower($validated['email']);
 
         Cache::put(
-            'assignment_code:'.$normalizedEmail,
+            'assignment_code:' . $normalizedEmail,
             Hash::make($otp),
             now()->addMinutes($otpExpiresInMinutes)
         );
@@ -118,7 +118,7 @@ class AssignmentsController extends Controller
             Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
             $message = 'Rebràs el codi al correu.';
         } catch (\Exception $e) {
-            $message = 'Rebràs el codi al correu.';
+            $message = 'Correu no trobat.';
         }
 
         return back()->with('success', $message);
@@ -132,16 +132,16 @@ class AssignmentsController extends Controller
 
         $email = $request->session()->get('assignment_code_email');
 
-        if (! $email) {
+        if (!$email) {
             return back()->withErrors([
                 'code' => 'Primer envia el codi al teu correu',
             ]);
         }
 
-        $cacheKey = 'assignment_code:'.$email;
+        $cacheKey = 'assignment_code:' . $email;
         $hashedOtp = Cache::get($cacheKey);
 
-        if (! $hashedOtp || ! Hash::check($validated['code'], $hashedOtp)) {
+        if (!$hashedOtp || !Hash::check($validated['code'], $hashedOtp)) {
             return back()->withErrors([
                 'code' => 'Codi invalid o caducat',
             ]);
