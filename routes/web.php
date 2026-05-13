@@ -12,8 +12,8 @@ use App\Http\Controllers\Admin\ServiceScheduleController;
 use App\Http\Controllers\AssignmentsController;
 use App\Http\Controllers\Contactans;
 use App\Http\Controllers\HomeController;
-use App\Http\Controllers\ServiceController;
 use App\Http\Controllers\public_workshops_controller;
+use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 //
@@ -63,11 +63,11 @@ Route::post('/assignments/verify-code', [AssignmentsController::class, 'verifyCo
 //
 // WORKSHOPS
 //
-Route::resource('workshops/index', public_workshops_controller::class);
+Route::get('/workshops', [public_workshops_controller::class, 'index'])->name('workshops');
 
 //
 // CONTACT
 //
 Route::get('/contactans', [Contactans::class, 'index'])->name('contactans');
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

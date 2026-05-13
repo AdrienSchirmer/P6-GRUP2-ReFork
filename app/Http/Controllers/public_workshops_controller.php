@@ -2,63 +2,35 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Workshop;
+use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class public_workshops_controller extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): Response
     {
-        //
-    }
+        $workshops = Workshop::query()
+            ->select(['id', 'name', 'description', 'photo_path', 'workshop_date', 'start_time', 'end_time', 'max_attendees'])
+            ->where('is_active', true)
+            ->where('workshop_date', '>=', now()->toDateString())
+            ->orderBy('workshop_date')
+            ->orderBy('start_time')
+            ->get()
+            ->map(fn (Workshop $workshop) => [
+                'id' => $workshop->id,
+                'name' => $workshop->name,
+                'description' => $workshop->description,
+                'photo_url' => $workshop->photo_path ? Storage::disk('public')->url($workshop->photo_path) : null,
+                'workshop_date' => $workshop->workshop_date->toDateString(),
+                'start_time' => substr($workshop->start_time, 0, 5),
+                'end_time' => substr($workshop->end_time, 0, 5),
+                'max_attendees' => $workshop->max_attendees,
+            ]);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        return Inertia::render('workshops/index', [
+            'workshops' => $workshops,
+        ]);
     }
 }
