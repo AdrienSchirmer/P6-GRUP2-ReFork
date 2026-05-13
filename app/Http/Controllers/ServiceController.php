@@ -103,9 +103,7 @@ class ServiceController extends Controller
             $message = 'Reservació creat correctament! Rebràs un correu de confirmació.';
         }
 
-        Inertia::flash([
-            'message' => $message,
-        ]);
+   
 
         return to_route('pedir-cita')->with('success', [
             'message' => 'Reservació creada amb èxit! Rebràs una confirmació aviat.',
@@ -114,7 +112,8 @@ class ServiceController extends Controller
             'time' => $validated['start_time'],
             'name' => $validated['customer_name'],
             'email' => $validated['customer_email'],
-        ]);
+        ])
+        ->with('success', $message);
     }
 
     /**
