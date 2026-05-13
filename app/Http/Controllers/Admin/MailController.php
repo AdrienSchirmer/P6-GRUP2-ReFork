@@ -44,7 +44,7 @@ class MailController extends Controller
             'MAIL_HOST' => (string) $request->input('mail_host', ''),
             'MAIL_PORT' => (string) $request->input('mail_port', ''),
             'MAIL_USERNAME' => (string) $request->input('mail_username', ''),
-            'MAIL_FROM_ADDRESS' => '"' . (string) $request->input('mail_from_address', '') . '"',
+            'MAIL_FROM_ADDRESS' => '"'.(string) $request->input('mail_from_address', '').'"',
         ];
 
         if ($request->filled('mail_password')) {
@@ -55,13 +55,13 @@ class MailController extends Controller
         $env = file_get_contents($envPath);
 
         foreach ($update as $key => $value) {
-            $pattern = '/^' . preg_quote($key, '/') . '=.*$/m';
-            $line = $key . '=' . $value;
+            $pattern = '/^'.preg_quote($key, '/').'=.*$/m';
+            $line = $key.'='.$value;
 
             if (preg_match($pattern, $env) === 1) {
                 $env = preg_replace($pattern, $line, $env);
             } else {
-                $env .= PHP_EOL . $line;
+                $env .= PHP_EOL.$line;
             }
         }
 
