@@ -47,11 +47,13 @@ jobs:
           git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git config --local credential.helper store
           echo "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
-      - name: Commit Changes
-        uses: stefanzweifel/git-auto-commit-action@v7
-        with:
-          commit_message: fix pint code style
-          commit_options: '--no-verify'
+      - name: Push Changes Back to Repo Manually
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "gh@githubactions.cat"
+          git add .
+          git commit -m "Laravel Pint" || exit 0
+          git push
   tests:
     runs-on: ubuntu-latest
     needs: laravel-pint-lint
