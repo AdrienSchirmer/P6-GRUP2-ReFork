@@ -18,31 +18,31 @@ onMounted(() => {
     // Set Week
     selectedDate.week.value = date.getDay()-1;
     for (let i = 0; i < week.length; i++) {
-        week[i].id.value = selectedDate.week.value + i < 7 ? selectedDate.week.value + i :  selectedDate.week.value - 7;
+        week[i].id.value = selectedDate.week.value + i < 7 ? selectedDate.week.value + i :  selectedDate.week.value + i - 7;
     };
+    
     // Set Day
     selectedDate.day.value = date.getDate();
     setDays();
+
     // Set Month
     selectedDate.month.value = setMonth.num = date.getMonth();
     setMonthName();
+
     // Set Year
     selectedDate.year.value = setYear.num = date.getFullYear();
     setYearName();
 
+    /// Swiper
+    new Swiper(".hero-swiper", {
+        modules: [Pagination, Autoplay],
+        autoplay: { delay: 3000 },
+        pagination: { el: '.hero-swiper-pagination' },
+    });
+
     /// Leaflet
     address.value = document.getElementById('address');
-    address.value?.setAttribute('href', "https://www.google.com/maps/search@" + pharmacy.lat.value + "," + pharmacy.long.value + ",17z");
-
-    new Swiper(".swiper", {
-        modules: [Pagination, Autoplay],
-        autoplay: {
-            delay: 3000,
-        },
-        pagination: {
-            el: ".hero-swiper-pagination",
-        },
-    });
+    address.value?.setAttribute('href', "https://www.google.com/maps/search/" + (pharmacy.name.value || "farmàcia soler") + "/@" + pharmacy.lat.value + "," + pharmacy.long.value + ",21z");
 
     // Setup Map
     map.value = L.map('map').setView([pharmacy.lat.value, pharmacy.long.value], 19);
@@ -51,7 +51,8 @@ onMounted(() => {
     }).addTo(map.value);
     marker.value = L.marker([pharmacy.lat.value, pharmacy.long.value]).addTo(map.value);
 
-    getPharmacyInfo(selectedDate.day.value, setMonth.num + 1, selectedDate.year.value);
+    // Pharmacy Info
+    getPharmacyInfo(selectedDate.day.value, selectedDate.month.value + 1, selectedDate.year.value);
 });
 
 const address = ref();
@@ -110,14 +111,13 @@ async function getPharmacyInfo(day : number, month : number, year : number) {
         pharmacy.description.value = data.response.description;
         pharmacy.lat.value = data.response.latitude;
         pharmacy.long.value = data.response.longitude;
-        console.log(data.response);
 
-        address.value.setAttribute('href', "https://www.google.com/maps/@" + pharmacy.lat.value + "," + pharmacy.long.value + ",17z");
-        marker.value.setLatLng([pharmacy.lat.value, pharmacy.long.value])
+        address.value.setAttribute('href', "https://www.google.com/maps/search/" + (pharmacy.name.value || "farmàcia soler") + "/@" + pharmacy.lat.value + "," + pharmacy.long.value + ",21z");
+        marker.value.setLatLng([pharmacy.lat.value, pharmacy.long.value]);
         map.value.flyTo([pharmacy.lat.value, pharmacy.long.value], 19);
     } else {
         pharmacy.description.value = "";
-        pharmacy.name.value = "No s'ha trobat cap farmacia."
+        pharmacy.name.value = "No s'ha trobat cap farmacia.";
     }
 }
 
@@ -135,6 +135,7 @@ function setDays() {
         count++;
     }
 };
+
 // Function get max day from month
 function getMaxDay() : number {
     return new Date(setYear.num, setMonth.num+1, 0).getDate();
@@ -146,6 +147,7 @@ function getMaxDay() : number {
 function getSelectedMonth(day : number) : number {
     return setMonth.double && day < 7 ? getNextMonth() : setMonth.num;
 }
+
 // Function Set Month Name
 function setMonthName() {
     if (checkDoubleMonth()) {
@@ -156,19 +158,23 @@ function setMonthName() {
         setMonth.double = false;
     }
 };
+
 // Function Get Previous Month
 function getPreviousMonth() : number {
     return setMonth.num - 1 < 0 ? 11 : setMonth.num - 1;
 };
+
 // Function Get Next Month
 function getNextMonth() : number {
     return setMonth.num + 1 > 11 ? 0 : setMonth.num + 1;
 };
+
 // Function Set Previous Month
 function setPreviousMonth() {
     setMonth.num = getPreviousMonth();
     setMonth.num == 11 ? setPreviousYear() : null;
 };
+
 // Function Set Next Month
 function setNextMonth() {
     setMonth.num = getNextMonth();
@@ -181,6 +187,7 @@ function setNextMonth() {
 function getSelectedYear(day : number, month : number) : number {
     return setMonth.double && day < 7 && month == 0 ? setYear.num + 1 : setYear.num;
 }
+
 // Function Set Year Name
 function setYearName() {
     if (checkDoubleYear()) {
@@ -191,11 +198,13 @@ function setYearName() {
         setYear.double = false;
     }
 };
+
 // Function Set Previous Year
 function setPreviousYear() {
     setYear.num--;
     setYearName();
 };
+
 // Function Set Next Year
 function setNextYear() {
     setYear.num++;
@@ -203,6 +212,15 @@ function setNextYear() {
 };
 
 /// Checks
+
+// Check if week has date selected
+function checkDateSelected(id : number, num : number) : boolean {
+    return selectedDate.week.value == id &&
+            selectedDate.day.value == num &&
+            selectedDate.month.value == ((checkDoubleMonth() && num < 7) ? setMonth.num + 1 : setMonth.num) &&
+            selectedDate.year.value == ((checkDoubleYear() && num < 7) ? setYear.num + 1 : setYear.num)
+            ? true : false;
+};
 
 // Check if has days from 2 months diferently set double name
 function checkDoubleMonth() : boolean {
@@ -213,21 +231,10 @@ function checkDoubleMonth() : boolean {
     };
     return false;
 };
+
 // Check if has months from 2 years diferently set double name
 function checkDoubleYear() : boolean {
-    if (checkDoubleMonth()) {
-        if (setMonth.num == 11) return true;
-    };
-    return false;
-};
-// Check if week has date selected
-function checkDateSelected() {
-    for (let i = 0; i < week.length; i++) {
-        const day = week[i].num.value;
-        const month = getSelectedMonth(day);
-        const year = getSelectedYear(day, month);
-        day == selectedDate.day.value && month == selectedDate.month.value && year == selectedDate.year.value ? setButtonSelected(week[i].id.value) : false;
-    };
+    return checkDoubleMonth() && setMonth.num == 11 ? true : false;
 };
 
 /// Buttons
@@ -238,9 +245,9 @@ function setSelectDate(idWeek : number, day : number) {
     selectedDate.day.value = day;
     selectedDate.month.value = getSelectedMonth(day);
     selectedDate.year.value = getSelectedYear(day, selectedDate.month.value);
-    resetButtonColor();
-    setButtonSelected(idWeek);
-}
+
+    getPharmacyInfo(selectedDate.day.value, selectedDate.month.value + 1, selectedDate.year.value);
+};
 
 // Button Set Previous Week
 function setPreviousWeek() {
@@ -264,9 +271,8 @@ function setPreviousWeek() {
         setMonthName();
         if (setYear.double) setYearName(); 
     };
-    resetButtonColor();
-    checkDateSelected();
 };
+
 // Button Set Next Week
 function setNextWeek() {
     const limitDay = getMaxDay();
@@ -287,46 +293,17 @@ function setNextWeek() {
         setNextMonth();
         setMonthName();
     }
-    resetButtonColor();
-    checkDateSelected();
 };
-
-/// Button Color
-
-// Set Button Color
-function setButtonSelected(id : number) {
-    const button = document.getElementById('week'+id); 
-    if (button) {
-        button.style.background = '#FFFFFF';
-        button.style.color = '#01617F';
-    };
-}
-// Reset All Button Color
-function resetButtonColor() {
-    for (let i = 0; i < week.length; i++) {
-        const button = document.getElementById('week'+i);
-        if (button) {
-            button.style.background = '';
-            button.style.color = '';
-        };
-    }
-}
 </script>
 
 <template>
     <WebAppLayout>
         <!-- Hero -->
-        <section
-            class="relative overflow-hidden bg-linear-to-br from-[#013F52] via-[#015873] to-[#01789E]"
-        >
-            <div
-                class="mx-auto flex max-w-7xl flex-col items-center gap-8 px-6 py-16 md:h-130 md:flex-row md:gap-0 md:py-0"
-            >
+        <section class="relative overflow-hidden bg-linear-to-br from-[#013F52] via-[#015873] to-[#01789E]">
+            <div class="mx-auto flex max-w-7xl flex-col items-center gap-8 px-6 py-16 md:h-130 md:flex-row md:gap-0 md:py-0">
                 <!-- Left: text -->
                 <div class="z-10 flex flex-col gap-6 text-white md:w-1/2">
-                    <p
-                        class="text-xs font-semibold tracking-[0.22em] text-white/60 uppercase"
-                    >
+                    <p class="text-xs font-semibold tracking-[0.22em] text-white/60 uppercase">
                         Figueres · Carrer Nou, 22
                     </p>
                     <h1 class="text-4xl leading-tight font-bold lg:text-5xl">
@@ -381,9 +358,8 @@ function resetButtonColor() {
                             />
                         </div>
                     </div>
-                    <div
-                        class="hero-swiper-pagination absolute right-0 bottom-3 left-0 z-10 flex justify-center"
-                    ></div>
+                    <div class="hero-swiper-pagination absolute right-0 bottom-3 left-0 z-10 flex justify-center">
+                    </div>
                 </div>
             </div>
         </section>
@@ -395,21 +371,15 @@ function resetButtonColor() {
             class="scroll-mt-24 bg-[#F2FAFF] px-2 py-12 md:px-24"
         >
             <Card class="flex-col bg-white md:flex-row">
-                <div
-                    class="flex h-110 w-full items-end overflow-hidden md:relative md:h-auto md:w-1/2"
-                >
+                <div class="flex h-110 w-full items-end overflow-hidden md:relative md:h-auto md:w-1/2">
                     <img
                         src="/storage/farmaciaSolerStore.jpeg"
                         alt="Farmacia Soler"
                         class="h-full w-full rounded-xl object-cover object-bottom md:absolute"
                     />
                 </div>
-                <div
-                    class="flex flex-col gap-4 px-8 py-8 md:h-160 md:w-1/2 md:py-16"
-                >
-                    <h2
-                        class="text-center text-2xl font-bold md:text-left md:text-4xl"
-                    >
+                <div class="flex flex-col gap-4 px-8 py-8 md:h-160 md:w-1/2 md:py-16">
+                    <h2 class="text-center text-2xl font-bold md:text-left md:text-4xl">
                         ¿Quí som?
                     </h2>
                     <p>
@@ -428,14 +398,11 @@ function resetButtonColor() {
         >
             <!-- Section header -->
             <div class="mb-8 text-center">
-                <div
-                    class="mb-3 flex items-center justify-center gap-2 text-[#01617F]"
-                >
+                <div class="mb-3 flex items-center justify-center gap-2 text-[#01617F]">
                     <Icon icon="mdi:hospital-building" width="22" height="22" />
-                    <span
-                        class="text-xs font-semibold tracking-widest uppercase"
-                        >Servei 24h</span
-                    >
+                    <span class="text-xs font-semibold tracking-widest uppercase">
+                        Servei 24h
+                    </span>
                 </div>
                 <h2 class="text-3xl font-bold text-[#124559] md:text-4xl">
                     Farmàcies de guàrdia
@@ -445,17 +412,11 @@ function resetButtonColor() {
                     mapa.
                 </p>
             </div>
-            <div
-                class="overflow-hidden rounded-2xl border border-[#D0EAF3] shadow-xl shadow-[#01617F]/10"
-            >
+            <div class="overflow-hidden rounded-2xl border border-[#D0EAF3] shadow-xl shadow-[#01617F]/10">
                 <!-- Calendar strip -->
-                <div
-                    class="bg-linear-to-r from-[#015873] to-[#01789E] px-4 py-5"
-                >
+                <div class="bg-linear-to-r from-[#015873] to-[#01789E] px-4 py-5">
                     <div class="text-center text-white">
-                        <p
-                            class="text-xs font-semibold tracking-[0.2em] uppercase opacity-70"
-                        >
+                        <p class="text-xs font-semibold tracking-[0.2em] uppercase opacity-70">
                             {{ setYear.name }}
                         </p>
                         <h3 class="mt-0.5 text-2xl font-bold">
@@ -463,36 +424,33 @@ function resetButtonColor() {
                         </h3>
                     </div>
                     <div class="mt-4 overflow-x-auto pb-1">
-                        <div
-                            class="mx-auto flex min-w-max items-center justify-center gap-1.5"
-                        >
-                            <button
-                                @click="setPreviousWeek()"
-                                class="flex h-14 w-8 cursor-pointer items-center justify-center rounded-lg transition hover:bg-white/10"
-                            >
-                                <Icon
-                                    icon="iconamoon:player-play"
-                                    class="rotate-180 text-white/70"
-                                    width="20"
-                                    height="20"
-                                />
-                            </button>
-                            <template
-                                v-for="(value, key) in week"
-                            >
+                        <div class="mx-auto flex min-w-max items-center justify-center gap-1.5">
+                            <label>
                                 <button
-                                    @click="
-                                        setSelectDate(value.id.value, value.num.value)
-                                    "
-                                    class="h-14 w-12 rounded-xl text-center cursor-pointer transition flex flex-col items-center justify-center text-white hover:bg-white/15"
+                                    @click="setPreviousWeek()"
+                                    class="flex h-14 w-8 cursor-pointer items-center justify-center rounded-lg transition hover:bg-white/10"
                                 >
-                                    <span
-                                        class="mb-0.5 block text-[10px] font-semibold uppercase opacity-70"
-                                        >{{ nameWeekDay[value.id.value].key }}</span
-                                    >
-                                    <span class="block text-sm font-bold">{{
-                                        value.num.value
-                                    }}</span>
+                                    <Icon
+                                        icon="iconamoon:player-play"
+                                        class="rotate-180 text-white/70"
+                                        width="20"
+                                        height="20"
+                                    />
+                                </button>
+                            </label>
+                            <template v-for="value in week">
+                                <button @click="setSelectDate(value.id.value, value.num.value)"
+                                    :id="'week'+value.id.value"
+                                    :class="checkDateSelected(value.id.value, value.num.value)
+                                        ? 'bg-white text-[#01617F]' : 'text-white hover:bg-white/15'"
+                                    class="h-14 w-12 rounded-xl text-center cursor-pointer transition flex flex-col items-center justify-center"
+                                >
+                                    <span class="mb-0.5 block text-[10px] font-semibold uppercase opacity-70">
+                                        {{ nameWeekDay[value.id.value]?.key }}
+                                    </span>
+                                    <span class="block text-sm font-bold">
+                                        {{ value.num.value }}
+                                    </span>
                                 </button>
                             </template>
                             <button
@@ -518,23 +476,17 @@ function resetButtonColor() {
                     </div>
 
                     <!-- Info panel -->
-                    <div
-                        class="flex flex-col gap-4 border-[#D0EAF3] bg-[#F7FBFE] p-6 md:w-1/3 md:border-l"
-                    >
+                    <div class="flex flex-col gap-4 border-[#D0EAF3] bg-[#F7FBFE] px-6 py-6 md:w-1/3 md:border-l">
                         <!-- Pharmacy name -->
-                        <div class="flex items-start gap-3">
-                            <div
-                                class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#01617F]/10 text-[#01617F]"
-                            >
+                        <div class="flex items-center gap-3">
+                            <div class="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#01617F]/10 text-[#01617F]">
                                 <Icon
                                     icon="mdi:pharmacy"
                                     width="18"
                                     height="18"
                                 />
                             </div>
-                            <h4
-                                class="text-lg leading-snug font-semibold text-[#0E3C4D]"
-                            >
+                            <h4 class="text-lg leading-snug font-semibold text-[#0E3C4D]">
                                 {{ pharmacy.name || 'Carregant farmàcia...' }}
                             </h4>
                         </div>
@@ -551,7 +503,7 @@ function resetButtonColor() {
                             />
                             <span>
                                 <span class="font-semibold">{{
-                                    nameWeekDay[selectedDate.week.value]
+                                    nameWeekDay[selectedDate.week.value]?.name
                                 }}</span
                                 >, {{ selectedDate.day.value }}
                                 {{ nameMonth[selectedDate.month.value] }}
@@ -564,7 +516,7 @@ function resetButtonColor() {
                             class="min-h-10 text-sm leading-relaxed text-[#335B69]"
                         >
                             {{
-                                pharmacy.description ||
+                                pharmacy.description.value ||
                                 'Sense informació addicional per aquest dia.'
                             }}
                         </p>
