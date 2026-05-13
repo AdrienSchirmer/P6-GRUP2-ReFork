@@ -3,6 +3,14 @@ import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import type { BreadcrumbItem } from '@/types';
 import {
     create as workshopsCreate,
@@ -11,12 +19,23 @@ import {
     index as workshopsIndex,
 } from '@/routes/workshops';
 
+const workshopToDelete = ref<number | null>(null);
+
 function deleteWorkshop(id: number) {
-    if (!confirm('Segur que vols eliminar aquest taller?')) {
+    workshopToDelete.value = id;
+}
+
+function confirmDelete() {
+    if (workshopToDelete.value === null) {
         return;
     }
 
-    useForm({}).delete(workshopsDestroy(id).url);
+    useForm({}).delete(workshopsDestroy(workshopToDelete.value).url);
+    workshopToDelete.value = null;
+}
+
+function cancelDelete() {
+    workshopToDelete.value = null;
 }
 
 type Workshop = {
@@ -207,10 +226,12 @@ const formatTime = (time: string) => time.slice(0, 5);
                                         </Link>
                                         <button
                                             type="button"
-                                            class="inline-flex items-center rounded-lg p-1.5 text-muted-foreground transition hover:bg-red-50 hover:text-red-600"
+                                            class="inline-flex cursor-pointer items-center rounded-lg p-1.5 text-muted-foreground transition hover:bg-red-50 hover:text-red-600"
                                             @click="deleteWorkshop(workshop.id)"
                                         >
-                                            <Trash2 class="h-4 w-4" />
+                                            <Trash2
+                                                class="h-4 w-4 cursor-pointer"
+                                            />
                                         </button>
                                     </div>
                                 </td>
@@ -229,5 +250,32 @@ const formatTime = (time: string) => time.slice(0, 5);
                 </div>
             </div>
         </div>
+        <Dialog :open="workshopToDelete !== null" @update:open="cancelDelete">
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Eliminar taller</DialogTitle>
+                    <DialogDescription>
+                        Segur que vols eliminar aquest taller? Aquesta acció no
+                        es pot desfer.
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <button
+                        type="button"
+                        class="inline-flex cursor-pointer items-center rounded-xl border border-sidebar-border/80 bg-background px-4 py-2 text-sm font-medium transition hover:bg-muted"
+                        @click="cancelDelete"
+                    >
+                        Cancel·lar
+                    </button>
+                    <button
+                        type="button"
+                        class="inline-flex cursor-pointer items-center rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                        @click="confirmDelete"
+                    >
+                        Eliminar
+                    </button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </AppLayout>
 </template>
