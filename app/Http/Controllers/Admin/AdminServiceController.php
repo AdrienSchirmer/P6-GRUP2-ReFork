@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\StoreServiceRequest;
+use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -43,7 +45,7 @@ class AdminServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreServiceRequest $request)
     {
         //
 
@@ -54,7 +56,6 @@ class AdminServiceController extends Controller
                 'max:255',
                 'regex:/^[\pL\s]+$/u',
             ],
-
 
             'description' => 'required|string',
             'duration_minutes' => 'required|integer|min:1',
@@ -97,20 +98,11 @@ class AdminServiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateServiceRequest $request, string $id)
     {
         //
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                'regex:/^[\pL\s]+$/u',
-            ],
-            'description' => 'nullable|string',
-            'duration_minutes' => 'required|integer|min:1',
-            'icon' => 'nullable|string',
-        ]);
+         $validated = $request->validated();
+
 
         $service = Service::findOrFail($id);
         $service->update($validated);
