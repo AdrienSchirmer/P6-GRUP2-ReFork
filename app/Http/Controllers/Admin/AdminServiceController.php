@@ -55,7 +55,6 @@ class AdminServiceController extends Controller
                 'regex:/^[\pL\s]+$/u',
             ],
 
-
             'description' => 'required|string',
             'duration_minutes' => 'required|integer|min:1',
             'icon' => 'nullable|string|max:50',

@@ -107,7 +107,7 @@ class AssignmentsController extends Controller
         $normalizedEmail = strtolower($validated['email']);
 
         Cache::put(
-            'assignment_code:' . $normalizedEmail,
+            'assignment_code:'.$normalizedEmail,
             Hash::make($otp),
             now()->addMinutes($otpExpiresInMinutes)
         );
@@ -132,16 +132,16 @@ class AssignmentsController extends Controller
 
         $email = $request->session()->get('assignment_code_email');
 
-        if (!$email) {
+        if (! $email) {
             return back()->withErrors([
                 'code' => 'Primer envia el codi al teu correu',
             ]);
         }
 
-        $cacheKey = 'assignment_code:' . $email;
+        $cacheKey = 'assignment_code:'.$email;
         $hashedOtp = Cache::get($cacheKey);
 
-        if (!$hashedOtp || !Hash::check($validated['code'], $hashedOtp)) {
+        if (! $hashedOtp || ! Hash::check($validated['code'], $hashedOtp)) {
             return back()->withErrors([
                 'code' => 'Codi invalid o caducat',
             ]);
