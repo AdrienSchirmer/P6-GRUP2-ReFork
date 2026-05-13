@@ -73,7 +73,7 @@ const handlePhotoChange = (event: Event): void => {
                         <Label for="description">Descripció</Label>
 
                         <QuillEditor v-model:content="description" contentType="html" theme="snow" toolbar="full"
-                            class="rounded-xl bg-background" />
+                            class="rounded-xl bg-background "/>
 
                         <input type="hidden" name="description" :value="description" />
 

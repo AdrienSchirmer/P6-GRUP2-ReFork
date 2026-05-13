@@ -17,7 +17,6 @@ import {
     Thermometer,
     
 } from 'lucide-vue-next';
-import TiptapEditor from '@/components/TiptapEditor.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { admindashboard as dashboard } from '@/routes';
@@ -117,9 +116,7 @@ const submit = () => {
                             </p>
                         </div>
                     </div>
-
                     <!-- DESCRIPTION-->
-
                     <div>
                         <label
                             for="service-description"
@@ -127,8 +124,6 @@ const submit = () => {
                         >
                             Descripció
                         </label>
-
-
                         <p
                             v-if="form.errors.description"
                             class="mt-1 text-xs text-red-500"
