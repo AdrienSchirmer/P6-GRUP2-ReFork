@@ -143,6 +143,7 @@ function getMaxDay() : number {
     return new Date(setYear.num, setMonth.num+1, 0).getDate();
 };
 
+
 /// Month
 
 // Function Get Selected Month
@@ -440,7 +441,7 @@ function setNextWeek() {
                                     />
                                 </button>
                             </label>
-                            <template v-for="value, key in week">
+                            <template v-for="(value, key) in week" :key="key">
                                 <button @click="setSelectDate(value.id.value, value.num.value)"
                                     :id="'week'+value.id.value"
                                     :class="checkDateSelected(value.id.value, value.num.value)
