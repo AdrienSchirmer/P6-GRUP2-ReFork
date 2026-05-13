@@ -143,7 +143,6 @@ function getMaxDay() : number {
     return new Date(setYear.num, setMonth.num+1, 0).getDate();
 };
 
-
 /// Month
 
 // Function Get Selected Month
@@ -175,13 +174,13 @@ function getNextMonth() : number {
 // Function Set Previous Month
 function setPreviousMonth() {
     setMonth.num = getPreviousMonth();
-    setMonth.num == 11 ? setPreviousYear() : null;
+    if (setMonth.num == 11) setPreviousYear();
 };
 
 // Function Set Next Month
 function setNextMonth() {
     setMonth.num = getNextMonth();
-    setMonth.num == 0 ? setNextYear() : null;
+    if (setMonth.num == 0) setNextYear();
 };
 
 /// Year
