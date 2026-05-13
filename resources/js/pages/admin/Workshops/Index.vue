@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -34,8 +34,6 @@ type Workshop = {
 const props = defineProps<{
     workshops: Workshop[];
 }>();
-
-const page = usePage<{ flash?: { message?: string } }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tallers', href: workshopsIndex().url },
@@ -91,14 +89,6 @@ const formatTime = (time: string) => time.slice(0, 5);
                 <p class="mt-2 text-sm text-muted-foreground">
                     Gestió inicial dels tallers programats de la farmàcia.
                 </p>
-            </div>
-
-            <div
-                v-if="page.props.flash?.message"
-                class="rounded-xl border border-green-200 bg-green-50/90 px-4 py-3 text-sm text-green-700 shadow-sm"
-                role="alert"
-            >
-                {{ page.props.flash?.message }}
             </div>
 
             <div
