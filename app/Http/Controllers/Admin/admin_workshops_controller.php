@@ -77,7 +77,7 @@ class admin_workshops_controller extends Controller
         ]);
 
         return to_route('workshops.index')
-            ->with('message', 'Taller creat correctament.');
+            ->with('success', 'Taller creat correctament.');
     }
 
     /**
@@ -124,7 +124,7 @@ class admin_workshops_controller extends Controller
         $workshop->update($validated);
 
         return to_route('workshops.index')
-            ->with('message', 'Taller actualitzat correctament.');
+            ->with('success', 'Taller actualitzat correctament.');
     }
 
     /**
@@ -139,6 +139,6 @@ class admin_workshops_controller extends Controller
         $workshop->delete();
 
         return to_route('workshops.index')
-            ->with('message', 'Taller eliminat correctament.');
+            ->with('success', 'Taller eliminat correctament.');
     }
 }

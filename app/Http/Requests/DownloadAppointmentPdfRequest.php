@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 
-class UpdateServiceRequest extends FormRequest
+class DownloadAppointmentPdfRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,32 +24,29 @@ class UpdateServiceRequest extends FormRequest
     {
         return [
             //
+            'service' => [
+                'required',
+                'exists:services,id',
+            ],
+
+            'date' => [
+                'required',
+                'date',
+            ],
+
+            'time' => [
+                'required',
+                'string',
+            ],
+
             'name' => [
                 'required',
                 'string',
-                'max:255',
-                'regex:/^[\pL\pN\s\-\(\)]+$/u',
             ],
 
-            'description' => [
+            'email' => [
                 'required',
-                function ($attribute, $value, $fail) {
-                    if (trim(strip_tags($value)) === '') {
-                        $fail('La descripció és obligatòria.');
-                    }
-                },
-            ],
-
-            'duration_minutes' => [
-                'required',
-                'integer',
-                'min:1',
-            ],
-
-            'icon' => [
-                'nullable',
-                'string',
-                'max:50',
+                'email',
             ],
         ];
     }
