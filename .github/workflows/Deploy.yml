@@ -99,6 +99,7 @@ jobs:
           script: |
             echo "Descomprimint el fitxer app.tgz"
             cd ${{ secrets.DOCUMENT_ROOT }}
+          
             tar -xzf app.tgz
 
             echo "Recrear storage si no existeix"

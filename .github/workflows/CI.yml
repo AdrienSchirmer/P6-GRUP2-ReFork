@@ -26,7 +26,6 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.head_ref }}
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup PHP and Composer
         uses: shivammathur/setup-php@v2
         with:
@@ -44,21 +43,15 @@ jobs:
         run: npm run format
       - name: Lint Frontend
         run: npm run lint --fix
-      - name: Configure Git credentials
-        run: |
-          git config --local user.name "github-actions[bot]"
-          git config --local user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git config --local credential.helper store
-          echo "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
       - name: Push Changes Back to Repo Manually
         # Només fa canvis si es fa el push, s'ha fet merge del pull-request.
         if: github.event_name == 'push'
         run: |
-          git config user.name "brandonalcantara17"
-          git config user.email "brandonalcantara@proton.me"
+          git config user.name "github-action[bot]"
+          git config user.email "bot@gmail.com"
           git add .
           git commit -m "Laravel Pint" || exit 0
-          git push
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.head_ref }}
 
   tests:
     runs-on: ubuntu-latest
