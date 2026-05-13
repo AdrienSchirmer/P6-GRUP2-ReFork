@@ -23,7 +23,6 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.head_ref }}
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
       - name: Setup PHP and Composer
         uses: shivammathur/setup-php@v2
         with:
@@ -43,6 +42,8 @@ jobs:
         run: npm run lint --fix
       - name: Push Changes Back to Repo Manually
         run: |
+          git config --global credential.helper store
+          echo "https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com" > ~/.git-credentials
           git config user.name "brandonalcantara17"
           git config user.email "brandonalcantara@proton.me"
           git add .
