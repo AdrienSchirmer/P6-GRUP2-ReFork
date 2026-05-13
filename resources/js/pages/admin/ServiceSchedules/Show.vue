@@ -103,9 +103,10 @@ function deleteSchedule() {
 
                 <div class="flex-1">
                     <h1 class="text-2xl font-bold">{{ props.service.name }}</h1>
-                    <p class="text-sm text-gray-500">
-                        {{ props.service.description }}
-                    </p>
+                    <div
+                        class="text-sm text-gray-500"
+                        v-html="props.service.description"
+                    ></div>
                     <p class="text-xs text-gray-400">
                         Durada: {{ props.service.duration_minutes }} min
                     </p>

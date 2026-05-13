@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreServiceRequest;
+use App\Http\Requests\UpdateServiceRequest;
 use App\Models\Service;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
@@ -43,27 +44,14 @@ class AdminServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreServiceRequest $request)
     {
         //
 
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                'regex:/^[\pL\s]+$/u',
-            ],
-
-
-            'description' => 'required|string',
-            'duration_minutes' => 'required|integer|min:1',
-            'icon' => 'nullable|string|max:50',
-        ]);
-
+        $validated = $request->validated();
         Service::create($validated);
 
-        Inertia::flash(['message' => 'Servei creat correctament.']);
+        Inertia::flash(['message' => 'success']);
 
         return redirect()
             ->route('services.index');
@@ -97,27 +85,17 @@ class AdminServiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateServiceRequest $request, string $id)
     {
         //
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                'regex:/^[\pL\s]+$/u',
-            ],
-            'description' => 'nullable|string',
-            'duration_minutes' => 'required|integer|min:1',
-            'icon' => 'nullable|string',
-        ]);
+        $validated = $request->validated();
 
         $service = Service::findOrFail($id);
         $service->update($validated);
 
         return redirect()
             ->route('services.index')
-            ->with('message', 'Servei actualitzat correctament.');
+            ->with('success', 'Servei actualitzat correctament.');
     }
 
     /**

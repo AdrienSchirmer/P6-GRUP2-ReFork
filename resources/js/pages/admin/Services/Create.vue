@@ -16,10 +16,10 @@ import {
     Bandage,
     Thermometer,
 } from 'lucide-vue-next';
+import TiptapEditor from '@/components/TiptapEditor.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { admindashboard as dashboard } from '@/routes';
-
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Administració de serveis', href: dashboard().url },
     { title: 'Nou servei', href: '#' },
@@ -118,17 +118,22 @@ const submit = () => {
                     </div>
 
                     <!-- DESCRIPTION-->
+
                     <div>
-                        <label class="block text-sm font-medium text-gray-700">
+                        <label
+                            for="service-description"
+                            class="block text-sm font-medium text-gray-700"
+                        >
                             Descripció
                         </label>
-                        <textarea
+
+                        <TiptapEditor
+                            id="service-description"
                             v-model="form.description"
-                            rows="3"
-                            placeholder="Descripció breu del servei..."
-                            aria-label="Descripció del servei"
-                            class="mt-1 w-full rounded-lg border px-3 py-2 text-sm"
-                        ></textarea>
+                            placeholder="Descripció breu del servei…"
+                            class="mt-1"
+                        />
+
                         <p
                             v-if="form.errors.description"
                             class="mt-1 text-xs text-red-500"

@@ -1,4 +1,7 @@
 <script setup lang="ts">
+// ---------------------------------------------------------------------------
+// 1. Imports
+// ---------------------------------------------------------------------------
 import { useForm, usePage, router } from '@inertiajs/vue3';
 import {
     ScanFace,
@@ -16,13 +19,16 @@ import {
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 
+// ---------------------------------------------------------------------------
+// 2. Layout
+// ---------------------------------------------------------------------------
 defineOptions({
     layout: WebAppLayout,
 });
-function closeSuccessModal() {
-    showModal.value = false;
-    router.visit('/');
-}
+
+// ---------------------------------------------------------------------------
+// 3. Types
+// ---------------------------------------------------------------------------
 type ServiceItem = {
     id: number;
     nom: string;
@@ -45,6 +51,9 @@ type CalendarCell = {
     isCurrentMonth: boolean;
 };
 
+// ---------------------------------------------------------------------------
+// 4. Props & Inertia page
+// ---------------------------------------------------------------------------
 const props = defineProps<{
     services: ServiceItem[];
     turnstileSiteKey: string | null;
@@ -56,24 +65,40 @@ const page = usePage<{
     };
 }>();
 
-const showConfirmModal = ref(false);
-const showModal = ref(false);
-const isSubmitting = ref(false);
-const bookedTimes = ref<string[]>([]);
+// ---------------------------------------------------------------------------
+// 5. UI state (modals, step, submitting flag, booked times)
+// ---------------------------------------------------------------------------
+const showConfirmModal = ref(false); // "Are you sure?" modal before sending
+const showModal = ref(false); // "Reservation confirmed" modal after success
+const isSubmitting = ref(false); // disables buttons while POST is running
+const step = ref(1); // current wizard step (1, 2 or 3)
+const bookedTimes = ref<string[]>([]); // slots already booked by other users
 
+// ---------------------------------------------------------------------------
+// 6. "Today" references (frozen at component creation)
+//    Used to know what is past, what is today, and to enable/disable cells.
+// ---------------------------------------------------------------------------
 const today = new Date();
 const todayYear = today.getFullYear();
 const todayMonth = today.getMonth();
 const todayDate = today.getDate();
 
+// ---------------------------------------------------------------------------
+// 7. User selection (service / date / time)
+// ---------------------------------------------------------------------------
 const selectedService = ref<number | null>(null);
+const selectedDate = ref<number | null>(todayDate); // day number inside currentMonth/Year
 const selectedTime = ref('');
-const selectedDate = ref<number | null>(todayDate);
 
+// ---------------------------------------------------------------------------
+// 8. Calendar position (month / year currently displayed)
+// ---------------------------------------------------------------------------
 const currentYear = ref(todayYear);
 const currentMonth = ref(todayMonth);
-const step = ref(1);
 
+// ---------------------------------------------------------------------------
+// 9. Inertia form (sent to POST /appointments)
+// ---------------------------------------------------------------------------
 const form = useForm<{
     service_id: number | null;
     customer_name: string;
@@ -92,6 +117,9 @@ const form = useForm<{
     'cf-turnstile-response': '',
 });
 
+// ---------------------------------------------------------------------------
+// 10. Constants (labels, headers, icon mapping)
+// ---------------------------------------------------------------------------
 const monthNames = [
     'Gener',
     'Febrer',
@@ -107,8 +135,10 @@ const monthNames = [
     'Desembre',
 ];
 
+// Catalan headers: Monday ---> Sunday
 const dayHeaders = ['DL', 'DT', 'DC', 'DJ', 'DV', 'DS', 'DG'];
 
+// Maps the icon name stored in DB to its lucide component
 const iconsMap: Record<string, any> = {
     ScanFace,
     Droplet,
@@ -123,11 +153,10 @@ const iconsMap: Record<string, any> = {
     HeartPulse,
 };
 
+// ---------------------------------------------------------------------------
+// 11. Computed - flash / success modal data
+// ---------------------------------------------------------------------------
 const successData = computed(() => page.props.flash?.success);
-
-const selectedServiceObj = computed(() =>
-    props.services.find((s) => s.id === selectedService.value),
-);
 
 const successServiceName = computed(() => {
     if (!successData.value?.service) {
@@ -140,6 +169,14 @@ const successServiceName = computed(() => {
     );
 });
 
+// ---------------------------------------------------------------------------
+// 12. Computed - currently selected service / formatted date / month label
+// ---------------------------------------------------------------------------
+const selectedServiceObj = computed(() =>
+    props.services.find((s) => s.id === selectedService.value),
+);
+
+// "YYYY-MM-DD" string built from currentYear/currentMonth/selectedDate
 const formattedDate = computed(() => {
     if (!selectedDate.value) {
         return '';
@@ -152,6 +189,10 @@ const currentMonthLabel = computed(
     () => `${monthNames[currentMonth.value]} ${currentYear.value}`,
 );
 
+// ---------------------------------------------------------------------------
+// 13. Computed - calendar grid (always 42 cells = 6 rows of 7 days)
+//     Cells from previous / next month are marked isCurrentMonth: false.
+// ---------------------------------------------------------------------------
 const calendarDays = computed<CalendarCell[]>(() => {
     const year = currentYear.value;
     const month = currentMonth.value;
@@ -160,20 +201,24 @@ const calendarDays = computed<CalendarCell[]>(() => {
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
 
+    // JS getDay(): Sun=0..Sat=6 → shift so Monday=0..Sunday=6
     let startDow = firstDay.getDay();
     startDow = (startDow + 6) % 7;
 
     const prevMonthLastDay = new Date(year, month, 0).getDate();
     const cells: CalendarCell[] = [];
 
+    // Trailing days of previous month (greyed out)
     for (let i = startDow - 1; i >= 0; i--) {
         cells.push({ day: prevMonthLastDay - i, isCurrentMonth: false });
     }
 
+    // Days of current month
     for (let d = 1; d <= daysInMonth; d++) {
         cells.push({ day: d, isCurrentMonth: true });
     }
 
+    // Leading days of next month to fill the 42-cell grid
     const remaining = 42 - cells.length;
 
     for (let d = 1; d <= remaining; d++) {
@@ -183,6 +228,9 @@ const calendarDays = computed<CalendarCell[]>(() => {
     return cells;
 });
 
+// ---------------------------------------------------------------------------
+// 14. Schedules - fetched from backend when the selected service changes
+// ---------------------------------------------------------------------------
 const serviceSchedules = ref<{ day_of_week: number; slots: string[] }[]>([]);
 
 async function fetchSchedule() {
@@ -198,10 +246,13 @@ async function fetchSchedule() {
     serviceSchedules.value = await res.json();
 }
 
+// Days of week (ISO: 1=Mon..7=Sun) where the service has a schedule
 const availableDaysOfWeek = computed(
     () => new Set(serviceSchedules.value.map((s) => s.day_of_week)),
 );
 
+// Slots available for the currently selected date.
+// If the selected date is today, slots already past are filtered out.
 const availableTimes = computed(() => {
     if (!selectedDate.value) {
         return [];
@@ -212,8 +263,8 @@ const availableTimes = computed(() => {
         currentMonth.value,
         selectedDate.value,
     );
-
     const iso = date.getDay() === 0 ? 7 : date.getDay();
+
     const schedule = serviceSchedules.value.find((s) => s.day_of_week === iso);
 
     if (!schedule) {
@@ -228,26 +279,41 @@ const availableTimes = computed(() => {
         selectedDate.value === todayDate;
 
     if (isToday) {
+        // Keep only slots whose start time is strictly after "now"
         const now = new Date();
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
         slots = slots.filter((time: string) => {
             const [h, m] = time.split(':').map(Number);
-            const slotMinutes = h * 60 + m;
 
-            return slotMinutes > currentMinutes;
+            return h * 60 + m > currentMinutes;
         });
     }
 
     return slots;
 });
 
-function isDayAvailable(cell: CalendarCell): boolean {
+// ---------------------------------------------------------------------------
+// 15. Calendar - day availability & navigation
+// ---------------------------------------------------------------------------
 
-  if (!cell.isCurrentMonth) {
+/**
+ * Decides if a calendar cell can be clicked.
+ *
+ * Rules:
+ *   - Cells outside the current month  -> not available.
+ *   - Cells with a date already past   -> not available.
+ *   - Cell's weekday must be scheduled -> otherwise not available.
+ *   - If the cell IS today, it must still have at least one slot
+ *     in the future, otherwise it is disabled too.
+ *     (Next week's same weekday stays enabled normally.)
+ */
+function isDayAvailable(cell: CalendarCell): boolean {
+    if (!cell.isCurrentMonth) {
         return false;
     }
 
+    // Past date (same month) -> always disabled
     const isPast =
         currentYear.value === todayYear &&
         currentMonth.value === todayMonth &&
@@ -257,10 +323,41 @@ function isDayAvailable(cell: CalendarCell): boolean {
         return false;
     }
 
+    // Weekday must be part of the service schedule
     const date = new Date(currentYear.value, currentMonth.value, cell.day);
     const iso = date.getDay() === 0 ? 7 : date.getDay();
 
-    return availableDaysOfWeek.value.has(iso);
+    if (!availableDaysOfWeek.value.has(iso)) {
+        return false;
+    }
+
+    // Today-specific check: disable when all of today's slots are past
+    const isToday =
+        currentYear.value === todayYear &&
+        currentMonth.value === todayMonth &&
+        cell.day === todayDate;
+
+    if (isToday) {
+        const schedule = serviceSchedules.value.find(
+            (s) => s.day_of_week === iso,
+        );
+
+        if (!schedule || schedule.slots.length === 0) {
+            return false;
+        }
+
+        const now = new Date();
+        const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+        // Any slot still in the future? ---> today stays enabled
+        return schedule.slots.some((time: string) => {
+            const [h, m] = time.split(':').map(Number);
+
+            return h * 60 + m > currentMinutes;
+        });
+    }
+
+    return true;
 }
 
 function selectDay(cell: CalendarCell) {
@@ -272,6 +369,7 @@ function selectDay(cell: CalendarCell) {
     selectedTime.value = '';
 }
 
+// Go to previous month, but never before the real current month
 function prevMonth() {
     const isCurrentRealMonth =
         currentYear.value === todayYear && currentMonth.value === todayMonth;
@@ -303,6 +401,9 @@ function nextMonth() {
     selectedTime.value = '';
 }
 
+// ---------------------------------------------------------------------------
+// 16. PDF download URL (built from flash data after a successful reservation)
+// ---------------------------------------------------------------------------
 const pdfDownloadUrl = computed(() => {
     if (!successData.value) {
         return '#';
@@ -319,6 +420,9 @@ const pdfDownloadUrl = computed(() => {
     return `/appointments/pdf?${params.toString()}`;
 });
 
+// ---------------------------------------------------------------------------
+// 17. Already booked times for the chosen (service, date)
+// ---------------------------------------------------------------------------
 async function fetchBookedTimes() {
     if (!selectedService.value || !selectedDate.value) {
         bookedTimes.value = [];
@@ -329,10 +433,12 @@ async function fetchBookedTimes() {
     const res = await fetch(
         `/appointments/booked-times?date=${formattedDate.value}&service_id=${selectedService.value}`,
     );
-
     bookedTimes.value = await res.json();
 }
 
+// ---------------------------------------------------------------------------
+// 18. Cloudflare Turnstile (captcha) - rendered on step 3
+// ---------------------------------------------------------------------------
 function renderTurnstile() {
     const el = document.querySelector('.cf-turnstile') as HTMLElement | null;
     const t = (window as any).turnstile;
@@ -345,11 +451,15 @@ function renderTurnstile() {
     t.render(el, { sitekey: props.turnstileSiteKey, language: 'es' });
 }
 
+// ---------------------------------------------------------------------------
+// 19. Step navigation (Next / Back)
+// ---------------------------------------------------------------------------
 function nextStep() {
     if (step.value < 3) {
         step.value++;
     }
 
+    // Lazy-load the Turnstile script the first time we enter step 3
     if (step.value === 3) {
         if (!props.turnstileSiteKey) {
             return;
@@ -378,6 +488,9 @@ function prevStep() {
     }
 }
 
+// ---------------------------------------------------------------------------
+// 20. Submit / confirm reservation
+// ---------------------------------------------------------------------------
 function submitReservation() {
     form.service_id = selectedService.value;
     form.appointment_date = formattedDate.value;
@@ -407,6 +520,16 @@ function confirmReservation() {
     submitReservation();
 }
 
+function closeSuccessModal() {
+    showModal.value = false;
+    router.visit('/');
+}
+
+// ---------------------------------------------------------------------------
+// 21. Watchers - keep UI state coherent when selection changes
+// ---------------------------------------------------------------------------
+
+// Service changed ---> reload its schedule and reset date/time
 watch(selectedService, async () => {
     selectedDate.value = null;
     selectedTime.value = '';
@@ -414,11 +537,13 @@ watch(selectedService, async () => {
     await fetchSchedule();
 });
 
+// Date / month / year changed ---> reset time and refresh booked times
 watch([selectedDate, currentMonth, currentYear], async () => {
     selectedTime.value = '';
     await fetchBookedTimes();
 });
 
+// Flash success arrived from the server ---> open the confirmation modal
 watch(
     () => page.props.flash?.success,
     (val) => {
@@ -430,7 +555,11 @@ watch(
     },
 );
 
+// ---------------------------------------------------------------------------
+// 22. Lifecycle hooks
+// ---------------------------------------------------------------------------
 onMounted(async () => {
+    // Auto-select the first service so the user sees the calendar populated
     if (props.services.length > 0) {
         selectedService.value = props.services[0].id;
         await fetchSchedule();
@@ -438,6 +567,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+    // Clean up the Turnstile script when leaving the page
     const script = document.getElementById('cf-turnstile-api');
 
     if (script) {
@@ -448,6 +578,9 @@ onUnmounted(() => {
 
 <template>
     <div class="bg-[#f3f4f6] text-slate-900">
+        <!-- =====================================================
+             HEADER (title + hero image)
+             ===================================================== -->
         <section class="py-10">
             <div
                 class="mx-auto grid max-w-6xl items-center gap-8 px-6 md:grid-cols-2"
@@ -488,20 +621,14 @@ onUnmounted(() => {
             </div>
         </section>
 
+        <!-- =====================================================
+             WIZARD (3 steps)
+             ===================================================== -->
         <section class="mx-auto max-w-7xl px-6 pb-20">
             <div class="rounded-3xl bg-white p-10 shadow-lg">
                 <div>
+                    <!-- ===== STEP 1 - choose service ===== -->
                     <div v-if="step === 1">
-                        <!-- <div
-                            v-if="$page.flash.message"
-                            class="mx-auto mt-4 mb-4 w-full rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-3xl text-black"
-                            role="alert"
-                        >
-                            <p>
-                                <span class="font-medium">Creat: </span>
-                                {{ $page.flash.message }}
-                            </p>
-                        </div> -->
                         <div class="mb-8 flex items-center gap-3">
                             <span
                                 class="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f5f7f] text-sm font-bold text-white"
@@ -537,16 +664,21 @@ onUnmounted(() => {
                                         {{ service.durada }}
                                     </span>
                                 </div>
-                                <h3 class="mb-1 text-base font-bold">
-                                    {{ service.nom }}
-                                </h3>
-                                <p class="text-sm text-slate-600">
-                                    {{ service.descripció }}
-                                </p>
+                                <h3
+                                    class="mb-1 text-base font-bold"
+                                    v-html="service.nom"
+                                ></h3>
+                                <div
+                                    class="text-sm text-slate-600"
+                                    v-html="service.descripció"
+                                ></div>
                             </div>
                         </div>
                     </div>
 
+                    <!-- ===== STEP 2 - choose date & time =====
+                         v-show is used so the calendar's reactive state
+                         stays mounted when navigating back and forth. -->
                     <div v-show="step === 2">
                         <div class="mb-8 flex items-center gap-3">
                             <span
@@ -557,7 +689,9 @@ onUnmounted(() => {
                         </div>
 
                         <div class="grid items-start gap-6 md:grid-cols-2">
+                            <!-- Calendar -->
                             <div class="rounded-xl bg-[#f3f4f6] p-4">
+                                <!-- Month navigation -->
                                 <div
                                     class="mb-3 flex items-center justify-between"
                                 >
@@ -583,6 +717,7 @@ onUnmounted(() => {
                                     </button>
                                 </div>
 
+                                <!-- Weekday headers (DL..DG) -->
                                 <div class="mb-2 grid grid-cols-7">
                                     <div
                                         v-for="h in dayHeaders"
@@ -593,6 +728,7 @@ onUnmounted(() => {
                                     </div>
                                 </div>
 
+                                <!-- Day cells -->
                                 <div class="grid grid-cols-7 gap-1">
                                     <button
                                         v-for="(cell, idx) in calendarDays"
@@ -614,6 +750,7 @@ onUnmounted(() => {
                                 </div>
                             </div>
 
+                            <!-- Time-slot list -->
                             <div>
                                 <h3
                                     class="mb-3 text-xs font-bold tracking-widest text-slate-500 uppercase"
@@ -656,6 +793,7 @@ onUnmounted(() => {
                         </div>
                     </div>
 
+                    <!-- ===== STEP 3 - personal data + summary + captcha ===== -->
                     <div v-show="step === 3">
                         <div class="mb-8 flex items-center gap-3">
                             <span
@@ -666,6 +804,7 @@ onUnmounted(() => {
                         </div>
 
                         <div class="grid gap-6 md:grid-cols-2">
+                            <!-- Form fields -->
                             <div class="space-y-4">
                                 <div>
                                     <label
@@ -674,7 +813,6 @@ onUnmounted(() => {
                                     >
                                         Nom i Cognoms
                                     </label>
-
                                     <input
                                         id="customer_name"
                                         v-model="form.customer_name"
@@ -700,7 +838,6 @@ onUnmounted(() => {
                                     >
                                         Telèfon
                                     </label>
-
                                     <input
                                         id="customer_phone"
                                         v-model="form.customer_phone"
@@ -728,7 +865,6 @@ onUnmounted(() => {
                                     >
                                         Correu Electrònic
                                     </label>
-
                                     <input
                                         id="customer_email"
                                         v-model="form.customer_email"
@@ -748,6 +884,7 @@ onUnmounted(() => {
                                 </div>
                             </div>
 
+                            <!-- Summary + submit + captcha -->
                             <div class="space-y-4">
                                 <div
                                     class="rounded-xl border border-[#e5e7eb] bg-[#f3f4f6] p-4"
@@ -801,6 +938,7 @@ onUnmounted(() => {
                                     }}
                                 </button>
 
+                                <!-- Turnstile widget container -->
                                 <div v-if="props.turnstileSiteKey" class="pt-2">
                                     <div
                                         class="cf-turnstile"
@@ -822,6 +960,7 @@ onUnmounted(() => {
                         </div>
                     </div>
 
+                    <!-- ===== Wizard navigation buttons ===== -->
                     <div class="mt-8 flex items-center justify-between">
                         <button
                             v-if="step > 1"
@@ -850,6 +989,9 @@ onUnmounted(() => {
                 </div>
             </div>
 
+            <!-- =====================================================
+                 MODAL - "Are you sure?" before sending
+                 ===================================================== -->
             <div
                 v-if="showConfirmModal"
                 class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
@@ -898,7 +1040,6 @@ onUnmounted(() => {
                         >
                             Cancel·lar
                         </button>
-
                         <button
                             @click="confirmReservation"
                             :disabled="isSubmitting"
@@ -912,6 +1053,9 @@ onUnmounted(() => {
                 </div>
             </div>
 
+            <!-- =====================================================
+                 MODAL - Success (after server responded with flash)
+                 ===================================================== -->
             <div
                 v-if="showModal"
                 class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60"

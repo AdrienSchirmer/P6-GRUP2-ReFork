@@ -5,6 +5,9 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - develop
+  push:
+    branches:
+      - develop
   workflow_dispatch:
 
 env:
@@ -20,7 +23,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - name: Setup PHP and Composer
         uses: shivammathur/setup-php@v2
         with:
@@ -38,12 +43,15 @@ jobs:
         run: npm run format
       - name: Lint Frontend
         run: npm run lint --fix
-      - name: Commit Changes
-        uses: stefanzweifel/git-auto-commit-action@v7
-        with:
-          commit_message: fix pint code style
-          commit_options: '--no-verify'
-          branch: ${{ github.ref_name }}
+      - name: Push Changes Back to Repo Manually
+        # Només fa canvis si es fa el push, s'ha fet merge del pull-request.
+        if: github.event_name == 'push'
+        run: |
+          git config user.name "github-action[bot]"
+          git config user.email "bot@gmail.com"
+          git add .
+          git commit -m "Laravel Pint" || exit 0
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.head_ref }}
 
   tests:
     runs-on: ubuntu-latest
@@ -51,6 +59,10 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.head_ref }}
+          fetch-depth: 0
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
         with:
