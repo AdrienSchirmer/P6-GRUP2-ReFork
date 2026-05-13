@@ -57,7 +57,8 @@ class ServiceScheduleController extends Controller
             'end_time' => $validated['end_time'],
         ]);
 
-        return redirect()->route('services.show', $validated['service_id']);
+        return redirect()->route('services.show', $validated['service_id'])
+            ->with('success', 'Horari creat correctament.');
 
     }
 
@@ -97,7 +98,7 @@ class ServiceScheduleController extends Controller
         $schedule->delete();
 
         return to_route('services.show', $serviceId)
-            ->with('message', 'Horari eliminat correctament.');
+            ->with('success', 'Horari eliminat correctament.');
 
     }
 }
