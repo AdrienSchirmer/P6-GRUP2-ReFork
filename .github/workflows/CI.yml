@@ -42,13 +42,11 @@ jobs:
         run: npm run lint --fix
       - name: Push Changes Back to Repo Manually
         run: |
-          git config --global credential.helper store
-          echo "https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com" > ~/.git-credentials
           git config user.name "brandonalcantara17"
           git config user.email "brandonalcantara@proton.me"
           git add .
           git commit -m "Laravel Pint" || exit 0
-          git push
+          git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.head_ref }}
 
   tests:
     runs-on: ubuntu-latest
