@@ -24,7 +24,7 @@ class GetBookedTimesRequest extends FormRequest
     {
         return [
             //
-             'date' => [
+            'date' => [
                 'required',
                 'date',
             ],

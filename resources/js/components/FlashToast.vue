@@ -40,6 +40,7 @@ watch(
 
 onMounted(() => {
     const flash = page.props.flash;
+
     if (flash?.success) {
         show(flash.success, 'success');
     } else if (flash?.error) {

@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Requests;
+
 use App\Rules\TurnstileRule;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
@@ -61,14 +62,13 @@ class StoreAppointmentRequest extends FormRequest
                 : ['required', 'string', new TurnstileRule],
         ];
     }
+
     public function messages(): array
     {
         return [
-            'cf-turnstile-response.required' =>
-                'Por favor, completa la verificación.',
+            'cf-turnstile-response.required' => 'Por favor, completa la verificación.',
 
-            'customer_phone.regex' =>
-                'El telèfon ha de tenir 9 dígits.',
+            'customer_phone.regex' => 'El telèfon ha de tenir 9 dígits.',
         ];
     }
 }

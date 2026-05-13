@@ -2,18 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Mail\ReservationCreated;
-use App\Models\Service;
-use App\Models\ServiceAppointment;
-use App\Http\Requests\StoreAppointmentRequest;
 use App\Http\Requests\DownloadAppointmentPdfRequest;
 use App\Http\Requests\GetBookedTimesRequest;
 use App\Http\Requests\GetScheduleRequest;
+use App\Http\Requests\StoreAppointmentRequest;
+use App\Mail\ReservationCreated;
+use App\Models\Service;
+use App\Models\ServiceAppointment;
+use Barryvdh\DomPDF\Facade\Pdf;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
-use Barryvdh\DomPDF\Facade\Pdf;
-use Carbon\Carbon;
 
 class ServiceController extends Controller
 {
@@ -30,7 +30,7 @@ class ServiceController extends Controller
                     'id' => $service->id,
                     'nom' => $service->name,
                     'descripció' => $service->description,
-                    'durada' => $service->duration_minutes . ' min',
+                    'durada' => $service->duration_minutes.' min',
                     'icon' => $service->icon,
                 ];
             }),
@@ -53,7 +53,7 @@ class ServiceController extends Controller
         // Validate and store the appointment, then send confirmation email
         $validated = $request->validated();
         $appointmentDateTime = Carbon::parse(
-            $validated['appointment_date'] . ' ' . $validated['start_time']
+            $validated['appointment_date'].' '.$validated['start_time']
         );
 
         if ($appointmentDateTime->isPast()) {
@@ -88,7 +88,7 @@ class ServiceController extends Controller
             'name' => $validated['customer_name'],
             'email' => $validated['customer_email'],
             'service_name' => $service->name,
-            'duration' => $service->duration_minutes . ' min',
+            'duration' => $service->duration_minutes.' min',
             'date' => $validated['appointment_date'],
             'time' => $validated['start_time'],
             'pharmacy' => 'Farmàcia Soler',
@@ -151,14 +151,14 @@ class ServiceController extends Controller
 
     public function downloadPdf(DownloadAppointmentPdfRequest $request)
     {
-        // Generate PDF with appointment details     
+        // Generate PDF with appointment details
 
         $validated = $request->validated();
 
         $service = Service::findOrFail($validated['service']);
         $data = [
             'service_name' => $service->name,
-            'duration' => $service->duration_minutes . ' min',
+            'duration' => $service->duration_minutes.' min',
             'date' => $validated['date'],
             'time' => $validated['time'],
             'name' => $validated['name'],
@@ -171,12 +171,12 @@ class ServiceController extends Controller
         $pdf = Pdf::loadView('pdf.appointment', $data)
             ->setPaper('a4', 'portrait');
 
-        $filename = 'cita-' . str_replace(' ', '-', $validated['name']) . '-' . $validated['date'] . '.pdf';
+        $filename = 'cita-'.str_replace(' ', '-', $validated['name']).'-'.$validated['date'].'.pdf';
 
         return $pdf->download($filename);
     }
 
-    //Get booked times for a specific date and service
+    // Get booked times for a specific date and service
     public function getBookedTimes(GetBookedTimesRequest $request)
     {
         $validated = $request->validated();
@@ -192,7 +192,8 @@ class ServiceController extends Controller
 
         return response()->json($times);
     }
-    //Get schedule for a specific service
+
+    // Get schedule for a specific service
     public function getSchedule(GetScheduleRequest $request)
     {
         $validated = $request->validated();

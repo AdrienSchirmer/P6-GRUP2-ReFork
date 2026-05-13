@@ -578,7 +578,6 @@ function getDayButtonClass(idWeek: number, day: number): string {
                                 {{ nameMonth[selectedMonth.num] }}
                                 {{ selectedYear }}
                             </span>
-                            
                         </div>
 
                         <!-- Description -->
