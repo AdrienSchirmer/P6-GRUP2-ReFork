@@ -98,17 +98,4 @@ onMounted(() => {
             </Card>
         </div>
     </WebAppLayout>
-    <div class="fixed right-0 bottom-0">
-        <a
-            class="mr-4 mb-4 flex h-15 w-15 cursor-pointer justify-center rounded-4xl bg-[#08c004]"
-            href="ht tps://wa.me/34658359458?text=Hola%2C%20estoy%20interesado%20en%20"
-        >
-            <Icon
-                icon="fontisto:whatsapp"
-                width="35"
-                height="35"
-                class="self-center text-white"
-            ></Icon>
-        </a>
-    </div>
 </template>
