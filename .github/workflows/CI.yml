@@ -47,8 +47,8 @@ jobs:
         # Només fa canvis si es fa el push, s'ha fet merge del pull-request.
         if: github.event_name == 'push'
         run: |
-          git config user.name ""
-          git config user.email "brandonalcantara@proton.me"
+          git config user.name "github-action[bot]"
+          git config user.email "bot@gmail.com"
           git add .
           git commit -m "Laravel Pint" || exit 0
           git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }}.git HEAD:${{ github.head_ref }}
