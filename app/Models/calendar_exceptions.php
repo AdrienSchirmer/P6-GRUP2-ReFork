@@ -8,5 +8,3 @@ class calendar_exceptions extends Model
 {
     //
 }
-
-
