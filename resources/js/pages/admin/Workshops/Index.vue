@@ -1,8 +1,16 @@
 <script setup lang="ts">
-import { Head, Link, useForm, usePage } from '@inertiajs/vue3';
+import { Head, Link, useForm } from '@inertiajs/vue3';
 import { Pencil, Plus, Trash2 } from 'lucide-vue-next';
 import { computed, ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import type { BreadcrumbItem } from '@/types';
 import {
     create as workshopsCreate,
@@ -11,12 +19,23 @@ import {
     index as workshopsIndex,
 } from '@/routes/workshops';
 
+const workshopToDelete = ref<number | null>(null);
+
 function deleteWorkshop(id: number) {
-    if (!confirm('Segur que vols eliminar aquest taller?')) {
+    workshopToDelete.value = id;
+}
+
+function confirmDelete() {
+    if (workshopToDelete.value === null) {
         return;
     }
 
-    useForm({}).delete(workshopsDestroy(id).url);
+    useForm({}).delete(workshopsDestroy(workshopToDelete.value).url);
+    workshopToDelete.value = null;
+}
+
+function cancelDelete() {
+    workshopToDelete.value = null;
 }
 
 type Workshop = {
@@ -34,8 +53,6 @@ type Workshop = {
 const props = defineProps<{
     workshops: Workshop[];
 }>();
-
-const page = usePage<{ flash?: { message?: string } }>();
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Tallers', href: workshopsIndex().url },
@@ -94,14 +111,6 @@ const formatTime = (time: string) => time.slice(0, 5);
             </div>
 
             <div
-                v-if="page.props.flash?.message"
-                class="rounded-xl border border-green-200 bg-green-50/90 px-4 py-3 text-sm text-green-700 shadow-sm"
-                role="alert"
-            >
-                {{ page.props.flash?.message }}
-            </div>
-
-            <div
                 class="relative rounded-2xl border border-sidebar-border/70 bg-background/95 p-5 shadow-sm"
             >
                 <div
@@ -119,7 +128,7 @@ const formatTime = (time: string) => time.slice(0, 5);
                         class="inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90 sm:ml-auto sm:w-auto"
                     >
                         <Plus class="mr-2 h-4 w-4" />
-                        Nou taller
+                        Crear taller
                     </Link>
                 </div>
 
@@ -208,17 +217,21 @@ const formatTime = (time: string) => time.slice(0, 5);
                                 <td class="px-4 py-3">
                                     <div class="flex items-center gap-2">
                                         <Link
-                                            :href="workshopsEdit(workshop.id).url"
+                                            :href="
+                                                workshopsEdit(workshop.id).url
+                                            "
                                             class="inline-flex items-center rounded-lg p-1.5 text-muted-foreground transition hover:bg-muted hover:text-foreground"
                                         >
                                             <Pencil class="h-4 w-4" />
                                         </Link>
                                         <button
                                             type="button"
-                                            class="inline-flex items-center rounded-lg p-1.5 text-muted-foreground transition hover:bg-red-50 hover:text-red-600"
+                                            class="inline-flex cursor-pointer items-center rounded-lg p-1.5 text-muted-foreground transition hover:bg-red-50 hover:text-red-600"
                                             @click="deleteWorkshop(workshop.id)"
                                         >
-                                            <Trash2 class="h-4 w-4" />
+                                            <Trash2
+                                                class="h-4 w-4 cursor-pointer"
+                                            />
                                         </button>
                                     </div>
                                 </td>
@@ -237,5 +250,32 @@ const formatTime = (time: string) => time.slice(0, 5);
                 </div>
             </div>
         </div>
+        <Dialog :open="workshopToDelete !== null" @update:open="cancelDelete">
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Eliminar taller</DialogTitle>
+                    <DialogDescription>
+                        Segur que vols eliminar aquest taller? Aquesta acció no
+                        es pot desfer.
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <button
+                        type="button"
+                        class="inline-flex cursor-pointer items-center rounded-xl border border-sidebar-border/80 bg-background px-4 py-2 text-sm font-medium transition hover:bg-muted"
+                        @click="cancelDelete"
+                    >
+                        Cancel·lar
+                    </button>
+                    <button
+                        type="button"
+                        class="inline-flex cursor-pointer items-center rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                        @click="confirmDelete"
+                    >
+                        Eliminar
+                    </button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </AppLayout>
 </template>

@@ -17,6 +17,7 @@ import {
     Thermometer,
 } from 'lucide-vue-next';
 import { computed } from 'vue';
+import TiptapEditor from '@/components/TiptapEditor.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { admindashboard as dashboard } from '@/routes';
@@ -116,12 +117,7 @@ const selectedIconComponent = computed(
                                     class="mb-1 block text-sm font-medium text-gray-700"
                                     >Descripció</label
                                 >
-                                <textarea
-                                    v-model="form.description"
-                                    rows="3"
-                                    aria-label="Descripció del servei"
-                                    class="w-full rounded-lg border px-3 py-2 text-sm"
-                                ></textarea>
+                                <TiptapEditor v-model="form.description" />
                                 <p
                                     v-if="form.errors.description"
                                     class="text-xs text-red-500"
@@ -240,7 +236,13 @@ const selectedIconComponent = computed(
 
                             <div>
                                 <p class="text-xs text-gray-400">Descripció</p>
-                                <p>{{ form.description || '—' }}</p>
+                                <div
+                                    v-if="form.description"
+                                    v-html="form.description"
+                                    class="prose prose-sm max-w-none"
+                                ></div>
+
+                                <p v-else>—</p>
                             </div>
 
                             <div>

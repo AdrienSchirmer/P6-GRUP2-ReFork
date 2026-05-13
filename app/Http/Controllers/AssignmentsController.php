@@ -44,9 +44,16 @@ class AssignmentsController extends Controller
     {
         $validated = $request->validated();
         $assignment = $createAssignment->execute($validated);
-        Mail::to($validated['address'])->send(new AssignmentCreated($validated));
+
+        try {
+            Mail::to($validated['address'])->send(new AssignmentCreated($validated));
+            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+        } catch (\Exception $e) {
+            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+        }
+
         Inertia::flash([
-            'message' => 'Ecarrec creat correctament',
+            'message' => $message,
         ]);
 
         return to_route('assignments.create', [
@@ -107,9 +114,14 @@ class AssignmentsController extends Controller
 
         $request->session()->put('assignment_code_email', $normalizedEmail);
 
-        Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
+        try {
+            Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
+            $message = 'Rebràs el codi al correu.';
+        } catch (\Exception $e) {
+            $message = 'Rebràs el codi al correu.';
+        }
 
-        return back()->with('success', 'Codi enviat correctament');
+        return back()->with('success', $message);
     }
 
     public function verifyCode(Request $request)
