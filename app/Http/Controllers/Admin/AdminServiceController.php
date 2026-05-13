@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Requests\StoreServiceRequest;
+use App\Http\Requests\UpdateServiceRequest;
 use App\Http\Controllers\Controller;
 use App\Models\Service;
 use Illuminate\Http\Request;
@@ -43,29 +45,11 @@ class AdminServiceController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreServiceRequest $request)
     {
         //
 
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                'regex:/^[\pL\s]+$/u',
-            ],
-
-            'description' => [
-                'required',
-                function ($attribute, $value, $fail) {
-                    if (trim(strip_tags($value)) === '') {
-                        $fail('La descripció és obligatòria.');
-                    }
-                },
-            ],
-            'duration_minutes' => 'required|integer|min:1',
-            'icon' => 'nullable|string|max:50',
-        ]);
+        $validated = $request->validated();
 
         Service::create($validated);
 
@@ -103,28 +87,11 @@ class AdminServiceController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateServiceRequest $request, string $id)
     {
         //
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                'regex:/^[\pL\s]+$/u',
-            ],
-           'description' => [
-    'required',
-    function ($attribute, $value, $fail) {
-        if (trim(strip_tags($value)) === '') {
-            $fail('La descripció és obligatòria.');
-        }
-    },
-],
+         $validated = $request->validated();
 
-            'duration_minutes' => 'required|integer|min:1',
-            'icon' => 'nullable|string',
-        ]);
 
         $service = Service::findOrFail($id);
         $service->update($validated);
