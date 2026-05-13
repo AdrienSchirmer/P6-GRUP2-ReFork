@@ -35,7 +35,7 @@ watch(
         } else if (error) {
             show(error, 'error');
         }
-    },
+    },git 
 );
 
 onMounted(() => {
