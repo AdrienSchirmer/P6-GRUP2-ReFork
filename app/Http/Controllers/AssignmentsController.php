@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Actions\Assignments\CreateAssignmentAction;
 use App\Http\Requests\CreateAssignmentRequest;
 use App\Mail\AssignmentCreated;
+use App\Mail\AssignmentCreatedAdmin;
 use App\Mail\AssignmentListCode;
 use App\Models\assignments as Assignment;
 use Illuminate\Http\Request;
@@ -47,6 +48,7 @@ class AssignmentsController extends Controller
 
         try {
             Mail::to($validated['address'])->send(new AssignmentCreated($validated));
+            Mail::to('brandonalcantara@proton.me')->send(new AssignmentCreatedAdmin($validated));
             $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
         } catch (\Exception $e) {
             $message = 'Correu no trobat.';

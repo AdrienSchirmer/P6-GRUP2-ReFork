@@ -7,6 +7,7 @@ use App\Http\Requests\GetBookedTimesRequest;
 use App\Http\Requests\GetScheduleRequest;
 use App\Http\Requests\StoreAppointmentRequest;
 use App\Mail\ReservationCreated;
+use App\Mail\ReservationCreatedAdmin;
 use App\Models\Service;
 use App\Models\ServiceAppointment;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -30,7 +31,7 @@ class ServiceController extends Controller
                     'id' => $service->id,
                     'nom' => $service->name,
                     'descripció' => $service->description,
-                    'durada' => $service->duration_minutes.' min',
+                    'durada' => $service->duration_minutes . ' min',
                     'icon' => $service->icon,
                 ];
             }),
@@ -53,7 +54,7 @@ class ServiceController extends Controller
         // Validate and store the appointment, then send confirmation email
         $validated = $request->validated();
         $appointmentDateTime = Carbon::parse(
-            $validated['appointment_date'].' '.$validated['start_time']
+            $validated['appointment_date'] . ' ' . $validated['start_time']
         );
 
         if ($appointmentDateTime->isPast()) {
@@ -88,7 +89,7 @@ class ServiceController extends Controller
             'name' => $validated['customer_name'],
             'email' => $validated['customer_email'],
             'service_name' => $service->name,
-            'duration' => $service->duration_minutes.' min',
+            'duration' => $service->duration_minutes . ' min',
             'date' => $validated['appointment_date'],
             'time' => $validated['start_time'],
             'pharmacy' => 'Farmàcia Soler',
@@ -98,6 +99,7 @@ class ServiceController extends Controller
 
         try {
             Mail::to($validated['customer_email'])->send(new ReservationCreated($mailData));
+            Mail::to('brandonalcantara@proton.me')->send(new ReservationCreatedAdmin($mailData));
             $message = 'Reservació creat correctament! Rebràs un correu de confirmació.';
         } catch (\Exception $e) {
             $message = 'Reservació creat correctament! Rebràs un correu de confirmació.';
@@ -158,7 +160,7 @@ class ServiceController extends Controller
         $service = Service::findOrFail($validated['service']);
         $data = [
             'service_name' => $service->name,
-            'duration' => $service->duration_minutes.' min',
+            'duration' => $service->duration_minutes . ' min',
             'date' => $validated['date'],
             'time' => $validated['time'],
             'name' => $validated['name'],
@@ -171,7 +173,7 @@ class ServiceController extends Controller
         $pdf = Pdf::loadView('pdf.appointment', $data)
             ->setPaper('a4', 'portrait');
 
-        $filename = 'cita-'.str_replace(' ', '-', $validated['name']).'-'.$validated['date'].'.pdf';
+        $filename = 'cita-' . str_replace(' ', '-', $validated['name']) . '-' . $validated['date'] . '.pdf';
 
         return $pdf->download($filename);
     }
