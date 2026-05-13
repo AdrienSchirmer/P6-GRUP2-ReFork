@@ -119,7 +119,7 @@ const formatTime = (time: string) => time.slice(0, 5);
                         class="inline-flex w-full items-center justify-center rounded-xl bg-primary px-4 py-2 text-sm font-medium text-primary-foreground shadow-sm transition hover:bg-primary/90 sm:ml-auto sm:w-auto"
                     >
                         <Plus class="mr-2 h-4 w-4" />
-                        Nou taller
+                        Crear taller
                     </Link>
                 </div>
 
