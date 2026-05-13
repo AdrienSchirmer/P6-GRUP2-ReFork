@@ -22,7 +22,6 @@ import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { admindashboard as dashboard } from '@/routes';
 
-
 const iconOptions = [
     { value: 'pill', label: 'Medicació', icon: Pill },
     { value: 'heart', label: 'Cor / Salut', icon: HeartPulse },

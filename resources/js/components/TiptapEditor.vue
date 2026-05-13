@@ -122,8 +122,8 @@ function setLink() {
     const url = window.prompt('URL', previousUrl);
 
     if (url === null) {
-return;
-}
+        return;
+    }
 
     if (url === '') {
         editor.value?.chain().focus().unsetLink().run();
