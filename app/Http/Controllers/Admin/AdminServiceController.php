@@ -49,22 +49,10 @@ class AdminServiceController extends Controller
     {
         //
 
-        $validated = $request->validate([
-            'name' => [
-                'required',
-                'string',
-                'max:255',
-                'regex:/^[\pL\s]+$/u',
-            ],
-
-            'description' => 'required|string',
-            'duration_minutes' => 'required|integer|min:1',
-            'icon' => 'nullable|string|max:50',
-        ]);
-
+        $validated = $request->validated();
         Service::create($validated);
 
-        Inertia::flash(['message' => 'Servei creat correctament.']);
+        Inertia::flash(['message' => 'success']);
 
         return redirect()
             ->route('services.index');
@@ -109,7 +97,7 @@ class AdminServiceController extends Controller
 
         return redirect()
             ->route('services.index')
-            ->with('message', 'Servei actualitzat correctament.');
+            ->with('success', 'Servei actualitzat correctament.');
     }
 
     /**
