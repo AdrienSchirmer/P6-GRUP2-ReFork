@@ -208,7 +208,9 @@ const formatTime = (time: string) => time.slice(0, 5);
                                 <td class="px-4 py-3">
                                     <div class="flex items-center gap-2">
                                         <Link
-                                            :href="workshopsEdit(workshop.id).url"
+                                            :href="
+                                                workshopsEdit(workshop.id).url
+                                            "
                                             class="inline-flex items-center rounded-lg p-1.5 text-muted-foreground transition hover:bg-muted hover:text-foreground"
                                         >
                                             <Pencil class="h-4 w-4" />

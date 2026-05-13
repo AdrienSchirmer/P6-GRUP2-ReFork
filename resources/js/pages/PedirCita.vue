@@ -305,8 +305,7 @@ const availableTimes = computed(() => {
  *     (Next week's same weekday stays enabled normally.)
  */
 function isDayAvailable(cell: CalendarCell): boolean {
-
-  if (!cell.isCurrentMonth) {
+    if (!cell.isCurrentMonth) {
         return false;
     }
 

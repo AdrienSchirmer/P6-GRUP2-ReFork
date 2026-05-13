@@ -49,7 +49,18 @@ class AdminServiceController extends Controller
     {
         //
 
-        $validated = $request->validated();
+        $validated = $request->validate([
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'regex:/^[\pL\s]+$/u',
+            ],
+
+            'description' => 'required|string',
+            'duration_minutes' => 'required|integer|min:1',
+            'icon' => 'nullable|string|max:50',
+        ]);
 
         Service::create($validated);
 
