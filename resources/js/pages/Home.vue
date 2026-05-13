@@ -163,12 +163,12 @@ function setMonthName() {
 
 // Function Get Previous Month
 function getPreviousMonth() : number {
-    return setMonth.num - 1 < 0 ? 11 : setMonth.num - 1;
+    return setMonth.num - 1 < 0 ? 11 : (setMonth.num - 1);
 };
 
 // Function Get Next Month
 function getNextMonth() : number {
-    return setMonth.num + 1 > 11 ? 0 : setMonth.num + 1;
+    return setMonth.num + 1 > 11 ? 0 : (setMonth.num + 1);
 };
 
 // Function Set Previous Month
@@ -440,7 +440,7 @@ function setNextWeek() {
                                     />
                                 </button>
                             </label>
-                            <template v-for="value in week">
+                            <template v-for="value, key in week">
                                 <button @click="setSelectDate(value.id.value, value.num.value)"
                                     :id="'week'+value.id.value"
                                     :class="checkDateSelected(value.id.value, value.num.value)
