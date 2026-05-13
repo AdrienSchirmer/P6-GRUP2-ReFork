@@ -5,6 +5,8 @@ on:
     types: [opened, synchronize, reopened]
     branches:
       - develop
+  push:
+    branches: [develop]
   workflow_dispatch:
 
 env:
@@ -48,6 +50,8 @@ jobs:
           git config --local credential.helper store
           echo "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
       - name: Push Changes Back to Repo Manually
+        # Només fa canvis si es fa el push, s'ha fet merge del pull-request.
+        if: github.event_name == 'push'
         run: |
           git config user.name "brandonalcantara17"
           git config user.email "brandonalcantara@proton.me"
