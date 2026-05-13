@@ -16,9 +16,9 @@ class AssignmentCreatedAdmin extends Mailable
     /**
      * Create a new message instance.
      */
-    public function __construct()
-    {
-        //
+    public function __construct(
+        public readonly array $assignment,
+    ) {
     }
 
     /**
@@ -27,7 +27,7 @@ class AssignmentCreatedAdmin extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Assignment Created Admin',
+            subject: 'Nou Encàrrec Creat',
         );
     }
 
@@ -37,7 +37,7 @@ class AssignmentCreatedAdmin extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'mail.assignment-created-admin',
         );
     }
 
