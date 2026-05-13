@@ -135,13 +135,13 @@ function deleteService(id: number) {
                     <p class="text-sm text-gray-500">
                         Administra tots els serveis disponibles
                     </p>
-                    <div
+                  <!----  <div
                         v-if="$page.flash.message"
                         class="mx-auto mt-4 mb-4 w-full rounded-lg border border-green-200 bg-green-50 px-4 py-3 text-sm text-green-700"
                         role="alert"
                     >
                         <p>{{ $page.flash.message }}</p>
-                    </div>
+                    </div>--->
                 </div>
 
                 <div class="flex items-center gap-3">
