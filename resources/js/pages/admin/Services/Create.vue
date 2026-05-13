@@ -15,6 +15,7 @@ import {
     Brain,
     Bandage,
     Thermometer,
+    
 } from 'lucide-vue-next';
 import TiptapEditor from '@/components/TiptapEditor.vue';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -127,12 +128,6 @@ const submit = () => {
                             Descripció
                         </label>
 
-                        <TiptapEditor
-                            id="service-description"
-                            v-model="form.description"
-                            placeholder="Descripció breu del servei…"
-                            class="mt-1"
-                        />
 
                         <p
                             v-if="form.errors.description"
