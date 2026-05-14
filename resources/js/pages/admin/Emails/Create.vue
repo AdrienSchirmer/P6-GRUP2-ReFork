@@ -2,20 +2,13 @@
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Administració dels Correus', href: 'admin/emails' },
+    { title: 'Crear Correus', href: 'admin/emails/create' },
 ];
-defineProps<{
-    emails?: {
-        id: number;
-        email: string;
-        active: number;
-    }[];
-}>();
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-6">
-            <h1 class="mb-6 text-2xl font-semibold">Configuració Correus</h1>
+            <h1 class="mb-6 text-2xl font-semibold">Crear Correus</h1>
         </div>
     </AppLayout>
 </template>

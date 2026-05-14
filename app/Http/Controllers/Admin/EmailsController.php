@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Email;
 
 class EmailsController extends Controller
 {
@@ -13,7 +14,11 @@ class EmailsController extends Controller
      */
     public function index()
     {
-        return Inertia::render('admin/Emails/Index');
+        $emails = Email::orderBy('email')->orderByDesc('active')->get();
+
+        return Inertia::render('admin/Emails/Index', [
+            'emails' => $emails,
+        ]);
     }
 
     /**
@@ -21,7 +26,7 @@ class EmailsController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('admin/Emails/Create');
     }
 
     /**
