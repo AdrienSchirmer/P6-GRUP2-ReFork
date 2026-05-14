@@ -52,6 +52,7 @@ class ServiceController extends Controller
     public function store(StoreAppointmentRequest $request)
     {
         // Validate and store the appointment, then send confirmation email
+
         $validated = $request->validated();
         $appointmentDateTime = Carbon::parse(
             $validated['appointment_date'] . ' ' . $validated['start_time']
@@ -62,9 +63,12 @@ class ServiceController extends Controller
                 'appointment_date' => 'No pots reservar una hora passada.',
             ]);
         }
+
+        $startTimeFormatted = Carbon::parse($validated['start_time'])->format('H:i:s');
+
         $exists = ServiceAppointment::whereDate('appointment_date', $validated['appointment_date'])
             ->where('service_id', $validated['service_id'])
-            ->where('start_time', $validated['start_time'])
+            ->where('start_time', $startTimeFormatted)
             ->exists();
 
         if ($exists) {
@@ -105,9 +109,7 @@ class ServiceController extends Controller
             $message = 'Reservació creat correctament! Rebràs un correu de confirmació.';
         }
 
-        Inertia::flash([
-            'message' => $message,
-        ]);
+
 
         return to_route('pedir-cita')->with('success', [
             'message' => 'Reservació creada amb èxit! Rebràs una confirmació aviat.',
@@ -116,7 +118,8 @@ class ServiceController extends Controller
             'time' => $validated['start_time'],
             'name' => $validated['customer_name'],
             'email' => $validated['customer_email'],
-        ]);
+        ])
+            ->with('success', $message);
     }
 
     /**
