@@ -149,13 +149,13 @@ function formatDate(dateStr: string): string {
                         class="rounded-2xl border border-[#D0EAF3] bg-white p-6 shadow-sm"
                     >
                         <h2
-                            class="mb-3 flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-[#01617F]"
+                            class="mb-3 flex items-center gap-2 text-sm font-semibold tracking-widest text-[#01617F] uppercase"
                         >
                             <Icon icon="mdi:text" width="16" height="16" />
                             Descripció
                         </h2>
                         <p
-                            class="whitespace-pre-wrap text-sm leading-relaxed text-[#335B69]"
+                            class="text-sm leading-relaxed whitespace-pre-wrap text-[#335B69]"
                         >
                             {{ workshop.description }}
                         </p>
@@ -166,7 +166,7 @@ function formatDate(dateStr: string): string {
                         class="rounded-2xl border border-[#D0EAF3] bg-white p-6 shadow-sm"
                     >
                         <h2
-                            class="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-widest text-[#01617F]"
+                            class="mb-4 flex items-center gap-2 text-sm font-semibold tracking-widest text-[#01617F] uppercase"
                         >
                             <Icon
                                 icon="mdi:information-outline"
