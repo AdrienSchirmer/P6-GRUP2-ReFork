@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\admin_workshops_controller;
 use App\Http\Controllers\Admin\AdminServiceController;
 use App\Http\Controllers\Admin\AssignmentsController as AdminAssignmentsController;
 use App\Http\Controllers\Admin\MailController;
+use App\Http\Controllers\Admin\EmailsController;
 use App\Http\Controllers\Admin\ServiceScheduleController;
 use App\Http\Controllers\AssignmentsController;
 use App\Http\Controllers\Contactans;
@@ -40,6 +41,7 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
 
     Route::resource('users', admin_users_controller::class);
     Route::resource('mail', MailController::class);
+    Route::resource('emails', EmailsController::class);
 
     Route::get('pharmacyguards/filter', [admin_pharmacyguards_controller::class, 'filter'])->name('pharmacyguards.filter');
     Route::resource('pharmacyguards', admin_pharmacyguards_controller::class);
@@ -71,4 +73,4 @@ Route::get('/workshops/{workshop}', [public_workshops_controller::class, 'show']
 //
 Route::get('/contactans', [Contactans::class, 'index'])->name('contactans');
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

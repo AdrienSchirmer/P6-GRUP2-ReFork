@@ -30,6 +30,7 @@ import type { NavItem } from '@/types';
 import { admindashboard as dashboard } from '@/routes';
 import { index as assignmentsIndex } from '@/routes/adminAssignments';
 import { index as mailIndex } from '@/routes/mail';
+import { index as emailIndex } from '@/routes/emails';
 import { index as pharmaciesIndex } from '@/routes/pharmacies';
 import { index as pharmacyguardsIndex } from '@/routes/pharmacyguards';
 import { index as servicesIndex } from '@/routes/services';
@@ -54,7 +55,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title: 'Correus',
-        href: mailIndex(),
+        href: emailIndex(),
         icon: Mails,
     },
     {
