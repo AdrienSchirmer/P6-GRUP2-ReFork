@@ -15,17 +15,27 @@ defineProps<{
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-6">
-            <div
-                v-if="$page.flash.message"
-                class="mx-auto mt-4 mb-4 w-full rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-3xl text-black"
-                role="alert"
-            >
-                <p>
-                    <span class="font-medium">Creat: </span>
-                    {{ $page.flash.message }}
-                </p>
-            </div>
+
             <h1 class="mb-6 text-2xl font-semibold">Configuració Correus</h1>
+            <div
+                class="grid grid-cols-1 gap-5 pr-10 md:grid-cols-2 lg:grid-cols-3"
+                v-if="emails && emails.length > 0"
+            >
+                <div
+                    v-for="email in emails"
+                    :key="email.id"
+                    class="relative m-6 flex w-full flex-col rounded-lg border border-slate-200 bg-white shadow-sm"
+                >
+                    <div class="p-4">
+                        <h5 class="mb-2 text-xl font-semibold text-slate-800">
+                            {{ email.email }}
+                        </h5>
+                        <p class="leading-normal font-light text-slate-600">
+                            {{ email.active }}
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </AppLayout>
 </template>
