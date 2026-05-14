@@ -11,6 +11,16 @@ const breadcrumbs: BreadcrumbItem[] = [
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-6">
+            <div
+                v-if="$page.flash.message"
+                class="mx-auto mt-4 mb-4 w-full rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-3xl text-black"
+                role="alert"
+            >
+                <p>
+                    <span class="font-medium">Creat: </span>
+                    {{ $page.flash.message }}
+                </p>
+            </div>
             <h1 class="mb-6 text-2xl font-semibold">Crear Correus</h1>
             <div class="rounded-2xl bg-white p-6 shadow-sm">
                 <Form
