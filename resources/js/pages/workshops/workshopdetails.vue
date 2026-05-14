@@ -154,11 +154,10 @@ function formatDate(dateStr: string): string {
                             <Icon icon="mdi:text" width="16" height="16" />
                             Descripció
                         </h2>
-                        <p
+                        <div
                             class="text-sm leading-relaxed whitespace-pre-wrap text-[#335B69]"
-                        >
-                            {{ workshop.description }}
-                        </p>
+                            v-html="workshop.description"
+                        ></div>
                     </div>
 
                     <!-- Details -->
