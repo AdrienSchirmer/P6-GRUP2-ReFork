@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Email;
+use App\Actions\Emails\CreateEmailAction;
+use App\Http\Requests\CreateEmailRequest;
 
 class EmailsController extends Controller
 {
@@ -32,9 +34,16 @@ class EmailsController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(CreateEmailRequest $request, CreateEmailAction $createEmail)
     {
-        //
+        $validated = $request->validated();
+        $createEmail->execute($validated);
+
+        Inertia::flash([
+            'message' => 'Correu electrònic creat correctament.',
+        ]);
+
+        return redirect('/admin/emails');
     }
 
     /**
