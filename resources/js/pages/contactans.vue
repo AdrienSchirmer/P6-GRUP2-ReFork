@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Head } from '@inertiajs/vue3';
 import { onMounted, ref } from 'vue';
 import Card from '@/components/Card.vue';
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
@@ -18,6 +19,10 @@ onMounted(() => {
 </script>
 
 <template>
+    <Head>
+        <title>Contacta'ns</title>
+        <meta name="description" content="Posa't en contacte amb Farmàcia Soler. Estem aquí per ajudar-te." />
+    </Head>
     <WebAppLayout>
         <div class="bg-[#F2FAFF] px-2 py-12 md:px-24">
             <Card class="flex-col bg-white md:flex-row">

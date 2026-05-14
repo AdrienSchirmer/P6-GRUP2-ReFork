@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------------
 // 1. Imports
 // ---------------------------------------------------------------------------
-import { useForm, usePage, router } from '@inertiajs/vue3';
+import { Head, useForm, usePage, router } from '@inertiajs/vue3';
 import {
     ScanFace,
     Droplet,
@@ -577,6 +577,10 @@ onUnmounted(() => {
 </script>
 
 <template>
+    <Head>
+        <title>Demanar cita</title>
+        <meta name="description" content="Demana la teva cita a Farmàcia Soler de forma fàcil i ràpida. Tria el servei, el dia i l'hora que millor t'encaixi." />
+    </Head>
     <div class="bg-[#f3f4f6] text-slate-900">
         <!-- =====================================================
              HEADER (title + hero image)
