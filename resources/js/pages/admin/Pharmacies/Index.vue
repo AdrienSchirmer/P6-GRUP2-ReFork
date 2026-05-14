@@ -3,6 +3,14 @@ import { Form, Head, router, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import InputError from '@/components/InputError.vue';
 import { Button } from '@/components/ui/button';
+import {
+    Dialog,
+    DialogContent,
+    DialogDescription,
+    DialogFooter,
+    DialogHeader,
+    DialogTitle,
+} from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/AppLayout.vue';
@@ -49,10 +57,25 @@ const filterPharmacies = () => {
         });
 };
 
+const pharmacyToDelete = ref<number | null>(null);
+
 const removePharmacy = (pharmacyId: number) => {
-    router.delete(pharmaciesDestroy(pharmacyId).url, {
+    pharmacyToDelete.value = pharmacyId;
+};
+
+const confirmDelete = () => {
+    if (pharmacyToDelete.value === null) {
+        return;
+    }
+
+    router.delete(pharmaciesDestroy(pharmacyToDelete.value).url, {
         preserveScroll: true,
     });
+    pharmacyToDelete.value = null;
+};
+
+const cancelDelete = () => {
+    pharmacyToDelete.value = null;
 };
 </script>
 
@@ -256,5 +279,32 @@ const removePharmacy = (pharmacyId: number) => {
                 </div>
             </div>
         </div>
+        <Dialog :open="pharmacyToDelete !== null" @update:open="cancelDelete">
+            <DialogContent>
+                <DialogHeader>
+                    <DialogTitle>Eliminar farmàcia</DialogTitle>
+                    <DialogDescription>
+                        Segur que vols eliminar aquesta farmàcia? Aquesta acció
+                        no es pot desfer.
+                    </DialogDescription>
+                </DialogHeader>
+                <DialogFooter>
+                    <button
+                        type="button"
+                        class="inline-flex items-center rounded-xl border border-sidebar-border/80 bg-background px-4 py-2 text-sm font-medium transition hover:bg-muted"
+                        @click="cancelDelete"
+                    >
+                        Cancel·lar
+                    </button>
+                    <button
+                        type="button"
+                        class="inline-flex items-center rounded-xl bg-red-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-red-700"
+                        @click="confirmDelete"
+                    >
+                        Eliminar
+                    </button>
+                </DialogFooter>
+            </DialogContent>
+        </Dialog>
     </AppLayout>
 </template>
