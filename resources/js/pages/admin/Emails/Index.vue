@@ -17,7 +17,12 @@ defineProps<{
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
         <div class="p-6">
-            <h1 class="mb-6 text-2xl font-semibold">Configuració Correus</h1>
+            <h1 class="mb-2 text-2xl font-semibold">Configuració Correus</h1>
+            <p class="mb-6 text-sm text-muted-foreground">
+                Configura a on s'enviarà el correu de part admin, quan un usuari
+                crea un encàrrec o un reserva.
+            </p>
+            <Link href="/admin/emails/create">Crear</Link>
             <div
                 v-if="emails && emails.length > 0"
                 class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
