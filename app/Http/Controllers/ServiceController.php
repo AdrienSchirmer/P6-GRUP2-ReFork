@@ -30,7 +30,7 @@ class ServiceController extends Controller
                     'id' => $service->id,
                     'nom' => $service->name,
                     'descripció' => $service->description,
-                    'durada' => $service->duration_minutes.' min',
+                    'durada' => $service->duration_minutes . ' min',
                     'icon' => $service->icon,
                 ];
             }),
@@ -51,9 +51,10 @@ class ServiceController extends Controller
     public function store(StoreAppointmentRequest $request)
     {
         // Validate and store the appointment, then send confirmation email
+
         $validated = $request->validated();
         $appointmentDateTime = Carbon::parse(
-            $validated['appointment_date'].' '.$validated['start_time']
+            $validated['appointment_date'] . ' ' . $validated['start_time']
         );
 
         if ($appointmentDateTime->isPast()) {
@@ -61,9 +62,12 @@ class ServiceController extends Controller
                 'appointment_date' => 'No pots reservar una hora passada.',
             ]);
         }
+
+        $startTimeFormatted = Carbon::parse($validated['start_time'])->format('H:i:s');
+
         $exists = ServiceAppointment::whereDate('appointment_date', $validated['appointment_date'])
             ->where('service_id', $validated['service_id'])
-            ->where('start_time', $validated['start_time'])
+            ->where('start_time', $startTimeFormatted)
             ->exists();
 
         if ($exists) {
@@ -88,7 +92,7 @@ class ServiceController extends Controller
             'name' => $validated['customer_name'],
             'email' => $validated['customer_email'],
             'service_name' => $service->name,
-            'duration' => $service->duration_minutes.' min',
+            'duration' => $service->duration_minutes . ' min',
             'date' => $validated['appointment_date'],
             'time' => $validated['start_time'],
             'pharmacy' => 'Farmàcia Soler',
@@ -103,9 +107,7 @@ class ServiceController extends Controller
             $message = 'Reservació creat correctament! Rebràs un correu de confirmació.';
         }
 
-        Inertia::flash([
-            'message' => $message,
-        ]);
+
 
         return to_route('pedir-cita')->with('success', [
             'message' => 'Reservació creada amb èxit! Rebràs una confirmació aviat.',
@@ -114,7 +116,8 @@ class ServiceController extends Controller
             'time' => $validated['start_time'],
             'name' => $validated['customer_name'],
             'email' => $validated['customer_email'],
-        ]);
+        ])
+            ->with('success', $message);
     }
 
     /**
@@ -158,7 +161,7 @@ class ServiceController extends Controller
         $service = Service::findOrFail($validated['service']);
         $data = [
             'service_name' => $service->name,
-            'duration' => $service->duration_minutes.' min',
+            'duration' => $service->duration_minutes . ' min',
             'date' => $validated['date'],
             'time' => $validated['time'],
             'name' => $validated['name'],
@@ -171,7 +174,7 @@ class ServiceController extends Controller
         $pdf = Pdf::loadView('pdf.appointment', $data)
             ->setPaper('a4', 'portrait');
 
-        $filename = 'cita-'.str_replace(' ', '-', $validated['name']).'-'.$validated['date'].'.pdf';
+        $filename = 'cita-' . str_replace(' ', '-', $validated['name']) . '-' . $validated['date'] . '.pdf';
 
         return $pdf->download($filename);
     }
