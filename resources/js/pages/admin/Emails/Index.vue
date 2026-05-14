@@ -19,29 +19,45 @@ defineProps<{
         <div class="p-6">
             <h1 class="mb-6 text-2xl font-semibold">Configuració Correus</h1>
             <div
-                class="grid grid-cols-1 gap-5 pr-10 md:grid-cols-2 lg:grid-cols-3"
                 v-if="emails && emails.length > 0"
+                class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
             >
-                <div
-                    v-for="email in emails"
-                    :key="email.id"
-                    class="relative m-6 flex w-full flex-col rounded-lg border border-slate-200 bg-white shadow-sm"
-                >
-                    <div class="p-4">
-                        <h5 class="mb-2 text-xl font-semibold text-slate-800">
-                            {{ email.email }}
-                        </h5>
-                        <p
-                            v-if="email.active === 1"
-                            class="leading-normal font-light text-slate-600"
+                <table class="w-full text-left text-sm">
+                    <thead class="border-b border-slate-200 bg-slate-50">
+                        <tr>
+                            <th class="px-6 py-3 font-semibold text-slate-700">
+                                Correu
+                            </th>
+                            <th class="px-6 py-3 font-semibold text-slate-700">
+                                Estat
+                            </th>
+                            <th class="px-6 py-3 font-semibold text-slate-700">
+                                Accions
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-200">
+                        <tr
+                            v-for="email in emails"
+                            :key="email.id"
+                            class="hover:bg-slate-50"
                         >
-                            Actiu
-                        </p>
-                        <Link>
-                            <Trash2 />
-                        </Link>
-                    </div>
-                </div>
+                            <td class="px-6 py-4 text-slate-800">
+                                {{ email.email }}
+                            </td>
+                            <td class="px-6 py-4 text-slate-600">
+                                {{ email.active === 1 ? 'Actiu' : 'Inactiu' }}
+                            </td>
+                            <td class="px-6 py-4">
+                                <Link>
+                                    <Trash2
+                                        class="h-4 w-4 text-slate-500 hover:text-red-500"
+                                    />
+                                </Link>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
             </div>
         </div>
     </AppLayout>
