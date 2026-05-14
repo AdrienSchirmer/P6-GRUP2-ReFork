@@ -1,6 +1,8 @@
 <script setup lang="ts">
+import { Link } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
+import { Trash2 } from 'lucide-vue-next';
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Administració dels Correus', href: 'admin/emails' },
 ];
@@ -35,6 +37,9 @@ defineProps<{
                         >
                             Actiu
                         </p>
+                        <Link>
+                            <Trash2 />
+                        </Link>
                     </div>
                 </div>
             </div>
