@@ -37,7 +37,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         </p>
                     </div>
 
-                    <div class="flex items-center gap-3">
+                    <!-- <div class="flex items-center gap-3">
                         <input
                             id="active"
                             type="checkbox"
@@ -48,7 +48,7 @@ const breadcrumbs: BreadcrumbItem[] = [
                         <label for="active" class="text-base text-gray-800">
                             Actiu
                         </label>
-                    </div>
+                    </div> -->
 
                     <div>
                         <button
