@@ -11,6 +11,7 @@ import {
     UsersRound,
     Shield,
     Pill,
+    Mails,
 } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
@@ -47,9 +48,14 @@ const mainNavItems: NavItem[] = [
         icon: UsersRound,
     },
     {
-        title: 'Mail',
+        title: 'Correu',
         href: mailIndex(),
         icon: Mail,
+    },
+    {
+        title: 'Correus',
+        href: mailIndex(),
+        icon: Mails,
     },
     {
         title: 'Serveis',
