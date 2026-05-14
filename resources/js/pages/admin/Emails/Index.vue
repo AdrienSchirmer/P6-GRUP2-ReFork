@@ -1,18 +1,24 @@
 <script setup lang="ts">
 import { Link } from '@inertiajs/vue3';
+import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Trash2 } from 'lucide-vue-next';
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Administració dels Correus', href: 'admin/emails' },
 ];
-defineProps<{
+
+const props = defineProps<{
     emails?: {
         id: number;
         email: string;
         active: number;
     }[];
 }>();
+
+const selectedEmailId = ref<number | null>(
+    props.emails?.find((email) => email.active === 1)?.id ?? null,
+);
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -50,6 +56,9 @@ defineProps<{
                             <th class="px-6 py-3 font-semibold text-slate-700">
                                 Accions
                             </th>
+                            <th class="px-6 py-3 font-semibold text-slate-700">
+                                Selecciona
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-200">
@@ -70,6 +79,22 @@ defineProps<{
                                         class="h-4 w-4 text-slate-500 hover:text-red-500"
                                     />
                                 </Link>
+                            </td>
+                            <td class="px-6 py-4">
+                                <input
+                                    type="radio"
+                                    :id="`email-${email.id}`"
+                                    name="selected_email"
+                                    :value="email.id"
+                                    v-model="selectedEmailId"
+                                    class="h-4 w-4 text-blue-600"
+                                />
+                                <label
+                                    :for="`email-${email.id}`"
+                                    class="sr-only"
+                                >
+                                    Seleccionar {{ email.email }}
+                                </label>
                             </td>
                         </tr>
                     </tbody>
