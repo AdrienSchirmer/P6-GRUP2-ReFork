@@ -15,9 +15,14 @@ import Navbar from '@/components/Navbar.vue';
         href="https://wa.me/34658359458?text=Hola%2C%20estoy%20interesado%20en%20"
         target="_blank"
         rel="noopener noreferrer"
-        class="fixed right-4 bottom-4 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] shadow-lg transition hover:scale-110 hover:bg-[#1ebe5d]"
+        class="fixed right-4 bottom-4 z-50 flex h-15 w-15 items-center justify-center rounded-full bg-[#25D366] shadow-lg transition hover:scale-110 hover:bg-[#1ebe5d]"
         aria-label="Contacta'ns per WhatsApp"
     >
-        <Icon icon="fontisto:whatsapp" width="30" height="30" class="text-white" />
+        <Icon
+            icon="fontisto:whatsapp"
+            width="30"
+            height="30"
+            class="text-white"
+        />
     </a>
 </template>

@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue';
+import { Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
+import { show as workshopShow } from '@/actions/App/Http/Controllers/public_workshops_controller';
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 
 type Workshop = {
@@ -122,10 +124,12 @@ function formatDate(dateStr: string): string {
                 v-if="filteredWorkshops.length > 0"
                 class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
             >
-                <article
+                <Link
                     v-for="workshop in filteredWorkshops"
                     :key="workshop.id"
+                    :href="workshopShow(workshop).url"
                     class="group flex flex-col overflow-hidden rounded-2xl border border-[#D0EAF3] bg-white shadow-md shadow-[#01617F]/8 transition duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-[#01617F]/15"
+                    as="article"
                 >
                     <!-- Poster -->
                     <div
@@ -198,7 +202,7 @@ function formatDate(dateStr: string): string {
                             </span>
                         </div>
                     </div>
-                </article>
+                </Link>
             </div>
 
             <!-- Empty state -->
