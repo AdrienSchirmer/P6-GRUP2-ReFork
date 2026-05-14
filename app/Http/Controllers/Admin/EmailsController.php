@@ -43,7 +43,7 @@ class EmailsController extends Controller
             'message' => 'Correu electrònic creat correctament.',
         ]);
 
-        return redirect('/admin/emails');
+        return redirect('/admin/emails/create');
     }
 
     /**

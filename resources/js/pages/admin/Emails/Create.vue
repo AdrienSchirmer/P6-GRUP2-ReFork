@@ -3,10 +3,16 @@ import { Form } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { store } from '@/routes/emails';
+import { ref } from 'vue';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Crear Correus', href: 'admin/emails/create' },
 ];
+
+const formRef = ref<HTMLFormElement | null>(null);
+function onSuccess() {
+    formRef.value?.reset();
+}
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
@@ -24,9 +30,11 @@ const breadcrumbs: BreadcrumbItem[] = [
             <h1 class="mb-6 text-2xl font-semibold">Crear Correus</h1>
             <div class="rounded-2xl bg-white p-6 shadow-sm">
                 <Form
+                    ref="formRef"
                     :action="store()"
                     method="post"
                     class="space-y-6"
+                    @success="onSuccess"
                     #default="{ errors, validating }"
                 >
                     <div>
