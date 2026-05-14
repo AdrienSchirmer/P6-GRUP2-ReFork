@@ -143,6 +143,7 @@ const formatTime = (time: string) => time.slice(0, 5);
                                 >
                                     Nom
                                 </th>
+                                
                                 <th
                                     class="px-4 py-3 text-left text-xs font-semibold tracking-wide text-foreground/80 uppercase"
                                 >
@@ -178,8 +179,9 @@ const formatTime = (time: string) => time.slice(0, 5);
                                     </div>
                                     <div
                                         class="mt-1 text-xs text-muted-foreground"
+                                        v-html="workshop.description"
                                     >
-                                        {{ workshop.description }}
+                                       
                                     </div>
                                 </td>
                                 <td class="px-4 py-3 text-muted-foreground">
