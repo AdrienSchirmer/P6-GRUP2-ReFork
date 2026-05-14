@@ -1,9 +1,11 @@
 <script setup lang="ts">
-import { Link } from '@inertiajs/vue3';
+import { Form, Link } from '@inertiajs/vue3';
 import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Trash2 } from 'lucide-vue-next';
+import { update } from '@/routes/emails';
+
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Administració dels Correus', href: 'admin/emails' },
 ];
@@ -40,66 +42,91 @@ const selectedEmailId = ref<number | null>(
                     Crear
                 </Link>
             </div>
-            <div
-                v-if="emails && emails.length > 0"
-                class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+            <Form
+                :action="selectedEmailId ? update(selectedEmailId) : undefined"
+                method="PATCH"
+                class="space-y-4"
             >
-                <table class="w-full text-left text-sm">
-                    <thead class="border-b border-slate-200 bg-slate-50">
-                        <tr>
-                            <th class="px-6 py-3 font-semibold text-slate-700">
-                                Correu
-                            </th>
-                            <th class="px-6 py-3 font-semibold text-slate-700">
-                                Estat
-                            </th>
-                            <th class="px-6 py-3 font-semibold text-slate-700">
-                                Accions
-                            </th>
-                            <th class="px-6 py-3 font-semibold text-slate-700">
-                                Selecciona
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-slate-200">
-                        <tr
-                            v-for="email in emails"
-                            :key="email.id"
-                            class="hover:bg-slate-50"
-                        >
-                            <td class="px-6 py-4 text-slate-800">
-                                {{ email.email }}
-                            </td>
-                            <td class="px-6 py-4 text-slate-600">
-                                {{ email.active === 1 ? 'Actiu' : 'Inactiu' }}
-                            </td>
-                            <td class="px-6 py-4">
-                                <Link>
-                                    <Trash2
-                                        class="h-4 w-4 text-slate-500 hover:text-red-500"
-                                    />
-                                </Link>
-                            </td>
-                            <td class="px-6 py-4">
-                                <input
-                                    type="radio"
-                                    :id="`email-${email.id}`"
-                                    name="selected_email"
-                                    :value="email.id"
-                                    v-model="selectedEmailId"
-                                    class="h-4 w-4 text-blue-600"
-                                />
-                                <label
-                                    :for="`email-${email.id}`"
-                                    class="sr-only"
+                <div
+                    v-if="emails && emails.length > 0"
+                    class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+                >
+                    <table class="w-full text-left text-sm">
+                        <thead class="border-b border-slate-200 bg-slate-50">
+                            <tr>
+                                <th
+                                    class="px-6 py-3 font-semibold text-slate-700"
                                 >
-                                    Seleccionar {{ email.email }}
-                                </label>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                    Correu
+                                </th>
+                                <th
+                                    class="px-6 py-3 font-semibold text-slate-700"
+                                >
+                                    Estat
+                                </th>
+                                <th
+                                    class="px-6 py-3 font-semibold text-slate-700"
+                                >
+                                    Accions
+                                </th>
+                                <th
+                                    class="px-6 py-3 font-semibold text-slate-700"
+                                >
+                                    Selecciona
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                            <tr
+                                v-for="email in emails"
+                                :key="email.id"
+                                class="hover:bg-slate-50"
+                            >
+                                <td class="px-6 py-4 text-slate-800">
+                                    {{ email.email }}
+                                </td>
+                                <td class="px-6 py-4 text-slate-600">
+                                    {{
+                                        email.active === 1 ? 'Actiu' : 'Inactiu'
+                                    }}
+                                </td>
+                                <td class="px-6 py-4">
+                                    <Link>
+                                        <Trash2
+                                            class="h-4 w-4 text-slate-500 hover:text-red-500"
+                                        />
+                                    </Link>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <input
+                                        type="radio"
+                                        :id="`email-${email.id}`"
+                                        name="selected_email"
+                                        :value="email.id"
+                                        v-model="selectedEmailId"
+                                        class="h-4 w-4 text-blue-600"
+                                    />
+                                    <label
+                                        :for="`email-${email.id}`"
+                                        class="sr-only"
+                                    >
+                                        Seleccionar {{ email.email }}
+                                    </label>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="pt-4">
+                    <button
+                        type="submit"
+                        class="rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700"
+                        :disabled="!selectedEmailId"
+                    >
+                        Guardar correu actiu
+                    </button>
+                </div>
+            </Form>
         </div>
     </AppLayout>
 </template>

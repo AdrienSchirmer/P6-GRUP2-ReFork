@@ -8,6 +8,7 @@ use Inertia\Inertia;
 use App\Models\Email;
 use App\Actions\Emails\CreateEmailAction;
 use App\Http\Requests\CreateEmailRequest;
+use Illuminate\Support\Facades\DB;
 
 class EmailsController extends Controller
 {
@@ -67,7 +68,13 @@ class EmailsController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'selected_email' => 'nullable|integer|exists:emails,id',
+        ]);
+
+        Email::query()->update(['active' => 0]);
+        Email::where('id', $id)->update(['active' => 1]);
+        return redirect('/admin/emails');
     }
 
     /**
