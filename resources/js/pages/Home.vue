@@ -41,7 +41,7 @@ onMounted(async () => {
         autoplay: { delay: 3000 },
         pagination: { el: '.hero-swiper-pagination' },
     });
-    
+
     // Setup Map
     map.value = L.map('map').setView([pharmacy.lat.value, pharmacy.long.value], 19);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -57,8 +57,6 @@ onMounted(async () => {
     document.querySelector('.leaflet-control-attribution')?.classList.add('!bg-[#015873]');
     document.querySelector('.leaflet-control-attribution > a')?.classList.add('!text-white');
 });
-
-const address = ref();
 
 const pharmacy = {
     name: ref(''),
