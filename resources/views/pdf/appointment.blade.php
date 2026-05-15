@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="ca">
+
 <head>
-    <meta charset="UTF-8"/>
+    <meta charset="UTF-8" />
     <title>Confirmació de Cita</title>
     <style>
         * {
@@ -25,28 +26,32 @@
             border-radius: 10px;
             margin-bottom: 24px;
         }
+
         .header-inner {
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
+
         .header-left {
             display: flex;
             align-items: center;
             gap: 16px;
         }
 
-     
+
         .header-text h1 {
             font-size: 18px;
             font-weight: bold;
             letter-spacing: 0.3px;
         }
+
         .header-text .subtitle {
             font-size: 11px;
             margin-top: 3px;
             opacity: 0.8;
         }
+
         .badge-confirmed {
             background-color: #dcfce7;
             color: #166534;
@@ -75,6 +80,7 @@
             padding: 14px 18px;
             margin-bottom: 18px;
         }
+
         .row {
             display: flex;
             justify-content: space-between;
@@ -82,23 +88,28 @@
             padding: 7px 0;
             border-bottom: 1px solid #f1f5f9;
         }
+
         .row:last-child {
             border-bottom: none;
             padding-bottom: 0;
         }
+
         .row:first-child {
             padding-top: 0;
         }
+
         .row .lbl {
             color: #64748b;
             font-size: 12px;
         }
+
         .row .val {
             font-weight: bold;
             color: #0f172a;
             font-size: 12px;
             text-align: right;
         }
+
         .row-highlight .val {
             color: #0f5f7f;
             font-size: 13px;
@@ -109,14 +120,17 @@
             border-collapse: collapse;
             margin-bottom: 18px;
         }
+
         .two-col td {
             width: 50%;
             vertical-align: top;
             padding: 0;
         }
+
         .two-col td:first-child {
             padding-right: 8px;
         }
+
         .two-col td:last-child {
             padding-left: 8px;
         }
@@ -129,6 +143,7 @@
             text-align: center;
             margin-bottom: 18px;
         }
+
         .captcha-label {
             font-size: 10px;
             font-weight: bold;
@@ -137,6 +152,7 @@
             color: #94a3b8;
             margin-bottom: 8px;
         }
+
         .captcha-inner {
             border: 1px solid #e2e8f0;
             border-radius: 6px;
@@ -145,10 +161,12 @@
             line-height: 56px;
             text-align: center;
         }
+
         .captcha-text {
             color: #cbd5e1;
             font-size: 11px;
         }
+
         .captcha-note {
             font-size: 10px;
             color: #94a3b8;
@@ -166,6 +184,7 @@
             color: #92400e;
             line-height: 1.7;
         }
+
         .notice strong {
             color: #78350f;
         }
@@ -181,25 +200,25 @@
         }
     </style>
 </head>
+
 <body>
 
     <div class="header">
         <div class="header-inner">
             <div class="header-left">
 
-             
+
                 <img
                     src="{{ storage_path('app/public/FarmaciaSolerLogoTallDark.png') }}"
                     alt="Logo Farmàcia Soler"
-                    style="height: 52px; width: auto; object-fit: contain;"
-                />
+                    style="height: 52px; width: auto; object-fit: contain;" />
 
                 <div class="header-text">
-                 <!---   <h1>{{ $pharmacy }}</h1>------>
+
                     <div class="subtitle">{{ $address }} &nbsp;·&nbsp; Tel. {{ $phone }}</div>
                 </div>
             </div>
-
+            
             <div class="badge-confirmed"> Reserva Confirmada</div>
         </div>
     </div>
@@ -227,7 +246,7 @@
                     </div>
                 </div>
             </td>
-
+   
             <td>
                 <div class="section-label">Dades del Client</div>
                 <div class="card">
@@ -243,18 +262,7 @@
             </td>
         </tr>
     </table>
-<!---
-    <div class="section-label">Verificació</div>
-    <div class="captcha-box">
-        <div class="captcha-label">Verificació de seguretat</div>
-        <div class="captcha-inner">
-            <span class="captcha-text">[  CAPTCHA ]</span>
-        </div>
-        <div class="captcha-note">
-            La verificació es realitza al formulari web abans de descarregar aquest document.
-        </div>
-    </div>
------>
+
     <div class="notice">
         <strong>Recordeu:</strong> Si no podeu assistir a la cita, si us plau cancel·leu-la amb
         almenys <strong>24 hores</strong> d'antelació trucant al <strong>{{ $phone }}</strong>
@@ -265,9 +273,10 @@
         Document generat automàticament per <strong>{{ $pharmacy }}</strong>
         &nbsp;·&nbsp;
         {{ now()->format('d/m/Y \a \l\e\s H:i') }} h
-        <br/>
+        <br />
         Aquest document és vàlid com a comprovant de reserva. Porteu-lo el dia de la cita.
     </div>
 
 </body>
+
 </html>
