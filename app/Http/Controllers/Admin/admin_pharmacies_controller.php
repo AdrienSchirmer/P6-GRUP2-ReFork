@@ -18,7 +18,7 @@ class admin_pharmacies_controller extends Controller
             ->select('id', 'name', 'latitude', 'longitude', 'created_at');
 
         if ($request->filled('search')) {
-            $query->where('name', 'like', '%'.$request->search.'%');
+            $query->where('name', 'like', '%' . $request->search . '%');
         }
 
         $pharmacies = $query
@@ -70,7 +70,7 @@ class admin_pharmacies_controller extends Controller
         ]);
 
         return to_route('pharmacies.index')
-            ->with('message', 'Farmàcia creada correctament.');
+            ->with('success', 'Farmàcia creada correctament.');
     }
 
     /**
@@ -107,6 +107,6 @@ class admin_pharmacies_controller extends Controller
             ->delete();
 
         return to_route('pharmacies.index')
-            ->with('message', 'Farmàcia eliminada correctament.');
+            ->with('success', 'Farmàcia eliminada correctament.');
     }
 }

@@ -41,11 +41,7 @@ onMounted(async () => {
         autoplay: { delay: 3000 },
         pagination: { el: '.hero-swiper-pagination' },
     });
-
-    /// Leaflet
-    address.value = document.getElementById('address');
-    address.value?.setAttribute('href', "https://www.google.com/maps/search/" + (pharmacy.name.value || "farmàcia soler") + "/@" + pharmacy.lat.value + "," + pharmacy.long.value + ",21z");
-
+    
     // Setup Map
     map.value = L.map('map').setView([pharmacy.lat.value, pharmacy.long.value], 19);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -400,12 +396,6 @@ function setNextWeek() {
         <section id="farmacies-guardia" class="scroll-mt-24 bg-[#F2FAFF] px-4 pb-16 md:px-24">
             <!-- Section header -->
             <div class="mb-8 text-center">
-                <div class="mb-3 flex items-center justify-center gap-2 text-[#015a75]">
-                    <Icon icon="mdi:hospital-building" width="22" height="22" />
-                    <span class="text-xs font-semibold tracking-widest uppercase">
-                        Servei 24h
-                    </span>
-                </div>
                 <h2 class="text-3xl font-bold text-[#124559] md:text-4xl">
                     Farmàcies de guàrdia
                 </h2>

@@ -12,6 +12,7 @@ use App\Http\Controllers\Admin\ServiceScheduleController;
 use App\Http\Controllers\AssignmentsController;
 use App\Http\Controllers\Contactans;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\public_workshops_controller;
 use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
@@ -58,6 +59,12 @@ Route::prefix('admin')->middleware(['auth', 'verified', 'isAdmin'])->group(funct
 Route::resource('assignments', AssignmentsController::class);
 Route::post('/assignments/code', [AssignmentsController::class, 'code'])->name('assignments.code');
 Route::post('/assignments/verify-code', [AssignmentsController::class, 'verifyCode'])->name('assignments.verify-code');
+
+//
+// WORKSHOPS
+//
+Route::get('/workshops', [public_workshops_controller::class, 'index'])->name('workshops');
+Route::get('/workshops/{workshop}', [public_workshops_controller::class, 'show'])->name('workshops.detail');
 
 //
 // CONTACT

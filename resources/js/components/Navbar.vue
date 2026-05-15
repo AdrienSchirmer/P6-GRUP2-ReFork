@@ -48,6 +48,19 @@ function isActive(path: string): boolean {
                     </li>
                     <li>
                         <Link
+                            href="/workshops"
+                            :class="[
+                                'rounded-lg px-2 py-2 whitespace-nowrap transition lg:px-3',
+                                isActive('/workshops')
+                                    ? 'bg-[#E6F5FB] text-[#01617F]'
+                                    : 'hover:bg-[#E6F5FB] hover:text-[#01617F]',
+                            ]"
+                        >
+                            Tallers
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
                             href="/pedir-cita"
                             :class="[
                                 'rounded-lg px-2 py-2 whitespace-nowrap transition lg:px-3',
@@ -134,6 +147,20 @@ function isActive(path: string): boolean {
                     >
                         Farmàcies de guàrdia
                     </a>
+                </li>
+                <li>
+                    <Link
+                        href="/workshops"
+                        :class="[
+                            'block rounded-lg px-3 py-2 transition',
+                            isActive('/workshops')
+                                ? 'bg-[#E6F5FB] text-[#01617F]'
+                                : 'hover:bg-[#E6F5FB] hover:text-[#01617F]',
+                        ]"
+                        @click="isMobileMenuOpen = false"
+                    >
+                        Tallers
+                    </Link>
                 </li>
                 <li>
                     <Link
