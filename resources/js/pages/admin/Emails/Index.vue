@@ -88,7 +88,12 @@ const handleChange = (emailId: number) => {
                                 {{ email.active === 1 ? 'Actiu' : 'Inactiu' }}
                             </td>
                             <td class="px-6 py-4">
-                                <Link>
+                                <Link
+                                    :href="`/admin/emails/${email.id}`"
+                                    method="delete"
+                                    as="button"
+                                    preserve-scroll
+                                >
                                     <Trash2
                                         class="h-4 w-4 text-slate-500 hover:text-red-500"
                                     />

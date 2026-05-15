@@ -80,8 +80,10 @@ class EmailsController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Email $email)
     {
-        //
+        $email->delete();
+
+        return redirect()->back();
     }
 }
