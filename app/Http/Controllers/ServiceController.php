@@ -101,23 +101,22 @@ class ServiceController extends Controller
         ];
 
         try {
-            Mail::to($validated['customer_email'])->send(new ReservationCreated($mailData));
-            $message = 'Reservació creat correctament! Rebràs un correu de confirmació.';
+            Mail::to($validated['customer_email'])
+                ->send(new ReservationCreated($mailData));
+
+            $message = 'Reservació creada amb èxit! Rebràs un correu de confirmació.';
         } catch (\Exception $e) {
-            $message = 'Reservació creat correctament! Rebràs un correu de confirmació.';
+            $message = 'Reservació creada correctament, però no hem pogut enviar el correu.';
         }
 
-
-
         return to_route('pedir-cita')->with('success', [
-            'message' => 'Reservació creada amb èxit! Rebràs una confirmació aviat.',
+            'message' => $message,
             'service' => $validated['service_id'],
             'date' => $validated['appointment_date'],
             'time' => $validated['start_time'],
             'name' => $validated['customer_name'],
             'email' => $validated['customer_email'],
-        ])
-            ->with('success', $message);
+        ]);
     }
 
     /**
