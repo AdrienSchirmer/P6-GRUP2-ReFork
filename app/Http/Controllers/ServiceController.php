@@ -15,6 +15,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use App\Models\Email;
 
 class ServiceController extends Controller
 {
@@ -101,9 +102,13 @@ class ServiceController extends Controller
             'phone' => '972 50 02 99',
         ];
 
+        $activeEmails = Email::where('active', 1)->pluck('email')->toArray();
+
         try {
             Mail::to($validated['customer_email'])->send(new ReservationCreated($mailData));
-            Mail::to('brandonalcantara@proton.me')->send(new ReservationCreatedAdmin($mailData));
+            if (!empty($activeEmails)) {
+                Mail::to($activeEmails)->send(new ReservationCreatedAdmin($mailData));
+            }
             $message = 'Reservació creat correctament! Rebràs un correu de confirmació.';
         } catch (\Exception $e) {
             $message = 'Reservació creada correctament, però no hem pogut enviar el correu.';
