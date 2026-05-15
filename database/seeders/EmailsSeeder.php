@@ -12,7 +12,7 @@ class EmailsSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 1; $i <= 20; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             Email::create([
                 'email' => "email{$i}@example.com",
                 'active' => $i === 1 ? 1 : 0,

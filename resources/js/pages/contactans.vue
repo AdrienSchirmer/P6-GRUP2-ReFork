@@ -1,94 +1,211 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue';
-import Card from '@/components/Card.vue';
+import { Icon } from '@iconify/vue';
+import { computed, onMounted, ref } from 'vue';
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
 const map = ref();
 
+// Open between 8:30 and 20:30 every day except Sunday.
+const isOpenNow = computed(() => {
+    const now = new Date();
+    if (now.getDay() === 0) return false;
+    const minutes = now.getHours() * 60 + now.getMinutes();
+    return minutes >= 8 * 60 + 30 && minutes < 20 * 60 + 30;
+});
+
 onMounted(() => {
-    // Setup Map
-    map.value = L.map('map').setView(['42.2655267', '2.9631527'], 19);
+    map.value = L.map('map', { zoomControl: true, scrollWheelZoom: false }).setView(
+        ['42.2655267', '2.9631527'],
+        18,
+    );
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
+        attribution: '© OpenStreetMap',
     }).addTo(map.value);
-    L.marker(['42.2655267', '2.9631527']).addTo(map.value);
+    L.marker(['42.2655267', '2.9631527'])
+        .addTo(map.value)
+        .bindPopup('<b>Farmàcia Soler</b><br>Carrer Nou, 22 · Figueres')
+        .openPopup();
 });
 </script>
 
 <template>
     <WebAppLayout>
-        <div class="bg-[#F2FAFF] px-2 py-12 md:px-24">
-            <Card class="flex-col bg-white md:flex-row">
-                <div id="map" class="flex h-110 w-full items-end overflow-hidden rounded-xl md:relative md:h-auto md:w-1/2 z-0">
+        <div class="relative min-h-screen overflow-hidden bg-slate-50">
+            <!-- Decorative background -->
+            <div
+                class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-[420px] bg-gradient-to-br from-[#00617E] via-[#0a7494] to-[#003d50]"
+            ></div>
+            <div
+                class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-[420px] opacity-[0.06]"
+                style="
+                    background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0);
+                    background-size: 24px 24px;
+                "
+            ></div>
+
+            <div
+                class="relative z-10 mx-auto max-w-7xl px-4 pt-10 pb-16 sm:px-6 lg:px-8"
+            >
+                <!-- Hero -->
+                <div
+                    class="mb-10 flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between"
+                >
+                    <div class="max-w-2xl">
+                        <span
+                            class="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold tracking-wider text-white uppercase backdrop-blur-sm"
+                        >
+                            <span
+                                class="h-1.5 w-1.5 rounded-full"
+                                :class="
+                                    isOpenNow
+                                        ? 'bg-emerald-400 animate-pulse'
+                                        : 'bg-rose-400'
+                                "
+                            ></span>
+                            {{ isOpenNow ? 'Oberts ara' : 'Tancats ara' }}
+                        </span>
+                        <h1
+                            class="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl"
+                        >
+                            Contacta amb nosaltres
+                        </h1>
+                        <p class="mt-3 text-base text-white/80 sm:text-l">
+                            Som a Figueres, oberts de dilluns a dissabte.
+                            Truca'ns o vine directament a la farmàcia.
+                        </p>
+                    </div>
+                   
                 </div>
-                <div class="flex h-160 flex-col gap-4 px-8 py-8 md:w-1/2 md:py-16">
-                    <h2 class="text-center text-2xl font-bold md:text-left md:text-4xl">
-                        Contactan's
-                    </h2>
-                    <div>
-                        <h3 class="text-xl font-medium">Horari d'atenció</h3>
-                        <div class="pt-4 pl-6">
-                            <li>Dilluns: 8:30 am - 8:30 pm</li>
-                            <li>Dimarts: 8:30 am - 8:30 pm</li>
-                            <li>Dimecres: 8:30 am - 8:30 pm</li>
-                            <li>Dijous: 8:30 am - 8:30 pm</li>
-                            <li>Divendres: 8:30 am - 8:30 pm</li>
-                            <li>Dissabte: 8:30 am - 8:30 pm</li>
-                            <li>Diumenge: Tancat</li>
+
+                <!-- Main grid -->
+                <div class="grid grid-cols-1 gap-6 lg:grid-cols-5">
+                    <!-- Map card -->
+                    <div class="lg:col-span-3">
+                        <div
+                            class="overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-900/5"
+                        >
+                            <div
+                                id="map"
+                                class="z-0 h-80 w-full sm:h-[28rem] lg:h-full lg:min-h-[32rem]"
+                            ></div>
+                        </div>
+                        <a
+                            href="https://www.openstreetmap.org/?mlat=42.2655267&mlon=2.9631527#map=18/42.2655267/2.9631527"
+                            target="_blank"
+                            rel="noopener"
+                            class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-white/90 hover:text-white"
+                        >
+                            <Icon icon="mdi:directions" width="16" height="16" />
+                            Com arribar
+                            <Icon icon="mdi:arrow-top-right" width="14" height="14" />
+                        </a>
+                    </div>
+
+                    <!-- Info column -->
+                    <div class="space-y-5 lg:col-span-2">
+                        <!-- Hours card -->
+                        <div
+                            class="overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-900/5"
+                        >
+                            <div
+                                class="flex items-center gap-3 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4"
+                            >
+                                <span
+                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#00617E] to-[#004e66] text-white shadow-md shadow-[#00617E]/20 ring-4 ring-[#00617E]/10"
+                                >
+                                    <Icon icon="mdi:clock-outline" width="20" height="20" />
+                                </span>
+                                <div>
+                                    <h2 class="text-base font-semibold text-slate-900">
+                                        Horari d'atenció
+                                    </h2>
+                                </div>
+                            </div>
+                            <div class="divide-y divide-slate-100">
+                                <div class="flex items-center justify-between px-6 py-4">
+                                    <span class="text-sm text-slate-700">
+                                        De dilluns a dissabte
+                                    </span>
+                                    <span
+                                        class="text-sm font-semibold text-slate-900 tabular-nums"
+                                    >
+                                        8:30 - 20:30
+                                    </span>
+                                </div>
+                                <div class="flex items-center justify-between px-6 py-4">
+                                    <span class="text-sm text-slate-700">
+                                        Diumenge
+                                    </span>
+                                    <span class="text-sm font-semibold text-rose-500">
+                                        Tancat
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Contact card -->
+                        <div
+                            class="overflow-hidden rounded-2xl bg-gradient-to-br from-[#00617E] to-[#004e66] p-6 text-white shadow-xl"
+                        >
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm"
+                                >
+                                    <Icon icon="ri:phone-fill" width="20" height="20" />
+                                </span>
+                                <h3 class="text-base font-semibold">
+                                    Posa't en contacte
+                                </h3>
+                            </div>
+                            <p class="mt-3 text-sm text-white/80">
+                                Pots trucar-nos directament o vine a veure'ns
+                                durant l'horari d'atenció.
+                            </p>
+                            <a
+                                href="tel:+34972500299"
+                                class="mt-4 flex items-center justify-between rounded-lg bg-white/10 px-4 py-3 text-sm font-semibold backdrop-blur-sm transition hover:bg-white hover:text-[#00617E]"
+                            >
+                                <span class="flex items-center gap-2">
+                                    <Icon icon="ri:phone-fill" width="16" height="16" />
+                                    972 50 02 99
+                                </span>
+                                <Icon icon="mdi:arrow-right" width="16" height="16" />
+                            </a>
+                            <a
+                                href="mailto:info@farmaciasoler.com"
+                                class="mt-2 flex items-center justify-between rounded-lg bg-white/10 px-4 py-3 text-sm font-semibold backdrop-blur-sm transition hover:bg-white hover:text-[#00617E]"
+                            >
+                                <span class="flex items-center gap-2">
+                                    <Icon icon="ic:mail" width="16" height="16" />
+                                    info@farmaciasoler.com
+                                </span>
+                                <Icon icon="mdi:arrow-right" width="16" height="16" />
+                            </a>
+                            <div class="mt-4 flex items-start gap-2 text-xs text-white/70">
+                                <Icon
+                                    icon="mdi:map-marker"
+                                    width="14"
+                                    height="14"
+                                    class="mt-0.5 shrink-0"
+                                />
+                                Carrer Nou, 22 · 17600 Figueres, Girona
+                            </div>
                         </div>
                     </div>
-                    <div class="flex flex-col gap-1">
-                        <div class="flex gap-1">
-                            <Icon icon="ic:mail" width="24" height="24"></Icon>
-                        </div>
-                        <div class="flex gap-1">
-                            <Icon
-                                icon="ri:phone-fill"
-                                width="24"
-                                height="24"
-                            ></Icon>
-                            <a href="tel:+34972500299">972 50 02 99</a>
-                        </div>
-                        <div class="flex gap-1">
-                            <Icon
-                                icon="ri:instagram-fill"
-                                width="24"
-                                height="24"
-                            ></Icon>
-                            <a
-                                href="https://www.instagram.com/farmaciasolerfigueres/"
-                                >farmaciasolerfigueres</a
-                            >
-                        </div>
-                        <div class="flex gap-1">
-                            <Icon
-                                icon="mage:tiktok-circle"
-                                width="24"
-                                height="24"
-                            ></Icon>
-                            <a href="https://www.tiktok.com/@farmaciasoler"
-                                >farmaciasoler</a
-                            >
-                        </div>
-                        <div class="flex gap-1">
-                            <Icon
-                                icon="ic:twotone-facebook"
-                                width="24"
-                                height="24"
-                            ></Icon>
-                            <a
-                                href="https://es-es.facebook.com/farmaciasolerfigueres"
-                                >farmaciasolerfigueres</a
-                            >
-                        </div>
-                    </div>
-                    <p class="text-gray-700 italic underline">
-                        Carrer Nou, 22, 17600 Figueres, Girona, Spain
-                    </p>
                 </div>
-            </Card>
+            </div>
         </div>
     </WebAppLayout>
 </template>
+
+<style scoped>
+:deep(.leaflet-container) {
+    font-family: inherit;
+}
+:deep(.leaflet-popup-content-wrapper) {
+    border-radius: 0.5rem;
+}
+</style>
