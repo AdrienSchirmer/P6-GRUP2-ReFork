@@ -96,6 +96,7 @@ const handleChange = (emailId: number) => {
                             </td>
                             <td class="px-6 py-4">
                                 <input
+                                    preserve-scroll
                                     type="checkbox"
                                     :disabled="
                                         selectedEmailIds.length >= 3 &&
