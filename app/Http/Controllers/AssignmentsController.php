@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use App\Models\Email;
 
 class AssignmentsController extends Controller
 {
@@ -45,10 +46,13 @@ class AssignmentsController extends Controller
     {
         $validated = $request->validated();
         $assignment = $createAssignment->execute($validated);
+        $activeEmails = Email::where('active', 1)->pluck('email')->toArray();
 
         try {
             Mail::to($validated['address'])->send(new AssignmentCreated($validated));
-            Mail::to('brandonalcantara@proton.me')->send(new AssignmentCreatedAdmin($validated));
+            if (!empty($activeEmails)) {
+                Mail::to($activeEmails)->send(new AssignmentCreatedAdmin($validated));
+            }
             $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
         } catch (\Exception $e) {
             $message = 'Correu no trobat.';
