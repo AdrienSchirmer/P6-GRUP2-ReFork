@@ -31,7 +31,7 @@ const form = useForm({
 const handleChange = (emailId: number) => {
     const isActive = selectedEmailIds.value.includes(emailId);
     form.active = isActive ? 1 : 0;
-    form.patch(`/admin/emails/${emailId}`);
+    form.patch(`/admin/emails/${emailId}`, { preserveScroll: true });
 };
 </script>
 <template>
@@ -96,7 +96,6 @@ const handleChange = (emailId: number) => {
                             </td>
                             <td class="px-6 py-4">
                                 <input
-                                    preserve-scroll
                                     type="checkbox"
                                     :disabled="
                                         selectedEmailIds.length >= 3 &&
