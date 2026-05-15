@@ -66,15 +66,15 @@ class EmailsController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, Email $email)
     {
         $request->validate([
-            'selected_email' => 'nullable|integer|exists:emails,id',
+            'active' => ['required', 'boolean'],
         ]);
 
-        Email::query()->update(['active' => 0]);
-        Email::where('id', $id)->update(['active' => 1]);
-        return redirect('/admin/emails');
+        $email->update(['active' => $request->boolean('active')]);
+
+        return redirect()->back();
     }
 
     /**
