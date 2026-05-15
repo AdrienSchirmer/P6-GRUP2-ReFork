@@ -1,6 +1,6 @@
 <script setup lang="ts"></script>
 <template>
-    <footer class="bg-[#00617E]">
+    <footer class="bg-[#015873]">
         <div class="mx-auto w-full max-w-7xl p-4 py-6 text-white lg:py-8">
             <div class="md:flex md:justify-between">
                 <div class="mb-6 md:mb-0">
