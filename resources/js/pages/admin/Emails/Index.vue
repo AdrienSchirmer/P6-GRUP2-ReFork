@@ -46,6 +46,9 @@ const handleChange = (emailId: number) => {
                         Configura a on s'enviarà el correu de part admin, quan
                         un usuari crea un encàrrec o un reserva.
                     </p>
+                    <p class="text-sm text-muted-foreground">
+                        Correus actius: {{ selectedEmailIds.length }}/3
+                    </p>
                 </div>
                 <Link
                     href="/admin/emails/create"
