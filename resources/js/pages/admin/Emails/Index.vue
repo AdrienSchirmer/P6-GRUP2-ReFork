@@ -4,7 +4,6 @@ import { ref } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Trash2 } from 'lucide-vue-next';
-import { update } from '@/routes/emails';
 
 const breadcrumbs: BreadcrumbItem[] = [
     { title: 'Administració dels Correus', href: 'admin/emails' },
