@@ -13,7 +13,7 @@
 				<table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:520px;background:#ffffff;border-radius:12px;overflow:hidden;">
 					<tr>
 						<td style="background:#0f5f7f;color:#ffffff;padding:16px 20px;font-size:18px;font-weight:700;">
-							Farmacia Soler
+							FarmaciaSoler
 						</td>
 					</tr>
 					<tr>

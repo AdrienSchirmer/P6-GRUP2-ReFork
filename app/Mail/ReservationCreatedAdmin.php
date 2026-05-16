@@ -3,22 +3,27 @@
 namespace App\Mail;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Attachment;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class AssignmentCreated extends Mailable
+class ReservationCreatedAdmin extends Mailable
 {
     use Queueable, SerializesModels;
+
+    public array $data;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(
-        public readonly array $assignment,
-    ) {}
+    public function __construct(array $data)
+    {
+        //
+        $this->data = $data;
+    }
 
     /**
      * Get the message envelope.
@@ -26,7 +31,8 @@ class AssignmentCreated extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Encàrrec Creat',
+            subject: 'Confirmació de la cita – ' . $this->data['pharmacy'],
+
         );
     }
 
@@ -36,7 +42,8 @@ class AssignmentCreated extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.assignment-created',
+            view: 'mail.reservation-created-admin',
+            with: ['data' => $this->data],
         );
     }
 
