@@ -15,9 +15,23 @@ class EmailsController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $emails = Email::orderBy('email')->orderByDesc('active')->get();
+        $query = Email::orderBy('email')->orderByDesc('active');
+
+        if ($request->filled('filter')) {
+            match ($request->input('filter')) {
+                'active' => $query->where('active', 1),
+                'inactive' => $query->where('active', 0),
+                default => null,
+            };
+        }
+
+        $emails = $query->get();
+
+        if ($request->expectsJson()) {
+            return response()->json($emails);
+        }
 
         return Inertia::render('admin/Emails/Index', [
             'emails' => $emails,

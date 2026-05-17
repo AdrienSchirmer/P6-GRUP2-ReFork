@@ -17,6 +17,22 @@ const props = defineProps<{
     }[];
 }>();
 
+const displayedEmails = ref(props.emails ?? []);
+
+const handleFilterChange = async (event: Event) => {
+    const filter = (event.target as HTMLSelectElement).value;
+    const url =
+        {
+            Tot: '/admin/emails',
+            Actiu: '/admin/emails?filter=active',
+            Inactiu: '/admin/emails?filter=inactive',
+        }[filter] ?? '/admin/emails';
+    const response = await fetch(url, {
+        headers: { Accept: 'application/json' },
+    });
+    displayedEmails.value = await response.json();
+};
+
 const selectedEmailIds = ref<number[]>(
     props.emails
         ?.filter((email) => email.active === 1)
@@ -56,8 +72,20 @@ const handleChange = (emailId: number) => {
                     Crear
                 </Link>
             </div>
+
+            <div class="mb-4">
+                <select
+                    @change="handleFilterChange"
+                    class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700"
+                >
+                    <option>Tot</option>
+                    <option>Actiu</option>
+                    <option>Inactiu</option>
+                </select>
+            </div>
+
             <div
-                v-if="emails && emails.length > 0"
+                v-if="displayedEmails && displayedEmails.length > 0"
                 class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
             >
                 <table class="w-full text-left text-sm">
@@ -79,7 +107,7 @@ const handleChange = (emailId: number) => {
                     </thead>
                     <tbody class="divide-y divide-slate-200">
                         <tr
-                            v-for="email in emails"
+                            v-for="email in displayedEmails"
                             :key="email.id"
                             class="hover:bg-slate-50"
                         >
