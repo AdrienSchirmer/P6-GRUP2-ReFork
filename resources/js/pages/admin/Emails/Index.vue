@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useForm, Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Trash2 } from 'lucide-vue-next';
@@ -18,6 +18,30 @@ const props = defineProps<{
 }>();
 
 const displayedEmails = ref(props.emails ?? []);
+const search = ref('');
+const fetchedEmails = ref(props.emails ?? []);
+
+watch(
+    () => props.emails,
+    (newEmails) => {
+        fetchedEmails.value = newEmails ?? [];
+        doSearch();
+    },
+);
+
+function normalize(str: string) {
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+}
+
+function doSearch() {
+    const s = normalize(search.value);
+    displayedEmails.value = fetchedEmails.value.filter((email) =>
+        normalize(email.email).includes(s),
+    );
+}
 
 const handleFilterChange = async (event: Event) => {
     const filter = (event.target as HTMLSelectElement).value;
@@ -73,7 +97,14 @@ const handleChange = (emailId: number) => {
                 </Link>
             </div>
 
-            <div class="mb-4">
+            <div class="mb-4 flex gap-3">
+                <input
+                    v-model="search"
+                    @input="doSearch"
+                    type="text"
+                    placeholder="Cercar correu..."
+                    class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700"
+                />
                 <select
                     @change="handleFilterChange"
                     class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700"
@@ -94,9 +125,9 @@ const handleChange = (emailId: number) => {
                             <th class="px-6 py-3 font-semibold text-slate-700">
                                 Correu
                             </th>
-                            <th class="px-6 py-3 font-semibold text-slate-700">
+                            <!-- <th class="px-6 py-3 font-semibold text-slate-700">
                                 Estat
-                            </th>
+                            </th> -->
                             <th class="px-6 py-3 font-semibold text-slate-700">
                                 Accions
                             </th>
@@ -114,9 +145,9 @@ const handleChange = (emailId: number) => {
                             <td class="px-6 py-4 text-slate-800">
                                 {{ email.email }}
                             </td>
-                            <td class="px-6 py-4 text-slate-600">
+                            <!-- <td class="px-6 py-4 text-slate-600">
                                 {{ email.active === 1 ? 'Actiu' : 'Inactiu' }}
-                            </td>
+                            </td> -->
                             <td class="px-6 py-4">
                                 <Link
                                     :href="`/admin/emails/${email.id}`"
