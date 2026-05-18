@@ -14,6 +14,7 @@ type Workshop = {
     start_time: string;
     end_time: string;
     max_attendees: number | null;
+    is_active: boolean;
 };
 
 const props = defineProps<{
@@ -136,9 +137,7 @@ function formatDate(dateStr: string): string {
                     as="article"
                 >
                     <!-- Poster -->
-                    <div
-                        class="relative aspect-[3/4] overflow-hidden bg-white"
-                    >
+                    <div class="relative aspect-[3/4] overflow-hidden bg-white">
                         <img
                             v-if="workshop.photo_url"
                             :src="workshop.photo_url"
@@ -155,9 +154,7 @@ function formatDate(dateStr: string): string {
                                 width="56"
                                 height="56"
                             />
-                            <p
-                                class="text-sm font-medium text-white/50"
-                            >
+                            <p class="text-sm font-medium text-white/50">
                                 {{ workshop.name }}
                             </p>
                         </div>
@@ -167,7 +164,9 @@ function formatDate(dateStr: string): string {
                     <div
                         class="flex flex-col gap-1.5 border-t border-[#D0EAF3] bg-white px-4 py-3"
                     >
-                        <p class="truncate text-sm font-semibold text-[#0E3C4D]">
+                        <p
+                            class="truncate text-sm font-semibold text-[#0E3C4D]"
+                        >
                             {{ workshop.name }}
                         </p>
                         <div class="flex items-center gap-3">
@@ -203,6 +202,22 @@ function formatDate(dateStr: string): string {
                                     height="13"
                                 />
                                 {{ workshop.max_attendees ?? '∞' }}
+                            </span>
+                            <span
+                                v-if="
+                                    new Date(
+                                        `${workshop.workshop_date}T${workshop.end_time}`,
+                                    ) < new Date()
+                                "
+                                class="ml-auto flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500"
+                            >
+                                Acabat
+                            </span>
+                            <span
+                                v-if="!workshop.is_active"
+                                class="ml-auto flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500"
+                            >
+                                Tancat
                             </span>
                         </div>
                     </div>
