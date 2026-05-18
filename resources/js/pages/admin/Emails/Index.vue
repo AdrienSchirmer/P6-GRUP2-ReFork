@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useForm, Link } from '@inertiajs/vue3';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 import { Trash2 } from 'lucide-vue-next';
@@ -16,6 +16,46 @@ const props = defineProps<{
         active: number;
     }[];
 }>();
+
+const displayedEmails = ref(props.emails ?? []);
+const search = ref('');
+const fetchedEmails = ref(props.emails ?? []);
+
+watch(
+    () => props.emails,
+    (newEmails) => {
+        fetchedEmails.value = newEmails ?? [];
+        doSearch();
+    },
+);
+
+function normalize(str: string) {
+    return str
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .toLowerCase();
+}
+
+function doSearch() {
+    const s = normalize(search.value);
+    displayedEmails.value = fetchedEmails.value.filter((email) =>
+        normalize(email.email).includes(s),
+    );
+}
+
+const handleFilterChange = async (event: Event) => {
+    const filter = (event.target as HTMLSelectElement).value;
+    const url =
+        {
+            Tot: '/admin/emails',
+            Actiu: '/admin/emails?filter=active',
+            Inactiu: '/admin/emails?filter=inactive',
+        }[filter] ?? '/admin/emails';
+    const response = await fetch(url, {
+        headers: { Accept: 'application/json' },
+    });
+    displayedEmails.value = await response.json();
+};
 
 const selectedEmailIds = ref<number[]>(
     props.emails
@@ -35,8 +75,10 @@ const handleChange = (emailId: number) => {
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="p-6">
-            <div class="mb-6 flex items-start justify-between">
+        <div class="p-3 sm:p-6">
+            <div
+                class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"
+            >
                 <div>
                     <h1 class="mb-2 text-2xl font-semibold">
                         Configuració Correus
@@ -56,40 +98,67 @@ const handleChange = (emailId: number) => {
                     Crear
                 </Link>
             </div>
+
+            <div class="mb-4 flex flex-col gap-2 sm:flex-row">
+                <input
+                    v-model="search"
+                    @input="doSearch"
+                    type="text"
+                    placeholder="Cercar correu..."
+                    class="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 sm:w-auto"
+                />
+                <select
+                    @change="handleFilterChange"
+                    class="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 sm:w-auto"
+                >
+                    <option>Tot</option>
+                    <option>Actiu</option>
+                    <option>Inactiu</option>
+                </select>
+            </div>
+
             <div
-                v-if="emails && emails.length > 0"
-                class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+                v-if="displayedEmails && displayedEmails.length > 0"
+                class="overflow-hidden overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm"
             >
                 <table class="w-full text-left text-sm">
                     <thead class="border-b border-slate-200 bg-slate-50">
                         <tr>
-                            <th class="px-6 py-3 font-semibold text-slate-700">
+                            <th
+                                class="px-3 py-2 font-semibold text-slate-700 sm:px-6 sm:py-3"
+                            >
                                 Correu
                             </th>
-                            <th class="px-6 py-3 font-semibold text-slate-700">
+                            <!-- <th class="px-6 py-3 font-semibold text-slate-700">
                                 Estat
-                            </th>
-                            <th class="px-6 py-3 font-semibold text-slate-700">
+                            </th> -->
+                            <th
+                                class="px-3 py-2 font-semibold text-slate-700 sm:px-6 sm:py-3"
+                            >
                                 Accions
                             </th>
-                            <th class="px-6 py-3 font-semibold text-slate-700">
+                            <th
+                                class="px-3 py-2 font-semibold text-slate-700 sm:px-6 sm:py-3"
+                            >
                                 Selecciona
                             </th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-200">
                         <tr
-                            v-for="email in emails"
+                            v-for="email in displayedEmails"
                             :key="email.id"
                             class="hover:bg-slate-50"
                         >
-                            <td class="px-6 py-4 text-slate-800">
+                            <td
+                                class="px-3 py-2 text-slate-800 sm:px-6 sm:py-4"
+                            >
                                 {{ email.email }}
                             </td>
-                            <td class="px-6 py-4 text-slate-600">
+                            <!-- <td class="px-6 py-4 text-slate-600">
                                 {{ email.active === 1 ? 'Actiu' : 'Inactiu' }}
-                            </td>
-                            <td class="px-6 py-4">
+                            </td> -->
+                            <td class="px-3 py-2 sm:px-6 sm:py-4">
                                 <Link
                                     :href="`/admin/emails/${email.id}`"
                                     method="delete"
@@ -101,7 +170,7 @@ const handleChange = (emailId: number) => {
                                     />
                                 </Link>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-3 py-2 sm:px-6 sm:py-4">
                                 <input
                                     type="checkbox"
                                     :disabled="
