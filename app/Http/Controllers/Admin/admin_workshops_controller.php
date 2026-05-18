@@ -101,14 +101,14 @@ class admin_workshops_controller extends Controller
     public function update(Request $request, Workshop $workshop)
     {
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
-            'photo' => ['required', 'image', 'mimes:webp', 'max:5120'],
-            'workshop_date' => ['required', 'date'],
-            'start_time' => ['required', 'date_format:H:i'],
-            'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
+            'name' => ['sometimes', 'required', 'string', 'max:255'],
+            'description' => ['sometimes', 'required', 'string'],
+            'photo' => ['nullable', 'image', 'mimes:webp', 'max:5120'],
+            'workshop_date' => ['sometimes', 'required', 'date'],
+            'start_time' => ['sometimes', 'required', 'date_format:H:i'],
+            'end_time' => ['sometimes', 'required', 'date_format:H:i', 'after:start_time'],
             'max_attendees' => ['nullable', 'integer', 'min:1'],
-            'is_active' => ['required', 'boolean'],
+            'is_active' => ['sometimes', 'required', 'boolean'],
         ]);
 
         if ($request->hasFile('photo')) {
