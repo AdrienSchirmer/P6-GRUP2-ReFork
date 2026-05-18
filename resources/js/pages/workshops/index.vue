@@ -4,7 +4,6 @@ import { Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { show as workshopShow } from '@/actions/App/Http/Controllers/public_workshops_controller';
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
-import { isActive } from '@tiptap/core';
 
 type Workshop = {
     id: number;
