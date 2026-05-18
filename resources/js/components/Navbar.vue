@@ -33,7 +33,7 @@ function isActive(path: string): boolean {
                     <li>
                         <a
                             href="/#qui-som"
-                            class="rounded-lg px-2 py-2 whitespace-nowrap transition hover:bg-[#E6F5FB] hover:text-[#01617F] lg:px-3"
+                            class="rounded-lg px-2 py-2 whitespace-nowrap transition hover:bg-[#E6F5FB] hover:text-[#01617F]/90 lg:px-3"
                         >
                             Qui som
                         </a>
@@ -41,7 +41,7 @@ function isActive(path: string): boolean {
                     <li>
                         <a
                             href="/#farmacies-guardia"
-                            class="rounded-lg px-2 py-2 whitespace-nowrap transition hover:bg-[#E6F5FB] hover:text-[#01617F] lg:px-3"
+                            class="rounded-lg px-2 py-2 whitespace-nowrap transition hover:bg-[#E6F5FB] hover:text-[#01617F]/90 lg:px-3"
                         >
                             Farmàcies de guàrdia
                         </a>
@@ -52,8 +52,8 @@ function isActive(path: string): boolean {
                             :class="[
                                 'rounded-lg px-2 py-2 whitespace-nowrap transition lg:px-3',
                                 isActive('/workshops')
-                                    ? 'bg-[#E6F5FB] text-[#01617F]'
-                                    : 'hover:bg-[#E6F5FB] hover:text-[#01617F]',
+                                    ? 'bg-[#E6F5FB] text-[#01617F]/90'
+                                    : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                             ]"
                         >
                             Tallers
@@ -65,8 +65,8 @@ function isActive(path: string): boolean {
                             :class="[
                                 'rounded-lg px-2 py-2 whitespace-nowrap transition lg:px-3',
                                 isActive('/pedir-cita')
-                                    ? 'bg-[#E6F5FB] text-[#01617F]'
-                                    : 'hover:bg-[#E6F5FB] hover:text-[#01617F]',
+                                    ? 'bg-[#E6F5FB] text-[#01617F]/90'
+                                    : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                             ]"
                         >
                             Demanar cita
@@ -78,8 +78,8 @@ function isActive(path: string): boolean {
                             :class="[
                                 'rounded-lg px-2 py-2 whitespace-nowrap transition lg:px-3',
                                 isActive('/assignments/create')
-                                    ? 'bg-[#E6F5FB] text-[#01617F]'
-                                    : 'hover:bg-[#E6F5FB] hover:text-[#01617F]',
+                                    ? 'bg-[#E6F5FB] text-[#01617F]/90'
+                                    : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                             ]"
                         >
                             Demanar encàrrec
@@ -91,8 +91,8 @@ function isActive(path: string): boolean {
                             :class="[
                                 'rounded-lg px-2 py-2 whitespace-nowrap transition lg:px-3',
                                 isActive('/contactans')
-                                    ? 'bg-[#E6F5FB] text-[#01617F]'
-                                    : 'hover:bg-[#E6F5FB] hover:text-[#01617F]',
+                                    ? 'bg-[#E6F5FB] text-[#01617F]/90'
+                                    : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                             ]"
                         >
                             Contacta'ns
@@ -133,7 +133,7 @@ function isActive(path: string): boolean {
                 <li>
                     <a
                         href="/#qui-som"
-                        class="block rounded-lg px-3 py-2 transition hover:bg-[#E6F5FB] hover:text-[#01617F]"
+                        class="block rounded-lg px-3 py-2 transition hover:bg-[#E6F5FB] hover:text-[#01617F]/90"
                         @click="isMobileMenuOpen = false"
                     >
                         Qui som
@@ -142,7 +142,7 @@ function isActive(path: string): boolean {
                 <li>
                     <a
                         href="/#farmacies-guardia"
-                        class="block rounded-lg px-3 py-2 transition hover:bg-[#E6F5FB] hover:text-[#01617F]"
+                        class="block rounded-lg px-3 py-2 transition hover:bg-[#E6F5FB] hover:text-[#01617F]/90"
                         @click="isMobileMenuOpen = false"
                     >
                         Farmàcies de guàrdia
@@ -154,8 +154,8 @@ function isActive(path: string): boolean {
                         :class="[
                             'block rounded-lg px-3 py-2 transition',
                             isActive('/workshops')
-                                ? 'bg-[#E6F5FB] text-[#01617F]'
-                                : 'hover:bg-[#E6F5FB] hover:text-[#01617F]',
+                                ? 'bg-[#E6F5FB] text-[#01617F]/90'
+                                : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                         ]"
                         @click="isMobileMenuOpen = false"
                     >
@@ -168,8 +168,8 @@ function isActive(path: string): boolean {
                         :class="[
                             'block rounded-lg px-3 py-2 transition',
                             isActive('/pedir-cita')
-                                ? 'bg-[#E6F5FB] text-[#01617F]'
-                                : 'hover:bg-[#E6F5FB] hover:text-[#01617F]',
+                                ? 'bg-[#E6F5FB] text-[#01617F]/90'
+                                : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                         ]"
                         @click="isMobileMenuOpen = false"
                     >
@@ -182,8 +182,8 @@ function isActive(path: string): boolean {
                         :class="[
                             'block rounded-lg px-3 py-2 transition',
                             isActive('/assignments/create')
-                                ? 'bg-[#E6F5FB] text-[#01617F]'
-                                : 'hover:bg-[#E6F5FB] hover:text-[#01617F]',
+                                ? 'bg-[#E6F5FB] text-[#01617F]/90'
+                                : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                         ]"
                         @click="isMobileMenuOpen = false"
                     >
@@ -196,8 +196,8 @@ function isActive(path: string): boolean {
                         :class="[
                             'block rounded-lg px-3 py-2 transition',
                             isActive('/contactans')
-                                ? 'bg-[#E6F5FB] text-[#01617F]'
-                                : 'hover:bg-[#E6F5FB] hover:text-[#01617F]',
+                                ? 'bg-[#E6F5FB] text-[#01617F]/90'
+                                : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                         ]"
                         @click="isMobileMenuOpen = false"
                     >
