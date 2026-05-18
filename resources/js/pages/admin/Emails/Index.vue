@@ -75,8 +75,10 @@ const handleChange = (emailId: number) => {
 </script>
 <template>
     <AppLayout :breadcrumbs="breadcrumbs">
-        <div class="p-6">
-            <div class="mb-6 flex items-start justify-between">
+        <div class="p-3 sm:p-6">
+            <div
+                class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between"
+            >
                 <div>
                     <h1 class="mb-2 text-2xl font-semibold">
                         Configuració Correus
@@ -97,17 +99,17 @@ const handleChange = (emailId: number) => {
                 </Link>
             </div>
 
-            <div class="mb-4 flex gap-3">
+            <div class="mb-4 flex flex-col gap-2 sm:flex-row">
                 <input
                     v-model="search"
                     @input="doSearch"
                     type="text"
                     placeholder="Cercar correu..."
-                    class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700"
+                    class="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 sm:w-auto"
                 />
                 <select
                     @change="handleFilterChange"
-                    class="rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700"
+                    class="w-full rounded-md border border-slate-300 px-3 py-1.5 text-sm text-slate-700 sm:w-auto"
                 >
                     <option>Tot</option>
                     <option>Actiu</option>
@@ -117,21 +119,27 @@ const handleChange = (emailId: number) => {
 
             <div
                 v-if="displayedEmails && displayedEmails.length > 0"
-                class="overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm"
+                class="overflow-hidden overflow-x-auto rounded-lg border border-slate-200 bg-white shadow-sm"
             >
                 <table class="w-full text-left text-sm">
                     <thead class="border-b border-slate-200 bg-slate-50">
                         <tr>
-                            <th class="px-6 py-3 font-semibold text-slate-700">
+                            <th
+                                class="px-3 py-2 font-semibold text-slate-700 sm:px-6 sm:py-3"
+                            >
                                 Correu
                             </th>
                             <!-- <th class="px-6 py-3 font-semibold text-slate-700">
                                 Estat
                             </th> -->
-                            <th class="px-6 py-3 font-semibold text-slate-700">
+                            <th
+                                class="px-3 py-2 font-semibold text-slate-700 sm:px-6 sm:py-3"
+                            >
                                 Accions
                             </th>
-                            <th class="px-6 py-3 font-semibold text-slate-700">
+                            <th
+                                class="px-3 py-2 font-semibold text-slate-700 sm:px-6 sm:py-3"
+                            >
                                 Selecciona
                             </th>
                         </tr>
@@ -142,13 +150,15 @@ const handleChange = (emailId: number) => {
                             :key="email.id"
                             class="hover:bg-slate-50"
                         >
-                            <td class="px-6 py-4 text-slate-800">
+                            <td
+                                class="px-3 py-2 text-slate-800 sm:px-6 sm:py-4"
+                            >
                                 {{ email.email }}
                             </td>
                             <!-- <td class="px-6 py-4 text-slate-600">
                                 {{ email.active === 1 ? 'Actiu' : 'Inactiu' }}
                             </td> -->
-                            <td class="px-6 py-4">
+                            <td class="px-3 py-2 sm:px-6 sm:py-4">
                                 <Link
                                     :href="`/admin/emails/${email.id}`"
                                     method="delete"
@@ -160,7 +170,7 @@ const handleChange = (emailId: number) => {
                                     />
                                 </Link>
                             </td>
-                            <td class="px-6 py-4">
+                            <td class="px-3 py-2 sm:px-6 sm:py-4">
                                 <input
                                     type="checkbox"
                                     :disabled="
