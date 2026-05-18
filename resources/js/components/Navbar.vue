@@ -19,7 +19,7 @@ function isActive(path: string): boolean {
         >
             <!-- Left: logo + desktop nav -->
             <div class="flex min-w-0 items-center gap-5">
-                <a href="/" class="flex items-center">
+                <a href="/" class="flex shrink-0 items-center">
                     <img
                         class="h-10 w-auto md:h-11 lg:h-12"
                         src="/storage/FarmaciaSolerLogoLong.jpeg"
@@ -28,7 +28,7 @@ function isActive(path: string): boolean {
                 </a>
 
                 <ul
-                    class="hidden items-center gap-1 text-[1.05rem] font-semibold text-[#3F2E05] md:flex lg:gap-2"
+                    class="hidden items-center gap-1 text-[1.05rem] font-semibold text-[#3F2E05] xl:flex xl:gap-2"
                 >
                     <li>
                         <a
@@ -103,7 +103,7 @@ function isActive(path: string): boolean {
 
             <!-- Right: mobile toggle -->
             <button
-                class="flex h-10 w-10 items-center justify-center rounded-md text-[#2A5970] transition hover:bg-[#F1F9FD] md:hidden"
+                class="flex h-10 w-10 items-center justify-center rounded-md text-[#2A5970] transition hover:bg-[#F1F9FD] xl:hidden"
                 @click="isMobileMenuOpen = !isMobileMenuOpen"
             >
                 <span class="sr-only">Open menu</span>
@@ -125,7 +125,7 @@ function isActive(path: string): boolean {
         <!-- Mobile menu -->
         <div
             v-show="isMobileMenuOpen"
-            class="border-t border-[#DCEEF5] bg-white px-4 py-4 md:hidden"
+            class="border-t border-[#DCEEF5] bg-white px-4 py-4 xl:hidden"
         >
             <ul
                 class="flex flex-col gap-2 text-lg font-semibold text-[#3F2E05]"

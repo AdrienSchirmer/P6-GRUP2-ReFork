@@ -48,7 +48,7 @@ import { Link } from '@inertiajs/vue3';
                 <!-- Navigation -->
                 <div>
                     <h3
-                        class="mb-4 text-xs font-semibold uppercase tracking-widest text-white/40"
+                        class="mb-4 text-xs font-semibold tracking-widest text-white/40 uppercase"
                     >
                         Navegació
                     </h3>
@@ -101,18 +101,14 @@ import { Link } from '@inertiajs/vue3';
                 <!-- Horaris -->
                 <div>
                     <h3
-                        class="mb-4 text-xs font-semibold uppercase tracking-widest text-white/40"
+                        class="mb-4 text-xs font-semibold tracking-widest text-white/40 uppercase"
                     >
                         Horaris
                     </h3>
                     <ul class="flex flex-col gap-2 text-sm text-white/70">
                         <li class="flex justify-between gap-4">
-                            <span>Dilluns – Divendres</span>
-                            <span class="text-white">9:00 – 21:00</span>
-                        </li>
-                        <li class="flex justify-between gap-4">
-                            <span>Dissabte</span>
-                            <span class="text-white">9:30 – 14:00</span>
+                            <span>Dilluns – Dissabte</span>
+                            <span class="text-white">8:30 – 20:30</span>
                         </li>
                         <li class="flex justify-between gap-4">
                             <span>Diumenge</span>
