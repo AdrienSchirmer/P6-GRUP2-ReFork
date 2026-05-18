@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue';
-import { Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 
 type Workshop = {
@@ -49,6 +49,10 @@ function formatDate(dateStr: string): string {
 </script>
 
 <template>
+    <Head>
+        <title>{{ workshop.name }}</title>
+        <meta name="description" :content="`${workshop.name} — Taller de Farmàcia Soler. ${workshop.workshop_date}, ${workshop.start_time} – ${workshop.end_time}.`" />
+    </Head>
     <WebAppLayout>
         <!-- Hero -->
         <section
@@ -144,22 +148,6 @@ function formatDate(dateStr: string): string {
 
                 <!-- Info -->
                 <div class="flex flex-1 flex-col gap-6">
-                    <!-- Description -->
-                    <div
-                        class="rounded-2xl border border-[#D0EAF3] bg-white p-6 shadow-sm"
-                    >
-                        <h2
-                            class="mb-3 flex items-center gap-2 text-sm font-semibold tracking-widest text-[#01617F] uppercase"
-                        >
-                            <Icon icon="mdi:text" width="16" height="16" />
-                            Descripció
-                        </h2>
-                        <div
-                            class="text-sm leading-relaxed whitespace-pre-wrap text-[#335B69]"
-                            v-html="workshop.description"
-                        ></div>
-                    </div>
-
                     <!-- Details -->
                     <div
                         class="rounded-2xl border border-[#D0EAF3] bg-white p-6 shadow-sm"
@@ -235,6 +223,22 @@ function formatDate(dateStr: string): string {
                                 </div>
                             </div>
                         </dl>
+                    </div>
+
+                    <!-- Description -->
+                    <div
+                        class="rounded-2xl border border-[#D0EAF3] bg-white p-6 shadow-sm"
+                    >
+                        <h2
+                            class="mb-3 flex items-center gap-2 text-sm font-semibold tracking-widest text-[#01617F] uppercase"
+                        >
+                            <Icon icon="mdi:text" width="16" height="16" />
+                            Descripció
+                        </h2>
+                        <div
+                            class="text-sm leading-relaxed text-[#335B69]"
+                            v-html="workshop.description"
+                        ></div>
                     </div>
                 </div>
             </div>

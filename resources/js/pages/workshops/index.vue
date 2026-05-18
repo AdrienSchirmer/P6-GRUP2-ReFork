@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Icon } from '@iconify/vue';
-import { Link } from '@inertiajs/vue3';
+import { Head, Link } from '@inertiajs/vue3';
 import { computed, ref } from 'vue';
 import { show as workshopShow } from '@/actions/App/Http/Controllers/public_workshops_controller';
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
@@ -63,6 +63,10 @@ function formatDate(dateStr: string): string {
 </script>
 
 <template>
+    <Head>
+        <title>Tallers</title>
+        <meta name="description" content="Descobreix els propers tallers i activitats de Farmàcia Soler. Reserva la teva plaça i aprèn sobre salut i benestar." />
+    </Head>
     <WebAppLayout>
         <!-- Hero -->
         <section
