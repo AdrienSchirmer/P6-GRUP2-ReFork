@@ -41,9 +41,10 @@ class admin_users_controller extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            ...$this->profileRules(),
-            'role' => ['required', 'in:admin,superadmin'],
+            'name' => $this->nameRules(),
+            'email' => $this->emailRules(),
             'password' => $this->passwordRules(),
+            'role' => ['required', 'string', 'in:admin,user'],
         ]);
 
         User::create([

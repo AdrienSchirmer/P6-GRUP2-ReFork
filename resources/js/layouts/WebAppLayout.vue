@@ -9,21 +9,6 @@ import { Icon } from '@iconify/vue';
     <div class="min-h-[80dvh]">
         <slot />
     </div>
-    <div class="fixed right-0 bottom-0 z-10">
-        <a
-            href="https://wa.me/34658359458"
-            class="mr-4 mb-4 flex h-15 w-15 cursor-pointer justify-center rounded-4xl bg-[#08c004]"
-        >
-            <p class="size-0 opacity-0 absolute">Whatsapp</p>
-            <Icon
-                icon="fontisto:whatsapp"
-                width="35"
-                height="35"
-                class="self-center text-white">
-            </Icon>
-        </a>
-    </div>
-
     <Footer />
 
     <a
