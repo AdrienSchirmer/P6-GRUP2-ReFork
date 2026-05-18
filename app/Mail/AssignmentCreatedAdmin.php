@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class AssignmentCreated extends Mailable
+class AssignmentCreatedAdmin extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -18,7 +18,8 @@ class AssignmentCreated extends Mailable
      */
     public function __construct(
         public readonly array $assignment,
-    ) {}
+    ) {
+    }
 
     /**
      * Get the message envelope.
@@ -26,7 +27,7 @@ class AssignmentCreated extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Encàrrec Creat',
+            subject: 'Nou Encàrrec Creat',
         );
     }
 
@@ -36,7 +37,7 @@ class AssignmentCreated extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'mail.assignment-created',
+            view: 'mail.assignment-created-admin',
         );
     }
 

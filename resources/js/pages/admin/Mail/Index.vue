@@ -3,7 +3,7 @@ import { Form } from '@inertiajs/vue3';
 import AppLayout from '@/layouts/AppLayout.vue';
 import type { BreadcrumbItem } from '@/types';
 const breadcrumbs: BreadcrumbItem[] = [
-    { title: 'Administració del Mail', href: 'admin/mail' },
+    { title: 'Administració del Correu', href: 'admin/mail' },
 ];
 
 import { store } from '@/routes/mail';

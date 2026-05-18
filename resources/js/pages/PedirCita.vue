@@ -15,6 +15,7 @@ import {
     Apple,
     Pill,
     HeartPulse,
+    Check,
 } from 'lucide-vue-next';
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
@@ -66,17 +67,16 @@ const page = usePage<{
 }>();
 
 // ---------------------------------------------------------------------------
-// 5. UI state (modals, step, submitting flag, booked times)
+// 5. UI state
 // ---------------------------------------------------------------------------
-const showConfirmModal = ref(false); // "Are you sure?" modal before sending
-const showModal = ref(false); // "Reservation confirmed" modal after success
-const isSubmitting = ref(false); // disables buttons while POST is running
-const step = ref(1); // current wizard step (1, 2 or 3)
-const bookedTimes = ref<string[]>([]); // slots already booked by other users
+const showConfirmModal = ref(false);
+const showModal = ref(false);
+const isSubmitting = ref(false);
+const step = ref(1);
+const bookedTimes = ref<string[]>([]);
 
 // ---------------------------------------------------------------------------
-// 6. "Today" references (frozen at component creation)
-//    Used to know what is past, what is today, and to enable/disable cells.
+// 6. "Today" references
 // ---------------------------------------------------------------------------
 const today = new Date();
 const todayYear = today.getFullYear();
@@ -84,20 +84,20 @@ const todayMonth = today.getMonth();
 const todayDate = today.getDate();
 
 // ---------------------------------------------------------------------------
-// 7. User selection (service / date / time)
+// 7. User selection
 // ---------------------------------------------------------------------------
 const selectedService = ref<number | null>(null);
-const selectedDate = ref<number | null>(todayDate); // day number inside currentMonth/Year
+const selectedDate = ref<number | null>(todayDate);
 const selectedTime = ref('');
 
 // ---------------------------------------------------------------------------
-// 8. Calendar position (month / year currently displayed)
+// 8. Calendar position
 // ---------------------------------------------------------------------------
 const currentYear = ref(todayYear);
 const currentMonth = ref(todayMonth);
 
 // ---------------------------------------------------------------------------
-// 9. Inertia form (sent to POST /appointments)
+// 9. Inertia form
 // ---------------------------------------------------------------------------
 const form = useForm<{
     service_id: number | null;
@@ -118,7 +118,7 @@ const form = useForm<{
 });
 
 // ---------------------------------------------------------------------------
-// 10. Constants (labels, headers, icon mapping)
+// 10. Constants
 // ---------------------------------------------------------------------------
 const monthNames = [
     'Gener',
@@ -135,10 +135,8 @@ const monthNames = [
     'Desembre',
 ];
 
-// Catalan headers: Monday ---> Sunday
 const dayHeaders = ['DL', 'DT', 'DC', 'DJ', 'DV', 'DS', 'DG'];
 
-// Maps the icon name stored in DB to its lucide component
 const iconsMap: Record<string, any> = {
     ScanFace,
     Droplet,
@@ -153,8 +151,14 @@ const iconsMap: Record<string, any> = {
     HeartPulse,
 };
 
+const stepTitles: Record<number, string> = {
+    1: 'Servei',
+    2: 'Data i hora',
+    3: 'Dades personals',
+};
+
 // ---------------------------------------------------------------------------
-// 11. Computed - flash / success modal data
+// 11. Computed - success modal data
 // ---------------------------------------------------------------------------
 const successData = computed(() => page.props.flash?.success);
 
@@ -170,13 +174,12 @@ const successServiceName = computed(() => {
 });
 
 // ---------------------------------------------------------------------------
-// 12. Computed - currently selected service / formatted date / month label
+// 12. Computed - selected service / date / month label
 // ---------------------------------------------------------------------------
 const selectedServiceObj = computed(() =>
     props.services.find((s) => s.id === selectedService.value),
 );
 
-// "YYYY-MM-DD" string built from currentYear/currentMonth/selectedDate
 const formattedDate = computed(() => {
     if (!selectedDate.value) {
         return '';
@@ -190,8 +193,7 @@ const currentMonthLabel = computed(
 );
 
 // ---------------------------------------------------------------------------
-// 13. Computed - calendar grid (always 42 cells = 6 rows of 7 days)
-//     Cells from previous / next month are marked isCurrentMonth: false.
+// 13. Computed - calendar grid
 // ---------------------------------------------------------------------------
 const calendarDays = computed<CalendarCell[]>(() => {
     const year = currentYear.value;
@@ -201,24 +203,20 @@ const calendarDays = computed<CalendarCell[]>(() => {
     const lastDay = new Date(year, month + 1, 0);
     const daysInMonth = lastDay.getDate();
 
-    // JS getDay(): Sun=0..Sat=6 → shift so Monday=0..Sunday=6
     let startDow = firstDay.getDay();
     startDow = (startDow + 6) % 7;
 
     const prevMonthLastDay = new Date(year, month, 0).getDate();
     const cells: CalendarCell[] = [];
 
-    // Trailing days of previous month (greyed out)
     for (let i = startDow - 1; i >= 0; i--) {
         cells.push({ day: prevMonthLastDay - i, isCurrentMonth: false });
     }
 
-    // Days of current month
     for (let d = 1; d <= daysInMonth; d++) {
         cells.push({ day: d, isCurrentMonth: true });
     }
 
-    // Leading days of next month to fill the 42-cell grid
     const remaining = 42 - cells.length;
 
     for (let d = 1; d <= remaining; d++) {
@@ -229,7 +227,7 @@ const calendarDays = computed<CalendarCell[]>(() => {
 });
 
 // ---------------------------------------------------------------------------
-// 14. Schedules - fetched from backend when the selected service changes
+// 14. Schedules
 // ---------------------------------------------------------------------------
 const serviceSchedules = ref<{ day_of_week: number; slots: string[] }[]>([]);
 
@@ -246,13 +244,10 @@ async function fetchSchedule() {
     serviceSchedules.value = await res.json();
 }
 
-// Days of week (ISO: 1=Mon..7=Sun) where the service has a schedule
 const availableDaysOfWeek = computed(
     () => new Set(serviceSchedules.value.map((s) => s.day_of_week)),
 );
 
-// Slots available for the currently selected date.
-// If the selected date is today, slots already past are filtered out.
 const availableTimes = computed(() => {
     if (!selectedDate.value) {
         return [];
@@ -279,7 +274,6 @@ const availableTimes = computed(() => {
         selectedDate.value === todayDate;
 
     if (isToday) {
-        // Keep only slots whose start time is strictly after "now"
         const now = new Date();
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
@@ -296,24 +290,11 @@ const availableTimes = computed(() => {
 // ---------------------------------------------------------------------------
 // 15. Calendar - day availability & navigation
 // ---------------------------------------------------------------------------
-
-/**
- * Decides if a calendar cell can be clicked.
- *
- * Rules:
- *   - Cells outside the current month  -> not available.
- *   - Cells with a date already past   -> not available.
- *   - Cell's weekday must be scheduled -> otherwise not available.
- *   - If the cell IS today, it must still have at least one slot
- *     in the future, otherwise it is disabled too.
- *     (Next week's same weekday stays enabled normally.)
- */
 function isDayAvailable(cell: CalendarCell): boolean {
     if (!cell.isCurrentMonth) {
         return false;
     }
 
-    // Past date (same month) -> always disabled
     const isPast =
         currentYear.value === todayYear &&
         currentMonth.value === todayMonth &&
@@ -323,7 +304,6 @@ function isDayAvailable(cell: CalendarCell): boolean {
         return false;
     }
 
-    // Weekday must be part of the service schedule
     const date = new Date(currentYear.value, currentMonth.value, cell.day);
     const iso = date.getDay() === 0 ? 7 : date.getDay();
 
@@ -331,7 +311,6 @@ function isDayAvailable(cell: CalendarCell): boolean {
         return false;
     }
 
-    // Today-specific check: disable when all of today's slots are past
     const isToday =
         currentYear.value === todayYear &&
         currentMonth.value === todayMonth &&
@@ -349,7 +328,6 @@ function isDayAvailable(cell: CalendarCell): boolean {
         const now = new Date();
         const currentMinutes = now.getHours() * 60 + now.getMinutes();
 
-        // Any slot still in the future? ---> today stays enabled
         return schedule.slots.some((time: string) => {
             const [h, m] = time.split(':').map(Number);
 
@@ -369,7 +347,6 @@ function selectDay(cell: CalendarCell) {
     selectedTime.value = '';
 }
 
-// Go to previous month, but never before the real current month
 function prevMonth() {
     const isCurrentRealMonth =
         currentYear.value === todayYear && currentMonth.value === todayMonth;
@@ -401,27 +378,38 @@ function nextMonth() {
     selectedTime.value = '';
 }
 
+const isAtCurrentMonth = computed(
+    () => currentYear.value === todayYear && currentMonth.value === todayMonth,
+);
+
 // ---------------------------------------------------------------------------
-// 16. PDF download URL (built from flash data after a successful reservation)
+// 16. PDF download URL
 // ---------------------------------------------------------------------------
+// PDF link is only valid when the backend actually sent every field we need.
+const hasPdfData = computed(() => {
+    const d = successData.value;
+    return !!(d && d.service && d.date && d.time && d.name && d.email);
+});
+
 const pdfDownloadUrl = computed(() => {
-    if (!successData.value) {
+    if (!hasPdfData.value) {
         return '#';
     }
 
+    const d = successData.value!;
     const params = new URLSearchParams({
-        service: String(successData.value.service),
-        date: successData.value.date,
-        time: successData.value.time,
-        name: successData.value.name,
-        email: successData.value.email,
+        service: String(d.service),
+        date: d.date,
+        time: d.time,
+        name: d.name,
+        email: d.email,
     });
 
     return `/appointments/pdf?${params.toString()}`;
 });
 
 // ---------------------------------------------------------------------------
-// 17. Already booked times for the chosen (service, date)
+// 17. Booked times
 // ---------------------------------------------------------------------------
 async function fetchBookedTimes() {
     if (!selectedService.value || !selectedDate.value) {
@@ -437,7 +425,7 @@ async function fetchBookedTimes() {
 }
 
 // ---------------------------------------------------------------------------
-// 18. Cloudflare Turnstile (captcha) - rendered on step 3
+// 18. Turnstile
 // ---------------------------------------------------------------------------
 function renderTurnstile() {
     const el = document.querySelector('.cf-turnstile') as HTMLElement | null;
@@ -452,14 +440,13 @@ function renderTurnstile() {
 }
 
 // ---------------------------------------------------------------------------
-// 19. Step navigation (Next / Back)
+// 19. Step navigation
 // ---------------------------------------------------------------------------
 function nextStep() {
     if (step.value < 3) {
         step.value++;
     }
 
-    // Lazy-load the Turnstile script the first time we enter step 3
     if (step.value === 3) {
         if (!props.turnstileSiteKey) {
             return;
@@ -488,8 +475,24 @@ function prevStep() {
     }
 }
 
+/**
+ * Step 1 service click.
+ *
+ *   1st click on a card     → just select that service
+ *   2nd click on the SAME   → also advance to step 2
+ *   Click on another card   → switch selection (no advance)
+ */
+function pickService(id: number) {
+    if (selectedService.value === id) {
+        nextStep();
+        return;
+    }
+
+    selectedService.value = id;
+}
+
 // ---------------------------------------------------------------------------
-// 20. Submit / confirm reservation
+// 20. Submit
 // ---------------------------------------------------------------------------
 function submitReservation() {
     form.service_id = selectedService.value;
@@ -526,10 +529,8 @@ function closeSuccessModal() {
 }
 
 // ---------------------------------------------------------------------------
-// 21. Watchers - keep UI state coherent when selection changes
+// 21. Watchers
 // ---------------------------------------------------------------------------
-
-// Service changed ---> reload its schedule and reset date/time
 watch(selectedService, async () => {
     selectedDate.value = null;
     selectedTime.value = '';
@@ -537,13 +538,11 @@ watch(selectedService, async () => {
     await fetchSchedule();
 });
 
-// Date / month / year changed ---> reset time and refresh booked times
 watch([selectedDate, currentMonth, currentYear], async () => {
     selectedTime.value = '';
     await fetchBookedTimes();
 });
 
-// Flash success arrived from the server ---> open the confirmation modal
 watch(
     () => page.props.flash?.success,
     (val) => {
@@ -556,10 +555,9 @@ watch(
 );
 
 // ---------------------------------------------------------------------------
-// 22. Lifecycle hooks
+// 22. Lifecycle
 // ---------------------------------------------------------------------------
 onMounted(async () => {
-    // Auto-select the first service so the user sees the calendar populated
     if (props.services.length > 0) {
         selectedService.value = props.services[0].id;
         await fetchSchedule();
@@ -567,186 +565,292 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-    // Clean up the Turnstile script when leaving the page
-    const script = document.getElementById('cf-turnstile-api');
-
-    if (script) {
-        script.remove();
-    }
+    document.getElementById('cf-turnstile-api')?.remove();
 });
 </script>
 
 <template>
-    <Head>
-        <title>Demanar cita</title>
-        <meta name="description" content="Demana la teva cita a Farmàcia Soler de forma fàcil i ràpida. Tria el servei, el dia i l'hora que millor t'encaixi." />
-    </Head>
-    <div class="bg-[#f3f4f6] text-slate-900">
-        <!-- =====================================================
-             HEADER (title + hero image)
-             ===================================================== -->
-        <section class="py-10">
-            <div
-                class="mx-auto grid max-w-6xl items-center gap-8 px-6 md:grid-cols-2"
-            >
-                <div>
+    <div class="relative min-h-screen overflow-hidden bg-slate-50">
+        <!-- Decorative background -->
+        <div
+            class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-[460px] bg-gradient-to-br from-[#00617E] via-[#0a7494] to-[#003d50]"
+        ></div>
+        <div
+            class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-[460px] opacity-[0.06]"
+            style="
+                background-image: radial-gradient(
+                    circle at 1px 1px,
+                    white 1px,
+                    transparent 0
+                );
+                background-size: 24px 24px;
+            "
+        ></div>
+
+        <div
+            class="relative z-10 mx-auto max-w-6xl px-4 pt-10 pb-16 sm:px-6 lg:px-8"
+        >
+            <!-- Hero -->
+            <div class="mb-10 grid items-center gap-8 md:grid-cols-5">
+                <div class="md:col-span-3">
                     <span
-                        class="mb-3 inline-block rounded-full bg-[#e5e7eb] px-3 py-1 text-[10px] font-semibold tracking-widest text-[#604700] uppercase"
+                        class="inline-flex items-center gap-2 rounded-full bg-white/15 px-3 py-1 text-xs font-semibold tracking-wider text-white uppercase backdrop-blur-sm"
                     >
-                        CITA PRÈVIA A FIGUERES
+                        <span
+                            class="h-1.5 w-1.5 animate-pulse rounded-full bg-emerald-400"
+                        ></span>
+                        Cita prèvia en línia · Farmàcia Soler
                     </span>
-
                     <h1
-                        class="mb-3 text-2xl font-bold text-[#0f5f7f] md:text-3xl"
+                        class="mt-4 text-4xl font-bold tracking-tight text-white sm:text-5xl"
                     >
-                        Demanar Cita
+                        Demana la teva cita
                     </h1>
-
-                    <p class="max-w-md text-sm leading-relaxed text-slate-500">
-                        Reserva els nostres serveis clínics especialitzats amb
-                        la comoditat del sistema online. La nostra centenària
-                        tradició a Figueres s'uneix a la tecnologia per
-                        oferir-te una atenció farmacèutica d'avantguarda.
+                    <p class="mt-3 text-base text-white/80 sm:text-lg">
+                        Reserva els nostres serveis clínics especialitzats en
+                        tres passos senzills. Atenció farmacèutica d'avantguarda
+                        a Figueres.
                     </p>
                 </div>
-
-                <div>
+                <div class="md:col-span-2">
                     <div
-                        class="relative h-[180px] overflow-hidden rounded-xl shadow-md md:h-[220px]"
+                        class="relative overflow-hidden rounded-2xl shadow-2xl ring-1 ring-white/20"
                     >
                         <img
-                            class="h-full w-full object-cover"
                             src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1400&auto=format&fit=crop"
                             alt="Consulta farmacèutica"
+                            class="h-44 w-full object-cover sm:h-56"
                         />
-                        <div class="absolute inset-0 bg-[#0f5f7f]/10"></div>
+                        <div
+                            class="absolute inset-0 bg-gradient-to-tr from-[#00617E]/60 via-transparent to-transparent"
+                        ></div>
+                        <div class="absolute right-4 bottom-4 left-4">
+                            <p
+                                class="text-[10px] font-semibold tracking-wider text-white/80 uppercase"
+                            >
+                                Centenària tradició
+                            </p>
+                            <p class="text-sm font-bold text-white">
+                                Atenció farmacèutica a Figueres
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- =====================================================
-             WIZARD (3 steps)
-             ===================================================== -->
-        <section class="mx-auto max-w-7xl px-6 pb-20">
-            <div class="rounded-3xl bg-white p-10 shadow-lg">
-                <div>
-                    <!-- ===== STEP 1 - choose service ===== -->
-                    <div v-if="step === 1">
-                        <div class="mb-8 flex items-center gap-3">
-                            <span
-                                class="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f5f7f] text-sm font-bold text-white"
-                                >1</span
-                            >
-                            <h2 class="text-lg font-bold">
-                                Seleccionar Servei
-                            </h2>
-                        </div>
-
-                        <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            <!-- Wizard card -->
+            <div
+                class="overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-900/5"
+            >
+                <!-- Progress stepper -->
+                <div
+                    class="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-5 sm:px-10"
+                >
+                    <ol
+                        class="flex items-center justify-between gap-2 sm:gap-4"
+                    >
+                        <li
+                            v-for="n in [1, 2, 3]"
+                            :key="n"
+                            class="flex flex-1 items-center"
+                        >
+                            <div class="flex items-center gap-3">
+                                <span
+                                    class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-sm font-bold ring-4 transition"
+                                    :class="
+                                        step > n
+                                            ? 'bg-emerald-500 text-white ring-emerald-100'
+                                            : step === n
+                                              ? 'bg-gradient-to-br from-[#00617E] to-[#004e66] text-white shadow-md shadow-[#00617E]/20 ring-[#00617E]/10'
+                                              : 'bg-slate-100 text-slate-400 ring-transparent'
+                                    "
+                                >
+                                    <Check v-if="step > n" class="h-4 w-4" />
+                                    <span v-else>{{ n }}</span>
+                                </span>
+                                <div class="hidden sm:block">
+                                    <p
+                                        class="text-[10px] font-semibold tracking-wider uppercase"
+                                        :class="
+                                            step >= n
+                                                ? 'text-[#00617E]'
+                                                : 'text-slate-400'
+                                        "
+                                    >
+                                        Pas {{ n }}
+                                    </p>
+                                    <p
+                                        class="text-sm font-semibold"
+                                        :class="
+                                            step >= n
+                                                ? 'text-slate-900'
+                                                : 'text-slate-400'
+                                        "
+                                    >
+                                        {{ stepTitles[n] }}
+                                    </p>
+                                </div>
+                            </div>
                             <div
+                                v-if="n < 3"
+                                class="mx-3 h-px flex-1 sm:mx-4"
+                                :class="
+                                    step > n ? 'bg-emerald-400' : 'bg-slate-200'
+                                "
+                            ></div>
+                        </li>
+                    </ol>
+                </div>
+
+                <div class="p-6 sm:p-10">
+                    <!-- ===== STEP 1 ===== -->
+                    <div v-if="step === 1">
+                        <h2 class="text-xl font-bold text-slate-900">
+                            Quin servei necessites?
+                        </h2>
+                        <p class="mt-1 text-sm text-slate-500">
+                            Tria un dels nostres serveis clínics per continuar.
+                            <span class="text-slate-400">
+                                Consell: torna a clicar el servei seleccionat
+                                per passar al següent pas.
+                            </span>
+                        </p>
+
+                        <div
+                            class="mt-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+                        >
+                            <button
                                 v-for="service in props.services"
                                 :key="service.id"
-                                @click="selectedService = service.id"
-                                :class="[
-                                    'cursor-pointer rounded-xl border p-4 transition',
+                                type="button"
+                                @click="pickService(service.id)"
+                                :title="
                                     selectedService === service.id
-                                        ? 'border-[#0f5f7f] bg-[#dbeaf4]'
-                                        : 'border-transparent bg-[#f3f4f6] hover:border-[#9fbcd3]',
+                                        ? 'Torna a clicar per continuar'
+                                        : 'Tria aquest servei'
+                                "
+                                :class="[
+                                    'group relative flex flex-col items-start gap-3 rounded-xl border-2 p-5 text-left transition',
+                                    selectedService === service.id
+                                        ? 'border-[#00617E] bg-[#00617E]/5 shadow-md shadow-[#00617E]/10'
+                                        : 'border-slate-200 bg-white hover:border-[#00617E]/40 hover:bg-slate-50',
                                 ]"
                             >
-                                <div
-                                    class="mb-2 flex items-center justify-between"
+                                <span
+                                    v-if="selectedService === service.id"
+                                    class="absolute top-3 right-3 flex h-6 w-6 items-center justify-center rounded-full bg-[#00617E] text-white"
+                                >
+                                    <Check class="h-3.5 w-3.5" />
+                                </span>
+                                <span
+                                    class="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-[#00617E] to-[#004e66] text-white shadow-md shadow-[#00617E]/20"
                                 >
                                     <component
                                         :is="iconsMap[service.icon] || 'div'"
-                                        class="h-5 w-5 text-[#0f5f7f]"
+                                        class="h-5 w-5"
                                     />
-                                    <span
-                                        class="text-xs font-semibold text-[#604700]"
-                                    >
-                                        {{ service.durada }}
-                                    </span>
+                                </span>
+                                <div>
+                                    <h3
+                                        class="text-base font-semibold text-slate-900"
+                                        v-html="service.nom"
+                                    ></h3>
+                                    <p
+                                        class="mt-1 text-sm text-slate-500"
+                                        v-html="service.descripció"
+                                    ></p>
                                 </div>
-                                <h3
-                                    class="mb-1 text-base font-bold"
-                                    v-html="service.nom"
-                                ></h3>
-                                <div
-                                    class="text-sm text-slate-600"
-                                    v-html="service.descripció"
-                                ></div>
-                            </div>
+                                <span
+                                    class="mt-auto inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium"
+                                    :class="
+                                        selectedService === service.id
+                                            ? 'bg-[#00617E]/10 text-[#00617E]'
+                                            : 'bg-slate-100 text-slate-600'
+                                    "
+                                >
+                                    <svg
+                                        class="h-3 w-3"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <circle cx="12" cy="12" r="10" />
+                                        <polyline points="12 6 12 12 16 14" />
+                                    </svg>
+                                    {{ service.durada }}
+                                </span>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- ===== STEP 2 - choose date & time =====
-                         v-show is used so the calendar's reactive state
-                         stays mounted when navigating back and forth. -->
+                    <!-- ===== STEP 2 ===== -->
                     <div v-show="step === 2">
-                        <div class="mb-8 flex items-center gap-3">
-                            <span
-                                class="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f5f7f] text-sm font-bold text-white"
-                                >2</span
-                            >
-                            <h2 class="text-lg font-bold">Data i Hora</h2>
-                        </div>
+                        <h2 class="text-xl font-bold text-slate-900">
+                            Quan et va bé?
+                        </h2>
+                        <p class="mt-1 text-sm text-slate-500">
+                            Selecciona el dia i l'hora que prefereixis.
+                        </p>
 
-                        <div class="grid items-start gap-6 md:grid-cols-2">
+                        <div class="mt-6 grid gap-6 lg:grid-cols-2">
                             <!-- Calendar -->
-                            <div class="rounded-xl bg-[#f3f4f6] p-4">
-                                <!-- Month navigation -->
+                            <div
+                                class="rounded-xl border border-slate-200 bg-white p-5"
+                            >
                                 <div
-                                    class="mb-3 flex items-center justify-between"
+                                    class="mb-4 flex items-center justify-between"
                                 >
                                     <button
                                         @click="prevMonth"
-                                        aria-label="Mes anterior"
+                                        :disabled="isAtCurrentMonth"
                                         type="button"
-                                        class="rounded-lg p-1.5 text-slate-500 transition hover:bg-white hover:text-[#0f5f7f]"
+                                        aria-label="Mes anterior"
+                                        class="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-[#00617E] disabled:cursor-not-allowed disabled:opacity-30"
                                     >
                                         <ChevronLeft class="h-5 w-5" />
                                     </button>
                                     <span
-                                        class="text-sm font-semibold text-slate-700"
+                                        class="text-sm font-semibold text-slate-900"
                                         >{{ currentMonthLabel }}</span
                                     >
                                     <button
                                         @click="nextMonth"
-                                        aria-label="Mes següent"
                                         type="button"
-                                        class="rounded-lg p-1.5 text-slate-500 transition hover:bg-white hover:text-[#0f5f7f]"
+                                        aria-label="Mes següent"
+                                        class="rounded-lg p-2 text-slate-500 transition hover:bg-slate-100 hover:text-[#00617E]"
                                     >
                                         <ChevronRight class="h-5 w-5" />
                                     </button>
                                 </div>
 
-                                <!-- Weekday headers (DL..DG) -->
                                 <div class="mb-2 grid grid-cols-7">
                                     <div
                                         v-for="h in dayHeaders"
                                         :key="h"
-                                        class="py-1 text-center text-xs font-semibold text-slate-400"
+                                        class="py-2 text-center text-[10px] font-semibold tracking-wider text-slate-400 uppercase"
                                     >
                                         {{ h }}
                                     </div>
                                 </div>
 
-                                <!-- Day cells -->
                                 <div class="grid grid-cols-7 gap-1">
                                     <button
                                         v-for="(cell, idx) in calendarDays"
                                         :key="idx"
                                         @click="selectDay(cell)"
                                         :disabled="!isDayAvailable(cell)"
+                                        type="button"
                                         :class="[
-                                            'flex h-8 items-center justify-center rounded-lg text-xs transition',
+                                            'flex h-10 items-center justify-center rounded-lg text-sm font-medium transition',
                                             !cell.isCurrentMonth ||
                                             !isDayAvailable(cell)
                                                 ? 'cursor-not-allowed text-slate-300'
                                                 : selectedDate === cell.day
-                                                  ? 'bg-[#0f5f7f] font-semibold text-white shadow-sm'
-                                                  : 'text-slate-700 hover:bg-[#dbeaf4] hover:text-[#0f5f7f]',
+                                                  ? 'bg-gradient-to-br from-[#00617E] to-[#004e66] font-semibold text-white shadow-md shadow-[#00617E]/30'
+                                                  : 'text-slate-700 hover:bg-[#00617E]/10 hover:text-[#00617E]',
                                         ]"
                                     >
                                         {{ cell.day }}
@@ -754,33 +858,103 @@ onUnmounted(() => {
                                 </div>
                             </div>
 
-                            <!-- Time-slot list -->
+                            <!-- Time slots -->
                             <div>
-                                <h3
-                                    class="mb-3 text-xs font-bold tracking-widest text-slate-500 uppercase"
-                                >
-                                    Hores Disponibles
-                                </h3>
                                 <div
-                                    class="grid grid-cols-2 gap-2 sm:grid-cols-3"
+                                    class="mb-3 flex items-center justify-between"
+                                >
+                                    <h3
+                                        class="text-xs font-bold tracking-widest text-slate-500 uppercase"
+                                    >
+                                        Hores disponibles
+                                    </h3>
+                                    <span
+                                        v-if="availableTimes.length"
+                                        class="text-xs text-slate-400"
+                                    >
+                                        {{
+                                            availableTimes.length -
+                                            bookedTimes.filter((t) =>
+                                                availableTimes.includes(t),
+                                            ).length
+                                        }}
+                                        lliures
+                                    </span>
+                                </div>
+
+                                <div
+                                    v-if="!selectedDate"
+                                    class="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 px-4 py-12 text-center"
+                                >
+                                    <svg
+                                        class="h-10 w-10 text-slate-300"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <rect
+                                            x="3"
+                                            y="4"
+                                            width="18"
+                                            height="18"
+                                            rx="2"
+                                            ry="2"
+                                        />
+                                        <line x1="16" y1="2" x2="16" y2="6" />
+                                        <line x1="8" y1="2" x2="8" y2="6" />
+                                        <line x1="3" y1="10" x2="21" y2="10" />
+                                    </svg>
+                                    <p class="mt-3 text-sm text-slate-500">
+                                        Tria un dia al calendari
+                                    </p>
+                                </div>
+
+                                <div
+                                    v-else-if="availableTimes.length === 0"
+                                    class="flex flex-col items-center justify-center rounded-xl border-2 border-dashed border-slate-200 px-4 py-12 text-center"
+                                >
+                                    <svg
+                                        class="h-10 w-10 text-slate-300"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line
+                                            x1="4.93"
+                                            y1="4.93"
+                                            x2="19.07"
+                                            y2="19.07"
+                                        />
+                                    </svg>
+                                    <p class="mt-3 text-sm text-slate-500">
+                                        Sense hores per a aquest dia
+                                    </p>
+                                </div>
+
+                                <div
+                                    v-else
+                                    class="grid grid-cols-3 gap-2 sm:grid-cols-4"
                                 >
                                     <button
                                         v-for="time in availableTimes"
                                         :key="time"
                                         @click="selectedTime = time"
-                                        :disabled="
-                                            !selectedDate ||
-                                            bookedTimes.includes(time)
-                                        "
+                                        :disabled="bookedTimes.includes(time)"
+                                        type="button"
                                         :class="[
-                                            'rounded-lg border py-2 text-xs font-medium transition',
-                                            !selectedDate
-                                                ? 'cursor-not-allowed bg-gray-100 text-gray-400'
-                                                : bookedTimes.includes(time)
-                                                  ? 'cursor-not-allowed border-red-300 bg-red-100 text-red-500'
-                                                  : selectedTime === time
-                                                    ? 'border-[#0f5f7f] bg-[#0f5f7f] text-white'
-                                                    : 'border-gray-200 bg-white text-slate-700 hover:border-[#0f5f7f]',
+                                            'rounded-lg border py-2.5 text-sm font-medium transition',
+                                            bookedTimes.includes(time)
+                                                ? 'cursor-not-allowed border-rose-200 bg-rose-50 text-rose-400 line-through'
+                                                : selectedTime === time
+                                                  ? 'border-[#00617E] bg-gradient-to-br from-[#00617E] to-[#004e66] text-white shadow-md shadow-[#00617E]/20'
+                                                  : 'border-slate-200 bg-white text-slate-700 hover:border-[#00617E]/40 hover:bg-[#00617E]/5',
                                         ]"
                                     >
                                         {{ time }}
@@ -789,7 +963,7 @@ onUnmounted(() => {
 
                                 <p
                                     v-if="form.errors.start_time"
-                                    class="mt-2 text-xs text-red-500"
+                                    class="mt-2 text-xs text-rose-600"
                                 >
                                     {{ form.errors.start_time }}
                                 </p>
@@ -797,25 +971,26 @@ onUnmounted(() => {
                         </div>
                     </div>
 
-                    <!-- ===== STEP 3 - personal data + summary + captcha ===== -->
+                    <!-- ===== STEP 3 ===== -->
                     <div v-show="step === 3">
-                        <div class="mb-8 flex items-center gap-3">
-                            <span
-                                class="flex h-8 w-8 items-center justify-center rounded-full bg-[#0f5f7f] text-sm font-bold text-white"
-                                >3</span
-                            >
-                            <h2 class="text-lg font-bold">Dades Personals</h2>
-                        </div>
+                        <h2 class="text-xl font-bold text-slate-900">
+                            Les teves dades
+                        </h2>
+                        <p class="mt-1 text-sm text-slate-500">
+                            Necessitem aquesta informació per confirmar la teva
+                            cita.
+                        </p>
 
-                        <div class="grid gap-6 md:grid-cols-2">
-                            <!-- Form fields -->
-                            <div class="space-y-4">
+                        <div class="mt-6 grid gap-8 lg:grid-cols-5">
+                            <!-- Form -->
+                            <div class="space-y-5 lg:col-span-3">
                                 <div>
                                     <label
                                         for="customer_name"
-                                        class="mb-1 block text-xs font-semibold text-slate-500"
+                                        class="mb-2 block text-sm font-semibold text-slate-700"
                                     >
-                                        Nom i Cognoms
+                                        Nom i cognoms
+                                        <span class="text-rose-500">*</span>
                                     </label>
                                     <input
                                         id="customer_name"
@@ -824,126 +999,88 @@ onUnmounted(() => {
                                         name="customer_name"
                                         autocomplete="name"
                                         required
-                                        class="w-full rounded-lg border border-transparent bg-[#f3f4f6] px-3 py-2.5 text-sm transition outline-none focus:bg-white focus:ring-2 focus:ring-[#0f5f7f]"
-                                        placeholder="Nom i Cognoms"
+                                        placeholder="Joan Pérez"
+                                        class="block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-[#00617E] focus:ring-4 focus:ring-[#00617E]/10 focus:outline-none"
+                                        :class="{
+                                            'border-rose-400 ring-4 ring-rose-100':
+                                                form.errors.customer_name,
+                                        }"
                                     />
                                     <p
                                         v-if="form.errors.customer_name"
-                                        class="mt-1 text-xs text-red-500"
+                                        class="mt-1.5 text-xs text-rose-600"
                                     >
                                         {{ form.errors.customer_name }}
                                     </p>
                                 </div>
 
-                                <div>
-                                    <label
-                                        for="customer_phone"
-                                        class="mb-1 block text-xs font-semibold text-slate-500"
-                                    >
-                                        Telèfon
-                                    </label>
-                                    <input
-                                        id="customer_phone"
-                                        v-model="form.customer_phone"
-                                        type="tel"
-                                        name="customer_phone"
-                                        autocomplete="tel"
-                                        pattern="[0-9]{9}"
-                                        maxlength="9"
-                                        required
-                                        class="w-full rounded-lg border border-transparent bg-[#f3f4f6] px-3 py-2.5 text-sm transition outline-none focus:bg-white focus:ring-2 focus:ring-[#0f5f7f]"
-                                        placeholder="600 000 000"
-                                    />
-                                    <p
-                                        v-if="form.errors.customer_phone"
-                                        class="mt-1 text-xs text-red-500"
-                                    >
-                                        {{ form.errors.customer_phone }}
-                                    </p>
-                                </div>
-
-                                <div>
-                                    <label
-                                        for="customer_email"
-                                        class="mb-1 block text-xs font-semibold text-slate-500"
-                                    >
-                                        Correu Electrònic
-                                    </label>
-                                    <input
-                                        id="customer_email"
-                                        v-model="form.customer_email"
-                                        type="email"
-                                        name="customer_email"
-                                        autocomplete="email"
-                                        required
-                                        class="w-full rounded-lg border border-transparent bg-[#f3f4f6] px-3 py-2.5 text-sm transition outline-none focus:bg-white focus:ring-2 focus:ring-[#0f5f7f]"
-                                        placeholder="exemple@mail.com"
-                                    />
-                                    <p
-                                        v-if="form.errors.customer_email"
-                                        class="mt-1 text-xs text-red-500"
-                                    >
-                                        {{ form.errors.customer_email }}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <!-- Summary + submit + captcha -->
-                            <div class="space-y-4">
                                 <div
-                                    class="rounded-xl border border-[#e5e7eb] bg-[#f3f4f6] p-4"
+                                    class="grid grid-cols-1 gap-5 md:grid-cols-2"
                                 >
-                                    <p
-                                        class="mb-3 text-sm font-semibold text-slate-800"
-                                    >
-                                        Resum de la reserva
-                                    </p>
-                                    <div
-                                        class="space-y-2 text-sm text-slate-600"
-                                    >
-                                        <div class="flex justify-between">
-                                            <span>Servei</span>
-                                            <span class="font-medium">{{
-                                                selectedServiceObj?.nom || '—'
-                                            }}</span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>Data</span>
-                                            <span class="font-medium">
-                                                {{
-                                                    selectedDate
-                                                        ? `${selectedDate} ${monthNames[currentMonth]} ${currentYear}`
-                                                        : '—'
-                                                }}
-                                            </span>
-                                        </div>
-                                        <div class="flex justify-between">
-                                            <span>Hora</span>
-                                            <span class="font-medium">{{
-                                                selectedTime || '—'
-                                            }}</span>
-                                        </div>
+                                    <div>
+                                        <label
+                                            for="customer_phone"
+                                            class="mb-2 block text-sm font-semibold text-slate-700"
+                                        >
+                                            Telèfon
+                                            <span class="text-rose-500">*</span>
+                                        </label>
+                                        <input
+                                            id="customer_phone"
+                                            v-model="form.customer_phone"
+                                            type="tel"
+                                            name="customer_phone"
+                                            autocomplete="tel"
+                                            pattern="[0-9]{9}"
+                                            maxlength="9"
+                                            required
+                                            placeholder="600 000 000"
+                                            class="block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-[#00617E] focus:ring-4 focus:ring-[#00617E]/10 focus:outline-none"
+                                            :class="{
+                                                'border-rose-400 ring-4 ring-rose-100':
+                                                    form.errors.customer_phone,
+                                            }"
+                                        />
+                                        <p
+                                            v-if="form.errors.customer_phone"
+                                            class="mt-1.5 text-xs text-rose-600"
+                                        >
+                                            {{ form.errors.customer_phone }}
+                                        </p>
+                                    </div>
+
+                                    <div>
+                                        <label
+                                            for="customer_email"
+                                            class="mb-2 block text-sm font-semibold text-slate-700"
+                                        >
+                                            Correu electrònic
+                                            <span class="text-rose-500">*</span>
+                                        </label>
+                                        <input
+                                            id="customer_email"
+                                            v-model="form.customer_email"
+                                            type="email"
+                                            name="customer_email"
+                                            autocomplete="email"
+                                            required
+                                            placeholder="exemple@mail.com"
+                                            class="block w-full rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm text-slate-900 placeholder-slate-400 shadow-sm transition focus:border-[#00617E] focus:ring-4 focus:ring-[#00617E]/10 focus:outline-none"
+                                            :class="{
+                                                'border-rose-400 ring-4 ring-rose-100':
+                                                    form.errors.customer_email,
+                                            }"
+                                        />
+                                        <p
+                                            v-if="form.errors.customer_email"
+                                            class="mt-1.5 text-xs text-rose-600"
+                                        >
+                                            {{ form.errors.customer_email }}
+                                        </p>
                                     </div>
                                 </div>
 
-                                <button
-                                    @click="showConfirmModal = true"
-                                    :disabled="
-                                        !selectedDate ||
-                                        !selectedTime ||
-                                        form.processing
-                                    "
-                                    class="w-full rounded-lg bg-[#0f5f7f] py-3 text-sm font-semibold text-white shadow-md transition-all hover:bg-[#0c4a63] disabled:opacity-50"
-                                >
-                                    {{
-                                        form.processing
-                                            ? 'Confirmant...'
-                                            : 'Confirmar Reserva'
-                                    }}
-                                </button>
-
-                                <!-- Turnstile widget container -->
-                                <div v-if="props.turnstileSiteKey" class="pt-2">
+                                <div v-if="props.turnstileSiteKey">
                                     <div
                                         class="cf-turnstile"
                                         :data-sitekey="props.turnstileSiteKey"
@@ -953,7 +1090,7 @@ onUnmounted(() => {
                                         v-if="
                                             form.errors['cf-turnstile-response']
                                         "
-                                        class="mt-2 text-sm text-red-600"
+                                        class="mt-1.5 text-xs text-rose-600"
                                     >
                                         {{
                                             form.errors['cf-turnstile-response']
@@ -961,211 +1098,482 @@ onUnmounted(() => {
                                     </p>
                                 </div>
                             </div>
+
+                            <!-- Summary -->
+                            <aside class="lg:col-span-2">
+                                <div
+                                    class="overflow-hidden rounded-2xl bg-gradient-to-br from-[#00617E] to-[#004e66] text-white shadow-xl"
+                                >
+                                    <div class="px-5 py-4">
+                                        <p
+                                            class="text-xs font-semibold tracking-wider text-white/70 uppercase"
+                                        >
+                                            Resum de la reserva
+                                        </p>
+                                    </div>
+                                    <dl
+                                        class="space-y-3 border-t border-white/10 px-5 py-4 text-sm"
+                                    >
+                                        <div>
+                                            <dt class="text-xs text-white/60">
+                                                Servei
+                                            </dt>
+                                            <dd class="mt-0.5 font-semibold">
+                                                {{
+                                                    selectedServiceObj?.nom ||
+                                                    '—'
+                                                }}
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-xs text-white/60">
+                                                Data
+                                            </dt>
+                                            <dd class="mt-0.5 font-semibold">
+                                                {{
+                                                    selectedDate
+                                                        ? `${selectedDate} ${monthNames[currentMonth]} ${currentYear}`
+                                                        : '—'
+                                                }}
+                                            </dd>
+                                        </div>
+                                        <div>
+                                            <dt class="text-xs text-white/60">
+                                                Hora
+                                            </dt>
+                                            <dd class="mt-0.5 font-semibold">
+                                                {{ selectedTime || '—' }}
+                                            </dd>
+                                        </div>
+                                    </dl>
+                                    <div
+                                        class="border-t border-white/10 px-5 py-4"
+                                    >
+                                        <button
+                                            @click="showConfirmModal = true"
+                                            :disabled="
+                                                !selectedDate ||
+                                                !selectedTime ||
+                                                form.processing
+                                            "
+                                            type="button"
+                                            class="w-full rounded-lg bg-white px-4 py-2.5 text-sm font-semibold text-[#00617E] shadow-md transition hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            {{
+                                                form.processing
+                                                    ? 'Confirmant…'
+                                                    : 'Confirmar reserva'
+                                            }}
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div
+                                    class="mt-4 flex items-center gap-2 text-xs text-slate-500"
+                                >
+                                    <svg
+                                        class="h-3.5 w-3.5 text-emerald-500"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
+                                        <rect
+                                            x="3"
+                                            y="11"
+                                            width="18"
+                                            height="11"
+                                            rx="2"
+                                            ry="2"
+                                        />
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                                    </svg>
+                                    Les teves dades estan protegides
+                                </div>
+                            </aside>
                         </div>
                     </div>
 
-                    <!-- ===== Wizard navigation buttons ===== -->
-                    <div class="mt-8 flex items-center justify-between">
+                    <!-- Navigation -->
+                    <div
+                        class="mt-10 flex items-center justify-between border-t border-slate-100 pt-6"
+                    >
                         <button
                             v-if="step > 1"
                             @click="prevStep"
-                            aria-label="Enrere"
                             type="button"
-                            class="rounded-lg border border-[#0f5f7f] px-5 py-2.5 text-sm font-medium text-[#0f5f7f] transition hover:bg-[#e3f2f9]"
+                            class="inline-flex items-center gap-2 rounded-lg border border-slate-300 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-sm transition hover:border-slate-400 hover:bg-slate-50"
                         >
-                            ← Enrere
+                            <ChevronLeft class="h-4 w-4" />
+                            Enrere
                         </button>
+                        <div v-else></div>
 
                         <button
                             v-if="step < 3"
                             @click="nextStep"
                             :disabled="
-                                (step === 2 && !selectedDate) ||
-                                (step === 2 && !selectedTime)
+                                (step === 1 && !selectedService) ||
+                                (step === 2 && (!selectedDate || !selectedTime))
                             "
-                            aria-label="Següent"
                             type="button"
-                            class="ml-auto rounded-lg bg-[#0f5f7f] px-5 py-2.5 text-sm font-medium text-white transition hover:bg-[#0c4a63] disabled:opacity-50"
+                            class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#00617E] to-[#004e66] px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#00617E]/25 transition hover:shadow-xl hover:shadow-[#00617E]/30 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
                         >
-                            Següent →
+                            Següent
+                            <ChevronRight class="h-4 w-4" />
                         </button>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- =====================================================
-                 MODAL - "Are you sure?" before sending
-                 ===================================================== -->
+        <!-- ===== Confirm modal ===== -->
+        <transition
+            enter-active-class="transition duration-200 ease-out"
+            enter-from-class="opacity-0"
+            enter-to-class="opacity-100"
+            leave-active-class="transition duration-150 ease-in"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+        >
             <div
                 v-if="showConfirmModal"
-                class="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 px-4 py-6 backdrop-blur-sm"
+                @click.self="!isSubmitting && (showConfirmModal = false)"
             >
-                <div class="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
-                    <h3 class="mb-3 text-lg font-bold text-[#0f5f7f]">
-                        Confirmar reserva
-                    </h3>
-
-                    <p class="mb-4 text-sm text-gray-600">
-                        Estàs segur que vols confirmar aquesta reserva?
-                    </p>
-
+                <div
+                    class="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-900/10"
+                >
                     <div
-                        class="mb-4 space-y-2 rounded-lg bg-gray-100 p-3 text-sm"
-                    >
-                        <div class="flex justify-between">
-                            <span>Servei</span>
-                            <span class="font-semibold">{{
-                                selectedServiceObj?.nom || '—'
-                            }}</span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Data</span>
-                            <span class="font-semibold">
-                                {{
-                                    selectedDate
-                                        ? `${selectedDate} ${monthNames[currentMonth]} ${currentYear}`
-                                        : '—'
-                                }}
-                            </span>
-                        </div>
-                        <div class="flex justify-between">
-                            <span>Hora</span>
-                            <span class="font-semibold">{{
-                                selectedTime || '—'
-                            }}</span>
+                        class="h-1.5 bg-gradient-to-r from-[#00617E] to-[#0a7494]"
+                    ></div>
+                    <div class="flex items-start gap-4 px-6 pt-6 sm:px-8">
+                        <span
+                            class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-[#00617E]/10 text-[#00617E]"
+                        >
+                            <svg
+                                class="h-6 w-6"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path d="M9 11l3 3L22 4" />
+                                <path
+                                    d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+                                />
+                            </svg>
+                        </span>
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">
+                                Confirmar la teva reserva
+                            </h3>
+                            <p class="mt-1 text-sm text-slate-500">
+                                Revisa les dades abans d'enviar-les.
+                            </p>
                         </div>
                     </div>
-
-                    <div class="flex gap-3">
+                    <div class="px-6 py-5 sm:px-8">
+                        <dl
+                            class="divide-y divide-slate-100 rounded-xl bg-slate-50 ring-1 ring-slate-200/60"
+                        >
+                            <div class="grid grid-cols-3 gap-4 px-4 py-3">
+                                <dt
+                                    class="text-xs font-semibold tracking-wide text-slate-500 uppercase"
+                                >
+                                    Servei
+                                </dt>
+                                <dd
+                                    class="col-span-2 text-sm font-medium text-slate-900"
+                                >
+                                    {{ selectedServiceObj?.nom || '—' }}
+                                </dd>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 px-4 py-3">
+                                <dt
+                                    class="text-xs font-semibold tracking-wide text-slate-500 uppercase"
+                                >
+                                    Data
+                                </dt>
+                                <dd
+                                    class="col-span-2 text-sm font-medium text-slate-900"
+                                >
+                                    {{
+                                        selectedDate
+                                            ? `${selectedDate} ${monthNames[currentMonth]} ${currentYear}`
+                                            : '—'
+                                    }}
+                                </dd>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 px-4 py-3">
+                                <dt
+                                    class="text-xs font-semibold tracking-wide text-slate-500 uppercase"
+                                >
+                                    Hora
+                                </dt>
+                                <dd
+                                    class="col-span-2 text-sm font-medium text-slate-900"
+                                >
+                                    {{ selectedTime || '—' }}
+                                </dd>
+                            </div>
+                        </dl>
+                        <p
+                            class="mt-4 flex items-start gap-2 rounded-lg bg-slate-50 px-3 py-2 text-xs text-slate-600 ring-1 ring-slate-200/60"
+                        >
+                            <svg
+                                class="mt-0.5 h-3.5 w-3.5 shrink-0 text-slate-400"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <circle cx="12" cy="12" r="10" />
+                                <line x1="12" y1="16" x2="12" y2="12" />
+                                <line x1="12" y1="8" x2="12.01" y2="8" />
+                            </svg>
+                            Un cop confirmada, rebràs un correu i podràs
+                            descarregar el PDF de la cita.
+                        </p>
+                    </div>
+                    <div
+                        class="flex items-center justify-end gap-3 border-t border-slate-100 bg-slate-50/60 px-6 py-4 sm:px-8"
+                    >
                         <button
                             @click="showConfirmModal = false"
                             :disabled="isSubmitting"
-                            class="flex-1 rounded-lg border border-gray-300 py-2 text-sm"
+                            type="button"
+                            class="rounded-lg border border-slate-300 bg-white px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50 disabled:opacity-50"
                         >
                             Cancel·lar
                         </button>
                         <button
                             @click="confirmReservation"
                             :disabled="isSubmitting"
-                            class="flex-1 rounded-lg bg-[#0f5f7f] py-2 text-sm text-white disabled:opacity-50"
+                            type="button"
+                            class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#00617E] to-[#004e66] px-5 py-2 text-sm font-semibold text-white shadow-md shadow-[#00617E]/20 transition hover:shadow-lg hover:shadow-[#00617E]/30 disabled:opacity-50"
                         >
-                            {{
-                                isSubmitting ? 'Confirmant...' : 'Sí, confirmar'
-                            }}
+                            <svg
+                                v-if="isSubmitting"
+                                class="h-4 w-4 animate-spin"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                            >
+                                <circle
+                                    class="opacity-25"
+                                    cx="12"
+                                    cy="12"
+                                    r="10"
+                                    stroke="currentColor"
+                                    stroke-width="4"
+                                />
+                                <path
+                                    class="opacity-75"
+                                    fill="currentColor"
+                                    d="M4 12a8 8 0 018-8v4l3-3-3-3v4a8 8 0 00-8 8z"
+                                />
+                            </svg>
+                            {{ isSubmitting ? 'Confirmant…' : 'Sí, confirmar' }}
                         </button>
                     </div>
                 </div>
             </div>
+        </transition>
 
-            <!-- =====================================================
-                 MODAL - Success (after server responded with flash)
-                 ===================================================== -->
+        <!-- ===== Success modal ===== -->
+        <transition
+            enter-active-class="transition duration-200 ease-out"
+            enter-from-class="opacity-0"
+            enter-to-class="opacity-100"
+            leave-active-class="transition duration-150 ease-in"
+            leave-from-class="opacity-100"
+            leave-to-class="opacity-0"
+        >
             <div
                 v-if="showModal"
-                class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/60"
+                class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 px-4 py-6 backdrop-blur-sm"
+                @click.self="showModal = false"
             >
-                <div class="relative w-full max-w-md p-4">
-                    <div class="rounded-lg bg-white p-6 shadow-xl">
-                        <div
-                            class="flex items-center justify-between border-b pb-4"
+                <div
+                    class="relative w-full max-w-md overflow-hidden rounded-2xl bg-white shadow-2xl ring-1 ring-slate-900/10"
+                >
+                    <div
+                        class="h-1.5 bg-gradient-to-r from-emerald-400 via-emerald-500 to-teal-500"
+                    ></div>
+
+                    <div
+                        class="flex items-start justify-between px-6 pt-6 sm:px-8"
+                    >
+                        <div class="flex items-center gap-4">
+                            <span
+                                class="relative flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100"
+                            >
+                                <span
+                                    class="absolute inset-0 animate-ping rounded-full bg-emerald-300 opacity-30"
+                                ></span>
+                                <Check
+                                    class="relative h-6 w-6 text-emerald-600"
+                                />
+                            </span>
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">
+                                    Reserva confirmada
+                                </h3>
+                                <p class="text-sm text-slate-500">
+                                    {{ successData?.message }}
+                                </p>
+                            </div>
+                        </div>
+                        <button
+                            @click="showModal = false"
+                            type="button"
+                            aria-label="Tancar"
+                            class="rounded-lg p-1.5 text-slate-400 transition hover:bg-slate-100 hover:text-slate-700"
                         >
-                            <h3 class="text-lg font-semibold text-[#0f5f7f]">
-                                Reserva confirmada
-                            </h3>
-                            <button
-                                @click="showModal = false"
-                                aria-label="Tancar finestra"
-                                type="button"
-                                class="text-gray-400 transition hover:text-black"
+                            <svg
+                                class="h-5 w-5"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
                             >
-                                ✕
-                            </button>
-                        </div>
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                            </svg>
+                        </button>
+                    </div>
 
-                        <div class="pt-4 pb-3">
-                            <p class="text-sm font-medium text-green-600">
-                                {{ successData?.message }}
-                            </p>
-                        </div>
-
-                        <div
-                            class="mb-4 space-y-2 rounded-lg bg-gray-100 p-3 text-xs"
+                    <div class="px-6 py-5 sm:px-8">
+                        <dl
+                            class="divide-y divide-slate-100 rounded-xl bg-slate-50 ring-1 ring-slate-200/60"
                         >
-                            <div class="flex justify-between">
-                                <span class="text-gray-500">Servei</span>
-                                <span class="font-semibold text-gray-800">{{
-                                    successServiceName
-                                }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-500">Data</span>
-                                <span class="font-semibold text-gray-800">{{
-                                    successData?.date
-                                }}</span>
-                            </div>
-                            <div class="flex justify-between">
-                                <span class="text-gray-500">Hora</span>
-                                <span class="font-semibold text-gray-800">{{
-                                    successData?.time
-                                }}</span>
-                            </div>
-
-                            <div
-                                class="mt-1 space-y-2 border-t border-gray-300 pt-2"
-                            >
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500">Nom</span>
-                                    <span class="font-semibold text-gray-800">{{
-                                        successData?.name
-                                    }}</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span class="text-gray-500">Correu</span>
-                                    <span
-                                        class="max-w-[200px] truncate font-semibold text-gray-800"
-                                        >{{ successData?.email }}</span
-                                    >
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="flex gap-3">
-                            <a
-                                :href="pdfDownloadUrl"
-                                target="_blank"
-                                class="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#0f5f7f] px-4 py-2.5 text-sm font-medium text-white transition hover:bg-[#0c4a63]"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    class="h-4 w-4 shrink-0"
-                                    viewBox="0 0 24 24"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    stroke-width="2"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
+                            <div class="grid grid-cols-3 gap-4 px-4 py-3">
+                                <dt
+                                    class="text-xs font-semibold tracking-wide text-slate-500 uppercase"
                                 >
-                                    <path
-                                        d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
-                                    />
-                                    <polyline points="7 10 12 15 17 10" />
-                                    <line x1="12" y1="15" x2="12" y2="3" />
-                                </svg>
-                                Descarregar PDF
-                            </a>
-
-                            <button
-                                @click="closeSuccessModal"
-                                aria-label="Tancar finestra"
-                                type="button"
-                                class="flex-1 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-600 transition hover:border-gray-400 hover:bg-gray-50"
+                                    Servei
+                                </dt>
+                                <dd
+                                    class="col-span-2 text-sm font-medium text-slate-900"
+                                >
+                                    {{ successServiceName }}
+                                </dd>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 px-4 py-3">
+                                <dt
+                                    class="text-xs font-semibold tracking-wide text-slate-500 uppercase"
+                                >
+                                    Data
+                                </dt>
+                                <dd class="col-span-2 text-sm text-slate-900">
+                                    {{ successData?.date }}
+                                </dd>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 px-4 py-3">
+                                <dt
+                                    class="text-xs font-semibold tracking-wide text-slate-500 uppercase"
+                                >
+                                    Hora
+                                </dt>
+                                <dd class="col-span-2 text-sm text-slate-900">
+                                    {{ successData?.time }}
+                                </dd>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 px-4 py-3">
+                                <dt
+                                    class="text-xs font-semibold tracking-wide text-slate-500 uppercase"
+                                >
+                                    Nom
+                                </dt>
+                                <dd class="col-span-2 text-sm text-slate-900">
+                                    {{ successData?.name }}
+                                </dd>
+                            </div>
+                            <div class="grid grid-cols-3 gap-4 px-4 py-3">
+                                <dt
+                                    class="text-xs font-semibold tracking-wide text-slate-500 uppercase"
+                                >
+                                    Correu
+                                </dt>
+                                <dd
+                                    class="col-span-2 truncate text-sm text-slate-900"
+                                >
+                                    {{ successData?.email }}
+                                </dd>
+                            </div>
+                        </dl>
+                        <div
+                            class="mt-4 flex items-start gap-2 rounded-lg bg-blue-50 px-3 py-2.5 text-xs text-blue-800 ring-1 ring-blue-100"
+                        >
+                            <svg
+                                class="mt-0.5 h-4 w-4 shrink-0"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
                             >
-                                Tancar
-                            </button>
+                                <path
+                                    d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                                />
+                                <polyline points="22,6 12,13 2,6" />
+                            </svg>
+                            Rebràs una confirmació al teu correu electrònic.
                         </div>
+                    </div>
+
+                    <div
+                        class="flex flex-col-reverse items-stretch gap-3 border-t border-slate-100 bg-slate-50/60 px-6 py-4 sm:flex-row sm:items-center sm:justify-end sm:px-8"
+                    >
+                        <button
+                            @click="closeSuccessModal"
+                            type="button"
+                            class="rounded-lg border border-slate-300 bg-white px-4 py-2.5 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+                        >
+                            Tancar
+                        </button>
+                        <a
+                            :href="hasPdfData ? pdfDownloadUrl : undefined"
+                            :target="hasPdfData ? '_blank' : undefined"
+                            rel="noopener"
+                            :aria-disabled="!hasPdfData"
+                            :tabindex="hasPdfData ? 0 : -1"
+                            :class="[
+                                'inline-flex items-center justify-center gap-2 rounded-lg px-5 py-2.5 text-sm font-semibold shadow-md transition',
+                                hasPdfData
+                                    ? 'bg-gradient-to-br from-[#00617E] to-[#004e66] text-white shadow-[#00617E]/20 hover:shadow-lg hover:shadow-[#00617E]/30'
+                                    : 'pointer-events-none cursor-not-allowed bg-slate-200 text-slate-400 shadow-none',
+                            ]"
+                        >
+                            <svg
+                                class="h-4 w-4"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            >
+                                <path
+                                    d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"
+                                />
+                                <polyline points="7 10 12 15 17 10" />
+                                <line x1="12" y1="15" x2="12" y2="3" />
+                            </svg>
+                            Descarregar PDF
+                        </a>
                     </div>
                 </div>
             </div>
-        </section>
+        </transition>
     </div>
 </template>

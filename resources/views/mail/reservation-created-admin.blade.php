@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="ca">
-
 <head>
-    <meta charset="UTF-8" />
-    <title>Confirmació de Cita</title>
+    <meta charset="UTF-8"/>
+    <title>Nova Reserva Rebuda</title>
     <style>
         * {
             margin: 0;
@@ -37,13 +36,6 @@
             display: flex;
             align-items: center;
             gap: 16px;
-        }
-
-
-        .header-text h1 {
-            font-size: 18px;
-            font-weight: bold;
-            letter-spacing: 0.3px;
         }
 
         .header-text .subtitle {
@@ -84,21 +76,12 @@
         .row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 7px 0;
-            border-bottom: 1px solid #f1f5f9;
-        }
-
-        .row:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .row:first-child {
-            padding-top: 0;
+            align-items: flex-start;
+            gap: 10px;
         }
 
         .row .lbl {
+            flex: 0 0 130px;
             color: #64748b;
             font-size: 12px;
         }
@@ -107,12 +90,16 @@
             font-weight: bold;
             color: #0f172a;
             font-size: 12px;
-            text-align: right;
+            text-align: left;
+            white-space: pre-line;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+            line-height: 1.45;
         }
 
         .row-highlight .val {
             color: #0f5f7f;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .two-col {
@@ -133,44 +120,6 @@
 
         .two-col td:last-child {
             padding-left: 8px;
-        }
-
-        .captcha-box {
-            border: 2px dashed #cbd5e1;
-            border-radius: 8px;
-            background-color: #f8fafc;
-            padding: 18px;
-            text-align: center;
-            margin-bottom: 18px;
-        }
-
-        .captcha-label {
-            font-size: 10px;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            color: #94a3b8;
-            margin-bottom: 8px;
-        }
-
-        .captcha-inner {
-            border: 1px solid #e2e8f0;
-            border-radius: 6px;
-            background: #ffffff;
-            height: 56px;
-            line-height: 56px;
-            text-align: center;
-        }
-
-        .captcha-text {
-            color: #cbd5e1;
-            font-size: 11px;
-        }
-
-        .captcha-note {
-            font-size: 10px;
-            color: #94a3b8;
-            margin-top: 6px;
         }
 
         .notice {
@@ -200,63 +149,58 @@
         }
     </style>
 </head>
-
 <body>
 
     <div class="header">
         <div class="header-inner">
             <div class="header-left">
-
-
-                <img
-                    src="{{ storage_path('app/public/FarmaciaSolerLogoTallDark.png') }}"
-                    alt="Logo Farmàcia Soler"
-                    style="height: 52px; width: auto; object-fit: contain;" />
-
                 <div class="header-text">
-
-                    <div class="subtitle">{{ $address }} &nbsp;·&nbsp; Tel. {{ $phone }}</div>
+                    <div class="subtitle">{{ $data['address'] }} · Tel. {{ $data['phone'] }}</div>
                 </div>
             </div>
-            
-            <div class="badge-confirmed"> Reserva Confirmada</div>
+
+            <div class="badge-confirmed">Nova Reserva</div>
         </div>
     </div>
 
     <table class="two-col">
         <tr>
             <td>
-                <div class="section-label">Detalls de la Cita</div>
+                <div class="section-label">Resum de la reserva</div>
                 <div class="card">
                     <div class="row row-highlight">
                         <span class="lbl">Servei</span>
-                        <span class="val">{{ $service_name }}</span>
+                        <span class="val">{{ $data['service_name'] }}</span>
                     </div>
                     <div class="row">
                         <span class="lbl">Durada</span>
-                        <span class="val">{{ $duration }}</span>
+                        <span class="val">{{ $data['duration'] }}</span>
                     </div>
                     <div class="row">
                         <span class="lbl">Data</span>
-                        <span class="val">{{ $date }}</span>
+                        <span class="val">{{ $data['date'] }}</span>
                     </div>
                     <div class="row">
                         <span class="lbl">Hora</span>
-                        <span class="val">{{ $time }}</span>
+                        <span class="val">{{ $data['time'] }}</span>
+                    </div>
+                    <div class="row">
+                        <span class="lbl">Registrada</span>
+                        <span class="val">{{ now()->format('d/m/Y H:i') }}</span>
                     </div>
                 </div>
             </td>
-   
+
             <td>
-                <div class="section-label">Dades del Client</div>
+                <div class="section-label">Dades del client</div>
                 <div class="card">
                     <div class="row">
                         <span class="lbl">Nom</span>
-                        <span class="val">{{ $name }}</span>
+                        <span class="val">{{ $data['name'] }}</span>
                     </div>
                     <div class="row">
                         <span class="lbl">Correu</span>
-                        <span class="val">{{ $email }}</span>
+                        <span class="val">{{ $data['email'] }}</span>
                     </div>
                 </div>
             </td>
@@ -264,19 +208,15 @@
     </table>
 
     <div class="notice">
-        <strong>Recordeu:</strong> Si no podeu assistir a la cita, si us plau cancel·leu-la amb
-        almenys <strong>24 hores</strong> d'antelació trucant al <strong>{{ $phone }}</strong>
-        o visitant la farmàcia en persona. Gràcies per la vostra col·laboració.
+        <strong>Accio recomanada:</strong> Reviseu la reserva i confirmeu disponibilitat de servei i horari.
+        Si cal, contacteu el client amb les dades indicades.
     </div>
 
     <div class="footer">
-        Document generat automàticament per <strong>{{ $pharmacy }}</strong>
-        &nbsp;·&nbsp;
-        {{ now()->format('d/m/Y \a \l\e\s H:i') }} h
-        <br />
-        Aquest document és vàlid com a comprovant de reserva. Porteu-lo el dia de la cita.
+        Notificacio interna generada automaticament per <strong>{{ $data['pharmacy'] }}</strong>
+        <br/>
+        Aquest correu esta destinat a l'equip administratiu.
     </div>
 
 </body>
-
 </html>

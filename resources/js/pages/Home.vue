@@ -79,8 +79,6 @@ onMounted(async () => {
     );
 });
 
-const address = ref();
-
 const pharmacy = {
     name: ref(''),
     dia: ref(''),
@@ -164,6 +162,8 @@ async function getPharmacyInfo(day: number, month: number, year: number) {
     } else {
         pharmacy.description.value = '';
         pharmacy.name.value = "No s'ha trobat cap farmacia.";
+        pharmacy.lat.value = '';
+        pharmacy.long.value = '';
     }
 }
 
@@ -352,7 +352,10 @@ function setNextWeek() {
 <template>
     <Head>
         <title>Farmàcia Soler</title>
-        <meta name="description" content="Farmàcia Soler — La teva farmàcia de confiança. Tallers de salut, demanar cita, encàrrecs i farmàcies de guàrdia." />
+        <meta
+            name="description"
+            content="Farmàcia Soler — La teva farmàcia de confiança. Tallers de salut, demanar cita, encàrrecs i farmàcies de guàrdia."
+        />
     </Head>
     <WebAppLayout>
         <!-- Hero -->
@@ -481,7 +484,7 @@ function setNextWeek() {
                 <h2 class="text-3xl font-bold text-[#124559] md:text-4xl">
                     Farmàcies de guàrdia
                 </h2>
-                <p class="mt-2 text-sm text-[#3B6A7A]">
+                <p class="mt-2 text-sm text-[#124559]">
                     Consulta quina farmàcia està de guàrdia avui i obre-la al
                     mapa.
                 </p>
@@ -553,6 +556,9 @@ function setNextWeek() {
                                 @click="setNextWeek()"
                                 class="flex h-14 w-8 cursor-pointer items-center justify-center rounded-lg transition hover:bg-white/10"
                             >
+                                <p class="absolute size-0 opacity-0">
+                                    1 Setmana després
+                                </p>
                                 <Icon
                                     icon="iconamoon:player-play"
                                     class="text-white/70"
@@ -599,7 +605,7 @@ function setNextWeek() {
                         >
                             <Icon
                                 icon="mdi:calendar"
-                                class="text-[#01617F]"
+                                class="text-[#015a75]"
                                 width="16"
                                 height="16"
                             />
@@ -626,7 +632,25 @@ function setNextWeek() {
                         <!-- Address button -->
                         <a
                             id="address"
-                            class="mt-auto inline-flex cursor-pointer items-center justify-center gap-2 rounded-xl bg-[#01617F] px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-[#014F67]"
+                            class="mt-auto inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold text-white shadow-sm transition"
+                            :class="
+                                pharmacy.lat.value === '' &&
+                                pharmacy.long.value === ''
+                                    ? 'cursor-not-allowed bg-gray-400 hover:bg-gray-500'
+                                    : 'cursor-pointer bg-[#015a75] hover:bg-[#014F67]'
+                            "
+                            :href="
+                                pharmacy.lat.value === '' &&
+                                pharmacy.long.value === ''
+                                    ? ''
+                                    : 'https://www.google.com/maps/search/' +
+                                      pharmacy.name.value +
+                                      '/@' +
+                                      pharmacy.lat.value +
+                                      ',' +
+                                      pharmacy.long.value +
+                                      ',21z'
+                            "
                         >
                             <Icon
                                 icon="mdi:map-marker"

@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             AssignmentsSeeder::class,
             ServiceSchedulesSeeder::class,
             PharmacyGuardSeeder::class,
+            EmailsSeeder::class,
         ]);
     }
 }
