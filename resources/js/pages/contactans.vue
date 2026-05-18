@@ -16,10 +16,10 @@ const isOpenNow = computed(() => {
 });
 
 onMounted(() => {
-    map.value = L.map('map', { zoomControl: true, scrollWheelZoom: false }).setView(
-        ['42.2655267', '2.9631527'],
-        18,
-    );
+    map.value = L.map('map', {
+        zoomControl: true,
+        scrollWheelZoom: false,
+    }).setView(['42.2655267', '2.9631527'], 18);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
         attribution: '© OpenStreetMap',
@@ -32,6 +32,13 @@ onMounted(() => {
 </script>
 
 <template>
+    <Head>
+        <title>Contacta'ns</title>
+        <meta
+            name="description"
+            content="Posa't en contacte amb Farmàcia Soler. Estem aquí per ajudar-te."
+        />
+    </Head>
     <WebAppLayout>
         <div class="relative min-h-screen overflow-hidden bg-slate-50">
             <!-- Decorative background -->
@@ -41,7 +48,11 @@ onMounted(() => {
             <div
                 class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-[420px] opacity-[0.06]"
                 style="
-                    background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0);
+                    background-image: radial-gradient(
+                        circle at 1px 1px,
+                        white 1px,
+                        transparent 0
+                    );
                     background-size: 24px 24px;
                 "
             ></div>
@@ -61,7 +72,7 @@ onMounted(() => {
                                 class="h-1.5 w-1.5 rounded-full"
                                 :class="
                                     isOpenNow
-                                        ? 'bg-emerald-400 animate-pulse'
+                                        ? 'animate-pulse bg-emerald-400'
                                         : 'bg-rose-400'
                                 "
                             ></span>
@@ -72,12 +83,11 @@ onMounted(() => {
                         >
                             Contacta amb nosaltres
                         </h1>
-                        <p class="mt-3 text-base text-white/80 sm:text-l">
+                        <p class="sm:text-l mt-3 text-base text-white/80">
                             Som a Figueres, oberts de dilluns a dissabte.
                             Truca'ns o vine directament a la farmàcia.
                         </p>
                     </div>
-                   
                 </div>
 
                 <!-- Main grid -->
@@ -98,9 +108,17 @@ onMounted(() => {
                             rel="noopener"
                             class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-white/90 hover:text-white"
                         >
-                            <Icon icon="mdi:directions" width="16" height="16" />
+                            <Icon
+                                icon="mdi:directions"
+                                width="16"
+                                height="16"
+                            />
                             Com arribar
-                            <Icon icon="mdi:arrow-top-right" width="14" height="14" />
+                            <Icon
+                                icon="mdi:arrow-top-right"
+                                width="14"
+                                height="14"
+                            />
                         </a>
                     </div>
 
@@ -114,18 +132,26 @@ onMounted(() => {
                                 class="flex items-center gap-3 border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-4"
                             >
                                 <span
-                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#00617E] to-[#004e66] text-white shadow-md shadow-[#00617E]/20 ring-4 ring-[#00617E]/10"
+                                    class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#00617E] to-[#004e66] text-white shadow-md ring-4 shadow-[#00617E]/20 ring-[#00617E]/10"
                                 >
-                                    <Icon icon="mdi:clock-outline" width="20" height="20" />
+                                    <Icon
+                                        icon="mdi:clock-outline"
+                                        width="20"
+                                        height="20"
+                                    />
                                 </span>
                                 <div>
-                                    <h2 class="text-base font-semibold text-slate-900">
+                                    <h2
+                                        class="text-base font-semibold text-slate-900"
+                                    >
                                         Horari d'atenció
                                     </h2>
                                 </div>
                             </div>
                             <div class="divide-y divide-slate-100">
-                                <div class="flex items-center justify-between px-6 py-4">
+                                <div
+                                    class="flex items-center justify-between px-6 py-4"
+                                >
                                     <span class="text-sm text-slate-700">
                                         De dilluns a dissabte
                                     </span>
@@ -135,11 +161,15 @@ onMounted(() => {
                                         8:30 - 20:30
                                     </span>
                                 </div>
-                                <div class="flex items-center justify-between px-6 py-4">
+                                <div
+                                    class="flex items-center justify-between px-6 py-4"
+                                >
                                     <span class="text-sm text-slate-700">
                                         Diumenge
                                     </span>
-                                    <span class="text-sm font-semibold text-rose-500">
+                                    <span
+                                        class="text-sm font-semibold text-rose-500"
+                                    >
                                         Tancat
                                     </span>
                                 </div>
@@ -154,7 +184,11 @@ onMounted(() => {
                                 <span
                                     class="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm"
                                 >
-                                    <Icon icon="ri:phone-fill" width="20" height="20" />
+                                    <Icon
+                                        icon="ri:phone-fill"
+                                        width="20"
+                                        height="20"
+                                    />
                                 </span>
                                 <h3 class="text-base font-semibold">
                                     Posa't en contacte
@@ -169,22 +203,40 @@ onMounted(() => {
                                 class="mt-4 flex items-center justify-between rounded-lg bg-white/10 px-4 py-3 text-sm font-semibold backdrop-blur-sm transition hover:bg-white hover:text-[#00617E]"
                             >
                                 <span class="flex items-center gap-2">
-                                    <Icon icon="ri:phone-fill" width="16" height="16" />
+                                    <Icon
+                                        icon="ri:phone-fill"
+                                        width="16"
+                                        height="16"
+                                    />
                                     972 50 02 99
                                 </span>
-                                <Icon icon="mdi:arrow-right" width="16" height="16" />
+                                <Icon
+                                    icon="mdi:arrow-right"
+                                    width="16"
+                                    height="16"
+                                />
                             </a>
                             <a
                                 href="mailto:info@farmaciasoler.com"
                                 class="mt-2 flex items-center justify-between rounded-lg bg-white/10 px-4 py-3 text-sm font-semibold backdrop-blur-sm transition hover:bg-white hover:text-[#00617E]"
                             >
                                 <span class="flex items-center gap-2">
-                                    <Icon icon="ic:mail" width="16" height="16" />
+                                    <Icon
+                                        icon="ic:mail"
+                                        width="16"
+                                        height="16"
+                                    />
                                     info@farmaciasoler.com
                                 </span>
-                                <Icon icon="mdi:arrow-right" width="16" height="16" />
+                                <Icon
+                                    icon="mdi:arrow-right"
+                                    width="16"
+                                    height="16"
+                                />
                             </a>
-                            <div class="mt-4 flex items-start gap-2 text-xs text-white/70">
+                            <div
+                                class="mt-4 flex items-start gap-2 text-xs text-white/70"
+                            >
                                 <Icon
                                     icon="mdi:map-marker"
                                     width="14"

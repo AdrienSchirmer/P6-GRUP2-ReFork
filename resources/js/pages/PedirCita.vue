@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------------
 // 1. Imports
 // ---------------------------------------------------------------------------
-import { useForm, usePage, router } from '@inertiajs/vue3';
+import { Head, useForm, usePage, router } from '@inertiajs/vue3';
 import {
     ScanFace,
     Droplet,
@@ -578,7 +578,11 @@ onUnmounted(() => {
         <div
             class="pointer-events-none absolute inset-x-0 top-0 -z-0 h-[460px] opacity-[0.06]"
             style="
-                background-image: radial-gradient(circle at 1px 1px, white 1px, transparent 0);
+                background-image: radial-gradient(
+                    circle at 1px 1px,
+                    white 1px,
+                    transparent 0
+                );
                 background-size: 24px 24px;
             "
         ></div>
@@ -604,8 +608,8 @@ onUnmounted(() => {
                     </h1>
                     <p class="mt-3 text-base text-white/80 sm:text-lg">
                         Reserva els nostres serveis clínics especialitzats en
-                        tres passos senzills. Atenció farmacèutica
-                        d'avantguarda a Figueres.
+                        tres passos senzills. Atenció farmacèutica d'avantguarda
+                        a Figueres.
                     </p>
                 </div>
                 <div class="md:col-span-2">
@@ -642,7 +646,9 @@ onUnmounted(() => {
                 <div
                     class="border-b border-slate-100 bg-gradient-to-r from-slate-50 to-white px-6 py-5 sm:px-10"
                 >
-                    <ol class="flex items-center justify-between gap-2 sm:gap-4">
+                    <ol
+                        class="flex items-center justify-between gap-2 sm:gap-4"
+                    >
                         <li
                             v-for="n in [1, 2, 3]"
                             :key="n"
@@ -1182,9 +1188,7 @@ onUnmounted(() => {
                                             rx="2"
                                             ry="2"
                                         />
-                                        <path
-                                            d="M7 11V7a5 5 0 0 1 10 0v4"
-                                        />
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
                                     </svg>
                                     Les teves dades estan protegides
                                 </div>
@@ -1212,8 +1216,7 @@ onUnmounted(() => {
                             @click="nextStep"
                             :disabled="
                                 (step === 1 && !selectedService) ||
-                                (step === 2 &&
-                                    (!selectedDate || !selectedTime))
+                                (step === 2 && (!selectedDate || !selectedTime))
                             "
                             type="button"
                             class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-br from-[#00617E] to-[#004e66] px-6 py-2.5 text-sm font-semibold text-white shadow-lg shadow-[#00617E]/25 transition hover:shadow-xl hover:shadow-[#00617E]/30 disabled:cursor-not-allowed disabled:opacity-50 disabled:shadow-none"
@@ -1259,9 +1262,7 @@ onUnmounted(() => {
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
                             >
-                                <path
-                                    d="M9 11l3 3L22 4"
-                                />
+                                <path d="M9 11l3 3L22 4" />
                                 <path
                                     d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
                                 />
