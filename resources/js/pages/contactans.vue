@@ -15,19 +15,30 @@ const isOpenNow = computed(() => {
     return minutes >= 8 * 60 + 30 && minutes < 20 * 60 + 30;
 });
 
-onMounted(() => {
+onMounted(async () => {
+    const LModule = await import('leaflet');
+    const L = LModule.default ?? LModule;
+
     map.value = L.map('map', {
         zoomControl: true,
         scrollWheelZoom: false,
     }).setView(['42.2655267', '2.9631527'], 18);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
-        attribution: '© OpenStreetMap',
     }).addTo(map.value);
     L.marker(['42.2655267', '2.9631527'])
         .addTo(map.value)
         .bindPopup('<b>Farmàcia Soler</b><br>Carrer Nou, 22 · Figueres')
         .openPopup();
+
+    // For accessibility (nothing important)
+    document.querySelector('.leaflet-marker-pane > img')?.setAttribute('aria-label', 'Ubicació de la Farmàcia');
+    document.querySelector('.leaflet-control-attribution')?.classList.add('!bg-[#015873]');
+    document.querySelector('.leaflet-control-attribution > a')?.classList.add('!text-white');
+    const leafletPopupClose = document.querySelector('.leaflet-popup-close-button');
+    leafletPopupClose?.removeAttribute('href');
+    leafletPopupClose?.classList.add('cursor-pointer');
+    console.dir(leafletPopupClose);
 });
 </script>
 
@@ -106,7 +117,7 @@ onMounted(() => {
                             href="https://www.openstreetmap.org/?mlat=42.2655267&mlon=2.9631527#map=18/42.2655267/2.9631527"
                             target="_blank"
                             rel="noopener"
-                            class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-white/90 hover:text-white"
+                            class="mt-3 inline-flex items-center gap-2 text-sm font-semibold text-[#00617E] hover:text-[#00617E]/80"
                         >
                             <Icon
                                 icon="mdi:directions"

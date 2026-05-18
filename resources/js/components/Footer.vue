@@ -108,7 +108,7 @@ import { Link } from '@inertiajs/vue3';
                     <ul class="flex flex-col gap-2 text-sm text-white/70">
                         <li class="flex justify-between gap-4">
                             <span>Dilluns – Dissabte</span>
-                            <span class="text-white">8:30 – 20:30</span>
+                            <span class="text-white/70">8:30 – 20:30</span>
                         </li>
                         <li class="flex justify-between gap-4">
                             <span>Diumenge</span>
