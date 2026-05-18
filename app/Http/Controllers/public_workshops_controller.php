@@ -12,12 +12,10 @@ class public_workshops_controller extends Controller
     {
         $workshops = Workshop::query()
             ->select(['id', 'name', 'description', 'photo_path', 'workshop_date', 'start_time', 'end_time', 'max_attendees'])
-            ->where('is_active', true)
-            ->where('workshop_date', '>=', now()->toDateString())
             ->orderBy('workshop_date')
             ->orderBy('start_time')
             ->get()
-            ->map(fn (Workshop $workshop) => [
+            ->map(fn(Workshop $workshop) => [
                 'id' => $workshop->id,
                 'name' => $workshop->name,
                 'description' => $workshop->description,
@@ -35,7 +33,7 @@ class public_workshops_controller extends Controller
 
     public function show(Workshop $workshop)
     {
-        abort_if(! $workshop->is_active, 404);
+        abort_if(!$workshop->is_active, 404);
 
         return Inertia::render('workshops/workshopdetails', [
             'workshop' => [
