@@ -27,7 +27,7 @@ Route::get('/pharmacyguard/{data}', [HomeController::class, 'getpg'])->name('get
 //
 // SERVICES / APPOINTMENTS
 //
-Route::get('/make-appointment', [ServiceController::class, 'index'])->name('pedir-cita');
+Route::get('/appointments/create', [ServiceController::class, 'index'])->name('pedir-cita');
 Route::post('/appointments', [ServiceController::class, 'store'])->name('appointments.store');
 Route::get('/appointments/pdf', [ServiceController::class, 'downloadPdf'])->name('appointments.pdf');
 Route::get('/appointments/booked-times', [ServiceController::class, 'getBookedTimes']);
