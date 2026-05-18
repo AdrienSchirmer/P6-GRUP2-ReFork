@@ -53,7 +53,7 @@ class admin_workshops_controller extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'photo' => ['required', 'image', 'max:5120'],
+            'photo' => ['required', 'image', 'mimes:webp', 'max:5120'],
             'workshop_date' => ['required', 'date'],
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
@@ -81,7 +81,9 @@ class admin_workshops_controller extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($id) {}
+    public function show($id)
+    {
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -101,7 +103,7 @@ class admin_workshops_controller extends Controller
         $validated = $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'description' => ['required', 'string'],
-            'photo' => ['nullable', 'image', 'max:5120'],
+            'photo' => ['required', 'image', 'mimes:webp', 'max:5120'],
             'workshop_date' => ['required', 'date'],
             'start_time' => ['required', 'date_format:H:i'],
             'end_time' => ['required', 'date_format:H:i', 'after:start_time'],
