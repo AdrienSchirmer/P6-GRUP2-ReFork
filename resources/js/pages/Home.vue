@@ -434,7 +434,7 @@ function setNextWeek() {
         <Brands />
 
         <section
-            id="qui-som"
+            id="who_we_are"
             class="scroll-mt-24 bg-[#F2FAFF] px-2 py-12 md:px-24"
         >
             <Card class="flex-col bg-white md:flex-row">
@@ -466,7 +466,7 @@ function setNextWeek() {
         </section>
 
         <section
-            id="farmacies-guardia"
+            id="pharmacy-guards"
             class="scroll-mt-24 bg-[#F2FAFF] px-4 pb-16 md:px-24"
         >
             <!-- Section header -->

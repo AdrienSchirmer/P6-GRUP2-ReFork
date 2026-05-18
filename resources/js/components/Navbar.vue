@@ -40,7 +40,7 @@ function isActive(path: string): boolean {
                     </li>
                     <li>
                         <a
-                            href="/#pharmacies-guards"
+                            href="/#pharmacy-guards"
                             class="rounded-lg px-2 py-2 whitespace-nowrap transition hover:bg-[#E6F5FB] hover:text-[#01617F]/90 lg:px-3"
                         >
                             Farmàcies de guàrdia
@@ -61,10 +61,10 @@ function isActive(path: string): boolean {
                     </li>
                     <li>
                         <Link
-                            href="/make-appointment"
+                            href="/appointments/create"
                             :class="[
                                 'rounded-lg px-2 py-2 whitespace-nowrap transition lg:px-3',
-                                isActive('/make-appointment')
+                                isActive('/appointments/create')
                                     ? 'bg-[#E6F5FB] text-[#01617F]/90'
                                     : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                             ]"
