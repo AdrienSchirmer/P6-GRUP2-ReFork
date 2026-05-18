@@ -32,7 +32,7 @@ function isActive(path: string): boolean {
                 >
                     <li>
                         <a
-                            href="/#qui-som"
+                            href="/#who_we_are"
                             class="rounded-lg px-2 py-2 whitespace-nowrap transition hover:bg-[#E6F5FB] hover:text-[#01617F]/90 lg:px-3"
                         >
                             Qui som
@@ -40,7 +40,7 @@ function isActive(path: string): boolean {
                     </li>
                     <li>
                         <a
-                            href="/#farmacies-guardia"
+                            href="/#pharmacies-guards"
                             class="rounded-lg px-2 py-2 whitespace-nowrap transition hover:bg-[#E6F5FB] hover:text-[#01617F]/90 lg:px-3"
                         >
                             Farmàcies de guàrdia
@@ -61,10 +61,10 @@ function isActive(path: string): boolean {
                     </li>
                     <li>
                         <Link
-                            href="/pedir-cita"
+                            href="/make-appointment"
                             :class="[
                                 'rounded-lg px-2 py-2 whitespace-nowrap transition lg:px-3',
-                                isActive('/pedir-cita')
+                                isActive('/make-appointment')
                                     ? 'bg-[#E6F5FB] text-[#01617F]/90'
                                     : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                             ]"
@@ -87,10 +87,10 @@ function isActive(path: string): boolean {
                     </li>
                     <li>
                         <Link
-                            href="/contactans"
+                            href="/contact-us"
                             :class="[
                                 'rounded-lg px-2 py-2 whitespace-nowrap transition lg:px-3',
-                                isActive('/contactans')
+                                isActive('/contact-us')
                                     ? 'bg-[#E6F5FB] text-[#01617F]/90'
                                     : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                             ]"
@@ -132,7 +132,7 @@ function isActive(path: string): boolean {
             >
                 <li>
                     <a
-                        href="/#qui-som"
+                        href="/#who_we_are"
                         class="block rounded-lg px-3 py-2 transition hover:bg-[#E6F5FB] hover:text-[#01617F]/90"
                         @click="isMobileMenuOpen = false"
                     >
@@ -141,7 +141,7 @@ function isActive(path: string): boolean {
                 </li>
                 <li>
                     <a
-                        href="/#farmacies-guardia"
+                        href="/#pharmacies-guards"
                         class="block rounded-lg px-3 py-2 transition hover:bg-[#E6F5FB] hover:text-[#01617F]/90"
                         @click="isMobileMenuOpen = false"
                     >
@@ -164,10 +164,10 @@ function isActive(path: string): boolean {
                 </li>
                 <li>
                     <Link
-                        href="/pedir-cita"
+                        href="/make-appointment"
                         :class="[
                             'block rounded-lg px-3 py-2 transition',
-                            isActive('/pedir-cita')
+                            isActive('/make-appointment')
                                 ? 'bg-[#E6F5FB] text-[#01617F]/90'
                                 : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                         ]"
@@ -192,10 +192,10 @@ function isActive(path: string): boolean {
                 </li>
                 <li>
                     <Link
-                        href="/contactans"
+                        href="/contact-us"
                         :class="[
                             'block rounded-lg px-3 py-2 transition',
-                            isActive('/contactans')
+                            isActive('/contact-us')
                                 ? 'bg-[#E6F5FB] text-[#01617F]/90'
                                 : 'hover:bg-[#E6F5FB] hover:text-[#01617F]/90',
                         ]"
