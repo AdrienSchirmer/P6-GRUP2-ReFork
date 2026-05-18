@@ -328,7 +328,7 @@ function setNextWeek() {
                             Demanar cita
                         </a>
                         <a
-                            href="/#farmacies-guardia"
+                            href="/#pharmacies-guards"
                             class="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
                         >
                             <Icon
@@ -368,7 +368,7 @@ function setNextWeek() {
 
         <Brands />
 
-        <section id="qui-som" class="scroll-mt-24 bg-[#F2FAFF] px-2 py-12 md:px-24">
+        <section id="who_we_are" class="scroll-mt-24 bg-[#F2FAFF] px-2 py-12 md:px-24">
             <Card class="flex-col bg-white md:flex-row">
                 <div class="flex h-110 w-full items-end overflow-hidden md:relative md:h-auto md:w-1/2">
                     <img
@@ -391,7 +391,7 @@ function setNextWeek() {
             </Card>
         </section>
 
-        <section id="farmacies-guardia" class="scroll-mt-24 bg-[#F2FAFF] px-4 pb-16 md:px-24">
+        <section id="pharmacies-guards" class="scroll-mt-24 bg-[#F2FAFF] px-4 pb-16 md:px-24">
             <!-- Section header -->
             <div class="mb-8 text-center">
                 <h2 class="text-3xl font-bold text-[#124559] md:text-4xl">

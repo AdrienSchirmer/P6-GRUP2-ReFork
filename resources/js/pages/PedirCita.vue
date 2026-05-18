@@ -1140,9 +1140,12 @@ onUnmounted(() => {
                                             </dd>
                                         </div>
                                     </dl>
+                                    
+                                    
                                     <div
-                                        class="border-t border-white/10 px-5 py-4"
+                                        class="border-t border-white/10 px-5 py-4"   
                                     >
+                                    
                                         <button
                                             @click="showConfirmModal = true"
                                             :disabled="
