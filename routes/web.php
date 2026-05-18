@@ -18,7 +18,7 @@ use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 //
-// ✅ MAIN HOME ROUTE (ONLY ONE)
+// MAIN HOME ROUTE
 //
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
@@ -27,7 +27,7 @@ Route::get('/pharmacyguard/{data}', [HomeController::class, 'getpg'])->name('get
 //
 // SERVICES / APPOINTMENTS
 //
-Route::get('/pedir-cita', [ServiceController::class, 'index'])->name('pedir-cita');
+Route::get('/make-appointment', [ServiceController::class, 'index'])->name('pedir-cita');
 Route::post('/appointments', [ServiceController::class, 'store'])->name('appointments.store');
 Route::get('/appointments/pdf', [ServiceController::class, 'downloadPdf'])->name('appointments.pdf');
 Route::get('/appointments/booked-times', [ServiceController::class, 'getBookedTimes']);
@@ -71,6 +71,6 @@ Route::get('/workshops/{workshop}', [public_workshops_controller::class, 'show']
 //
 // CONTACT
 //
-Route::get('/contactans', [Contactans::class, 'index'])->name('contactans');
+Route::get('/contact-us', [Contactans::class, 'index'])->name('contactans');
 
 require __DIR__ . '/settings.php';

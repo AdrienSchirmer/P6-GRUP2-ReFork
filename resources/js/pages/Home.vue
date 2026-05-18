@@ -392,7 +392,7 @@ function setNextWeek() {
                             Demanar cita
                         </a>
                         <a
-                            href="/#farmacies-guardia"
+                            href="/#pharmacies-guards"
                             class="inline-flex items-center gap-2 rounded-xl border border-white/30 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
                         >
                             <Icon
