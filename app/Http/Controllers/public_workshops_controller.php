@@ -11,7 +11,7 @@ class public_workshops_controller extends Controller
     public function index()
     {
         $workshops = Workshop::query()
-            ->select(['id', 'name', 'description', 'photo_path', 'workshop_date', 'start_time', 'end_time', 'max_attendees'])
+            ->select(['id', 'name', 'description', 'photo_path', 'workshop_date', 'start_time', 'end_time', 'max_attendees', 'is_active'])
             ->orderBy('workshop_date')
             ->orderBy('start_time')
             ->get()
@@ -24,6 +24,7 @@ class public_workshops_controller extends Controller
                 'start_time' => substr($workshop->start_time, 0, 5),
                 'end_time' => substr($workshop->end_time, 0, 5),
                 'max_attendees' => $workshop->max_attendees,
+                'is_active' => (bool) $workshop->is_active,
             ]);
 
         return Inertia::render('workshops/index', [
