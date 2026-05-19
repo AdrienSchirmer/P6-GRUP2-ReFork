@@ -19,6 +19,7 @@ import {
 } from 'lucide-vue-next';
 import { ref, computed, onMounted, watch, onUnmounted } from 'vue';
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
+import PublicFlashToast from '@/components/PublicFlashToast.vue';
 
 // ---------------------------------------------------------------------------
 // 2. Layout
@@ -38,8 +39,7 @@ type ServiceItem = {
     icon: string;
 };
 
-type FlashSuccess = {
-    message: string;
+type FlashReservation = {
     service: number;
     date: string;
     time: string;
@@ -62,7 +62,9 @@ const props = defineProps<{
 
 const page = usePage<{
     flash?: {
-        success?: FlashSuccess;
+        success?: string;
+        error?: string;
+        reservation?: FlashReservation;
     };
 }>();
 
@@ -160,7 +162,7 @@ const stepTitles: Record<number, string> = {
 // ---------------------------------------------------------------------------
 // 11. Computed - success modal data
 // ---------------------------------------------------------------------------
-const successData = computed(() => page.props.flash?.success);
+const successData = computed(() => page.props.flash?.reservation);
 
 const successServiceName = computed(() => {
     if (!successData.value?.service) {
@@ -560,7 +562,7 @@ watch([selectedDate, currentMonth, currentYear], async () => {
 });
 
 watch(
-    () => page.props.flash?.success,
+    () => page.props.flash?.reservation,
     (val) => {
         if (!val) {
             return;
@@ -606,6 +608,8 @@ onUnmounted(() => {
         <div
             class="relative z-10 mx-auto max-w-6xl px-4 pt-10 pb-16 sm:px-6 lg:px-8"
         >
+            <!-- Flash message -->
+            <PublicFlashToast />
             <!-- Hero -->
             <div class="mb-10 grid items-center gap-8 md:grid-cols-5">
                 <div class="md:col-span-3">
@@ -981,10 +985,23 @@ onUnmounted(() => {
                                     v-if="form.errors.start_time"
                                     class="mt-2 flex items-center gap-1 text-xs text-rose-600"
                                 >
-                                    <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <svg
+                                        class="h-3.5 w-3.5 shrink-0"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                    >
                                         <circle cx="12" cy="12" r="10" />
                                         <line x1="12" y1="8" x2="12" y2="12" />
-                                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                                        <line
+                                            x1="12"
+                                            y1="16"
+                                            x2="12.01"
+                                            y2="16"
+                                        />
                                     </svg>
                                     {{ form.errors.start_time }}
                                 </p>
@@ -1031,10 +1048,28 @@ onUnmounted(() => {
                                         v-if="form.errors.customer_name"
                                         class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                     >
-                                        <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg
+                                            class="h-3.5 w-3.5 shrink-0"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        >
                                             <circle cx="12" cy="12" r="10" />
-                                            <line x1="12" y1="8" x2="12" y2="12" />
-                                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            <line
+                                                x1="12"
+                                                y1="8"
+                                                x2="12"
+                                                y2="12"
+                                            />
+                                            <line
+                                                x1="12"
+                                                y1="16"
+                                                x2="12.01"
+                                                y2="16"
+                                            />
                                         </svg>
                                         {{ form.errors.customer_name }}
                                     </p>
@@ -1071,10 +1106,32 @@ onUnmounted(() => {
                                             v-if="form.errors.customer_phone"
                                             class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                         >
-                                            <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="12" r="10" />
-                                                <line x1="12" y1="8" x2="12" y2="12" />
-                                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            <svg
+                                                class="h-3.5 w-3.5 shrink-0"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                />
+                                                <line
+                                                    x1="12"
+                                                    y1="8"
+                                                    x2="12"
+                                                    y2="12"
+                                                />
+                                                <line
+                                                    x1="12"
+                                                    y1="16"
+                                                    x2="12.01"
+                                                    y2="16"
+                                                />
                                             </svg>
                                             {{ form.errors.customer_phone }}
                                         </p>
@@ -1106,10 +1163,32 @@ onUnmounted(() => {
                                             v-if="form.errors.customer_email"
                                             class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                         >
-                                            <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="12" r="10" />
-                                                <line x1="12" y1="8" x2="12" y2="12" />
-                                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            <svg
+                                                class="h-3.5 w-3.5 shrink-0"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                />
+                                                <line
+                                                    x1="12"
+                                                    y1="8"
+                                                    x2="12"
+                                                    y2="12"
+                                                />
+                                                <line
+                                                    x1="12"
+                                                    y1="16"
+                                                    x2="12.01"
+                                                    y2="16"
+                                                />
                                             </svg>
                                             {{ form.errors.customer_email }}
                                         </p>
@@ -1123,15 +1202,37 @@ onUnmounted(() => {
                                         data-language="es"
                                     ></div>
                                     <p
-                                        v-if="form.errors['cf-turnstile-response']"
+                                        v-if="
+                                            form.errors['cf-turnstile-response']
+                                        "
                                         class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                     >
-                                        <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg
+                                            class="h-3.5 w-3.5 shrink-0"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        >
                                             <circle cx="12" cy="12" r="10" />
-                                            <line x1="12" y1="8" x2="12" y2="12" />
-                                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            <line
+                                                x1="12"
+                                                y1="8"
+                                                x2="12"
+                                                y2="12"
+                                            />
+                                            <line
+                                                x1="12"
+                                                y1="16"
+                                                x2="12.01"
+                                                y2="16"
+                                            />
                                         </svg>
-                                        {{ form.errors['cf-turnstile-response'] }}
+                                        {{
+                                            form.errors['cf-turnstile-response']
+                                        }}
                                     </p>
                                 </div>
                             </div>

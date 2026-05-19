@@ -66,9 +66,15 @@ onMounted(async () => {
     );
 
     // Leaflet accessibility
-    document.querySelector('.leaflet-marker-pane > img')?.setAttribute('aria-label', 'Ubicació de la Farmàcia');
-    document.querySelector('.leaflet-control-attribution')?.classList.add('!bg-[#015873]');
-    document.querySelector('.leaflet-control-attribution > a')?.classList.add('!text-white');
+    document
+        .querySelector('.leaflet-marker-pane > img')
+        ?.setAttribute('aria-label', 'Ubicació de la Farmàcia');
+    document
+        .querySelector('.leaflet-control-attribution')
+        ?.classList.add('!bg-[#015873]');
+    document
+        .querySelector('.leaflet-control-attribution > a')
+        ?.classList.add('!text-white');
 });
 
 const pharmacy = {
@@ -363,7 +369,7 @@ function setNextWeek() {
                     </p>
                     <div class="flex flex-wrap gap-3">
                         <a
-                            href="/pedir-cita"
+                            href="/appointments/create"
                             class="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-[#015873] shadow-lg transition hover:bg-[#E6F5FB]"
                         >
                             <Icon

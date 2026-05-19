@@ -3,6 +3,7 @@ import { Form, Link } from '@inertiajs/vue3';
 import { onMounted, onUnmounted, ref } from 'vue';
 import WebAppLayout from '@/layouts/WebAppLayout.vue';
 import { store } from '@/routes/assignments';
+import PublicFlashToast from '@/components/PublicFlashToast.vue';
 
 const props = defineProps<{
     turnstileSiteKey: string | null;
@@ -101,6 +102,7 @@ function onDescriptionInput(e: Event) {
                 class="relative z-10 mx-auto max-w-7xl px-4 pt-10 pb-16 sm:px-6 lg:px-8"
             >
                 <!-- Flash message -->
+                <PublicFlashToast />
                 <div
                     v-if="$page.flash.message"
                     class="mb-6 flex items-start gap-3 rounded-xl border border-emerald-200 bg-white px-4 py-3 shadow-sm"
@@ -348,10 +350,32 @@ function onDescriptionInput(e: Event) {
                                             v-if="errors.address"
                                             class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                         >
-                                            <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="12" r="10" />
-                                                <line x1="12" y1="8" x2="12" y2="12" />
-                                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            <svg
+                                                class="h-3.5 w-3.5 shrink-0"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                />
+                                                <line
+                                                    x1="12"
+                                                    y1="8"
+                                                    x2="12"
+                                                    y2="12"
+                                                />
+                                                <line
+                                                    x1="12"
+                                                    y1="16"
+                                                    x2="12.01"
+                                                    y2="16"
+                                                />
                                             </svg>
                                             {{ errors.address }}
                                         </p>
@@ -410,10 +434,32 @@ function onDescriptionInput(e: Event) {
                                             v-if="errors.phone_number"
                                             class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                         >
-                                            <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                <circle cx="12" cy="12" r="10" />
-                                                <line x1="12" y1="8" x2="12" y2="12" />
-                                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            <svg
+                                                class="h-3.5 w-3.5 shrink-0"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                stroke-width="2"
+                                                stroke-linecap="round"
+                                                stroke-linejoin="round"
+                                            >
+                                                <circle
+                                                    cx="12"
+                                                    cy="12"
+                                                    r="10"
+                                                />
+                                                <line
+                                                    x1="12"
+                                                    y1="8"
+                                                    x2="12"
+                                                    y2="12"
+                                                />
+                                                <line
+                                                    x1="12"
+                                                    y1="16"
+                                                    x2="12.01"
+                                                    y2="16"
+                                                />
                                             </svg>
                                             {{ errors.phone_number }}
                                         </p>
@@ -460,10 +506,28 @@ function onDescriptionInput(e: Event) {
                                         v-if="errors.description"
                                         class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                     >
-                                        <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg
+                                            class="h-3.5 w-3.5 shrink-0"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        >
                                             <circle cx="12" cy="12" r="10" />
-                                            <line x1="12" y1="8" x2="12" y2="12" />
-                                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            <line
+                                                x1="12"
+                                                y1="8"
+                                                x2="12"
+                                                y2="12"
+                                            />
+                                            <line
+                                                x1="12"
+                                                y1="16"
+                                                x2="12.01"
+                                                y2="16"
+                                            />
                                         </svg>
                                         {{ errors.description }}
                                     </p>
@@ -509,10 +573,28 @@ function onDescriptionInput(e: Event) {
                                         v-if="errors['cf-turnstile-response']"
                                         class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                     >
-                                        <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <svg
+                                            class="h-3.5 w-3.5 shrink-0"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="2"
+                                            stroke-linecap="round"
+                                            stroke-linejoin="round"
+                                        >
                                             <circle cx="12" cy="12" r="10" />
-                                            <line x1="12" y1="8" x2="12" y2="12" />
-                                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            <line
+                                                x1="12"
+                                                y1="8"
+                                                x2="12"
+                                                y2="12"
+                                            />
+                                            <line
+                                                x1="12"
+                                                y1="16"
+                                                x2="12.01"
+                                                y2="16"
+                                            />
                                         </svg>
                                         {{ errors['cf-turnstile-response'] }}
                                     </p>
