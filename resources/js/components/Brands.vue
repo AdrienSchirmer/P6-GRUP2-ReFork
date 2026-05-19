@@ -3,10 +3,11 @@ const brands = [
     { name: 'Caudalie', logo: '/storage/brands/caudalie.svg' },
     { name: 'La Roche-Posay', logo: '/storage/brands/la-roche-posay.svg' },
     { name: 'Vichy', logo: '/storage/brands/vichy.svg' },
-    { name: "L'Oréal", logo: '/storage/brands/loreal.svg' },
     { name: 'Darphin', logo: '/storage/brands/darphin.svg' },
-    { name: 'Solaray', logo: '/storage/brands/solaray.svg' },
     { name: 'A-Derma', logo: '/storage/brands/a-derma.svg' },
+    { name: 'Eucerin', logo: '/storage/brands/eucerin.svg' },
+    { name: 'Solgar', logo: '/storage/brands/solgar.svg' },
+    { name: 'Neutrogena', logo: '/storage/brands/neutrogena.svg' },
 ];
 </script>
 

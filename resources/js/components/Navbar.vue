@@ -34,7 +34,6 @@ function isActive(path: string): boolean {
                     <a
                         href="https://www.instagram.com/farmaciasolerfigueres"
                         target="_blank"
-                        rel="noopener noreferrer"
                         aria-label="Instagram"
                         class="text-white/70 transition hover:text-white"
                     >
@@ -43,7 +42,6 @@ function isActive(path: string): boolean {
                     <a
                         href="https://www.facebook.com/farmaciasolerfigueres"
                         target="_blank"
-                        rel="noopener noreferrer"
                         aria-label="Facebook"
                         class="text-white/70 transition hover:text-white"
                     >
@@ -52,7 +50,6 @@ function isActive(path: string): boolean {
                     <a
                         href="https://www.tiktok.com/@farmaciasoler"
                         target="_blank"
-                        rel="noopener noreferrer"
                         aria-label="TikTok"
                         class="text-white/70 transition hover:text-white"
                     >
