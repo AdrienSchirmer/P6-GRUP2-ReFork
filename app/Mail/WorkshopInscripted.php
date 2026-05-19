@@ -39,7 +39,8 @@ class WorkshopInscripted extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.workshop-inscribed',
+          
+            view: 'mail.workshop-inscribed',
             with: [
                 'data' => $this->mailData,
             ],

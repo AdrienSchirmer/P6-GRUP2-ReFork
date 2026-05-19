@@ -31,7 +31,7 @@ class StoreWorkshopInscriptionRequest extends FormRequest
                 'email',
                 'max:255',
                 Rule::unique('workshop_inscriptions', 'email')
-                    ->where(fn ($q) => $q->where('workshop_id', $workshopId)),
+                    ->where(fn($q) => $q->where('workshop_id', $workshopId)),
             ],
 
             'phone' => [
@@ -39,9 +39,10 @@ class StoreWorkshopInscriptionRequest extends FormRequest
                 'regex:/^(?:\+34)?[0-9]{9}$/',
             ],
 
-            'cf-turnstile-response' => app()->environment('testing')
-                ? ['nullable']
-                : ['required', 'string', new TurnstileRule],
+            'cf-turnstile-response' => config('services.turnstile.site_key')
+                ? ['required', 'string', new TurnstileRule]
+                : ['nullable'],
+
         ];
     }
 

@@ -41,7 +41,8 @@ class public_workshops_controller extends Controller
     public function show(Workshop $workshop)
     {
         abort_if(!$workshop->is_active, 404);
-
+        $inscriptionsCount = $workshop->inscriptions()->count();
+        $isFull = $workshop->max_attendees !== null && $inscriptionsCount >= $workshop->max_attendees;
         return Inertia::render('workshops/workshopdetails', [
             'workshop' => [
                 'id' => $workshop->id,
@@ -52,7 +53,10 @@ class public_workshops_controller extends Controller
                 'start_time' => substr($workshop->start_time, 0, 5),
                 'end_time' => substr($workshop->end_time, 0, 5),
                 'max_attendees' => $workshop->max_attendees,
+                'inscriptions_count' => $inscriptionsCount,
+                'is_full' => $isFull,
             ],
+            'turnstileSiteKey' => config('services.turnstile.site_key'),
         ]);
     }
 
