@@ -346,8 +346,13 @@ function onDescriptionInput(e: Event) {
                                         </div>
                                         <p
                                             v-if="errors.address"
-                                            class="mt-1.5 text-xs text-rose-600"
+                                            class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                         >
+                                            <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <line x1="12" y1="8" x2="12" y2="12" />
+                                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            </svg>
                                             {{ errors.address }}
                                         </p>
                                     </div>
@@ -403,8 +408,13 @@ function onDescriptionInput(e: Event) {
                                         </div>
                                         <p
                                             v-if="errors.phone_number"
-                                            class="mt-1.5 text-xs text-rose-600"
+                                            class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                         >
+                                            <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <line x1="12" y1="8" x2="12" y2="12" />
+                                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            </svg>
                                             {{ errors.phone_number }}
                                         </p>
                                     </div>
@@ -448,8 +458,13 @@ function onDescriptionInput(e: Event) {
                                     />
                                     <p
                                         v-if="errors.description"
-                                        class="mt-1.5 text-xs text-rose-600"
+                                        class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                     >
+                                        <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="12" y1="8" x2="12" y2="12" />
+                                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                                        </svg>
                                         {{ errors.description }}
                                     </p>
                                 </div>
@@ -492,8 +507,13 @@ function onDescriptionInput(e: Event) {
                                     ></div>
                                     <p
                                         v-if="errors['cf-turnstile-response']"
-                                        class="mt-1.5 text-xs text-rose-600"
+                                        class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                     >
+                                        <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="12" y1="8" x2="12" y2="12" />
+                                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                                        </svg>
                                         {{ errors['cf-turnstile-response'] }}
                                     </p>
                                 </div>
