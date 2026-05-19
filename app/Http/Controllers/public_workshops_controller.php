@@ -6,8 +6,8 @@ use App\Models\Workshop;
 use App\Models\Email;
 use App\Http\Requests\StoreWorkshopInscriptionRequest;
 use App\Actions\Workshops\CreateWorkshopInscriptionAction;
-use App\Mail\WorkshopInscriptionCreated;
-use App\Mail\WorkshopInscriptionCreatedAdmin;
+use App\Mail\WorkshopInscripted;
+use App\Mail\WorkshopInscriptedAdmin;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
@@ -61,7 +61,7 @@ class public_workshops_controller extends Controller
         Workshop $workshop,
         CreateWorkshopInscriptionAction $action,
     ) {
-        abort_if(! $workshop->is_active, 404);
+        abort_if(!$workshop->is_active, 404);
 
         // Re-check capacity at write time to avoid a race condition between
         // two simultaneous registrations on the very last seat.
@@ -98,9 +98,9 @@ class public_workshops_controller extends Controller
         $activeEmails = Email::where('active', 1)->pluck('email')->toArray();
 
         try {
-            Mail::to($inscription->email)->send(new WorkshopInscriptionCreated($mailData));
-            if (! empty($activeEmails)) {
-                Mail::to($activeEmails)->send(new WorkshopInscriptionCreatedAdmin($mailData));
+            Mail::to($inscription->email)->send(new WorkshopInscripted($mailData));
+            if (!empty($activeEmails)) {
+                Mail::to($activeEmails)->send(new WorkshopInscriptedAdmin($mailData));
             }
             $message = 'Inscripció realitzada correctament! Rebràs un correu de confirmació.';
         } catch (\Exception $e) {
