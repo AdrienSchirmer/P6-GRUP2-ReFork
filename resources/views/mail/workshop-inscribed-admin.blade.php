@@ -124,7 +124,7 @@ body{
 
         <div class="header-text">
             <div class="subtitle">
-                Carrer Nou, 22, 17600 Figueres, Girona, Spain
+                {{ $data['address'] }} · Tel. {{ $data['phone_pharmacy'] }}
             </div>
         </div>
 
@@ -148,7 +148,39 @@ Resum de la notificació
     </div>
 
     <div class="row">
-        <span class="lbl">Data</span>
+        <span class="lbl">Nom</span>
+        <span class="val">{{ $data['name'] }}</span>
+    </div>
+
+    <div class="row">
+        <span class="lbl">Email</span>
+        <span class="val">{{ $data['email'] }}</span>
+    </div>
+
+    <div class="row">
+        <span class="lbl">Telèfon</span>
+        <span class="val">{{ $data['phone'] }}</span>
+    </div>
+
+    <div class="row">
+        <span class="lbl">Taller</span>
+        <span class="val">{{ $data['workshop_name'] }}</span>
+    </div>
+
+    <div class="row">
+        <span class="lbl">Data taller</span>
+        <span class="val">{{ $data['workshop_date'] }}</span>
+    </div>
+
+    <div class="row">
+        <span class="lbl">Horari</span>
+        <span class="val">
+            {{ $data['start_time'] }} - {{ $data['end_time'] }}
+        </span>
+    </div>
+
+    <div class="row">
+        <span class="lbl">Data notificació</span>
         <span class="val">{{ now()->format('d/m/Y H:i') }}</span>
     </div>
 
@@ -161,7 +193,8 @@ Comproveu la disponibilitat de places i gestioneu la participació si és necess
 </div>
 
 <div class="footer">
-Notificació interna generada automàticament per <strong>Farmacia Soler</strong>
+Notificació interna generada automàticament per
+<strong>{{ $data['pharmacy'] }}</strong>
 <br/>
 Aquest correu està destinat a l'equip administratiu.
 </div>
