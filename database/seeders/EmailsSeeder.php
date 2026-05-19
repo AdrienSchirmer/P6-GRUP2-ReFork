@@ -50,8 +50,8 @@ class EmailsSeeder extends Seeder
                 'updated_at' => now(),
             ],
             [
-                'email' => 'solaimanbaraka1@gmail.com',
-                'active' => 0,
+                'email' => 'sulibaraka1@gmail.com',
+                'active' => 1,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
