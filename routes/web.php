@@ -67,6 +67,7 @@ Route::post('/assignments/verify-code', [AssignmentsController::class, 'verifyCo
 //
 Route::get('/workshops', [public_workshops_controller::class, 'index'])->name('workshops');
 Route::get('/workshops/{workshop}', [public_workshops_controller::class, 'show'])->name('workshops.detail');
+Route::post('/workshops/{workshop}/inscribe', [public_workshops_controller::class, 'inscribe'])->name('workshops.inscribe');
 
 //
 // CONTACT
