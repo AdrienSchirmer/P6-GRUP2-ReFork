@@ -38,7 +38,8 @@ class WorkshopInscriptedAdmin extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.workshop-inscribed-admin',
+            view: 'mail.workshop-inscribed-admin',
+
             with: [
                 'data' => $this->mailData,
             ],
