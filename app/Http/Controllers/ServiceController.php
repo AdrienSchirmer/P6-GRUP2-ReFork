@@ -25,7 +25,7 @@ class ServiceController extends Controller
     public function index()
     {
         // Show the appointment booking form with available services
-        return Inertia::render('PedirCita', [
+        return Inertia::render('Appointments/Create', [
             'turnstileSiteKey' => config('services.turnstile.site_key'),
             'services' => Service::whereHas('schedules')->get()->map(function ($service) {
                 return [
