@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Link, usePage } from '@inertiajs/vue3';
 import { ref } from 'vue';
+import { Icon } from '@iconify/vue';
 
 const isMobileMenuOpen = ref(false);
 const page = usePage();
@@ -11,6 +12,57 @@ function isActive(path: string): boolean {
 </script>
 
 <template>
+    <!-- Top bar -->
+    <div class="w-full bg-[#00617E] text-white">
+        <div
+            class="mx-auto flex max-w-7xl items-center justify-between px-4 py-2.5 text-xs"
+        >
+            <span class="hidden text-white/70 sm:block">Farmàcia Soler</span>
+
+            <div class="flex items-center gap-4">
+                <a
+                    href="tel:+34688466225"
+                    class="flex items-center gap-1.5 text-white/80 transition hover:text-white"
+                >
+                    <Icon icon="mdi:phone" width="13" height="13" />
+                    688 466 225
+                </a>
+
+                <span class="text-white/30">|</span>
+
+                <div class="flex items-center gap-3">
+                    <a
+                        href="https://www.instagram.com/farmaciasolerfigueres"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Instagram"
+                        class="text-white/70 transition hover:text-white"
+                    >
+                        <Icon icon="ri:instagram-fill" width="15" height="15" />
+                    </a>
+                    <a
+                        href="https://www.facebook.com/farmaciasolerfigueres"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="Facebook"
+                        class="text-white/70 transition hover:text-white"
+                    >
+                        <Icon icon="ri:facebook-fill" width="15" height="15" />
+                    </a>
+                    <a
+                        href="https://www.tiktok.com/@farmaciasoler"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="TikTok"
+                        class="text-white/70 transition hover:text-white"
+                    >
+                        <Icon icon="ri:tiktok-fill" width="15" height="15" />
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <nav
         class="sticky top-0 z-30 w-full border-b border-[#DCEEF5] bg-white/95 backdrop-blur"
     >
