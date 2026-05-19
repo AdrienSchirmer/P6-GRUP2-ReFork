@@ -23,14 +23,14 @@ import { Link } from '@inertiajs/vue3';
                     </p>
                     <div class="flex flex-col gap-2 text-sm text-white/70">
                         <a
-                            href="tel:658359458"
+                            href="tel:688466225"
                             class="flex items-center gap-2 transition hover:text-white"
                         >
                             <Icon icon="mdi:phone" width="16" height="16" />
-                            658 359 458
+                            688 466 225
                         </a>
                         <a
-                            href="https://wa.me/34658359458"
+                            href="https://wa.me/34688466225"
                             target="_blank"
                             rel="noopener noreferrer"
                             class="flex items-center gap-2 transition hover:text-white"

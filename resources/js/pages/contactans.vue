@@ -22,20 +22,28 @@ onMounted(async () => {
     map.value = L.map('map', {
         zoomControl: true,
         scrollWheelZoom: false,
-    }).setView(['42.2655267', '2.9631527'], 18);
+    }).setView([42.2655267, 2.9631527], 18);
     L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 19,
     }).addTo(map.value);
-    L.marker(['42.2655267', '2.9631527'])
+    L.marker([42.2655267, 2.9631527])
         .addTo(map.value)
         .bindPopup('<b>Farmàcia Soler</b><br>Carrer Nou, 22 · Figueres')
         .openPopup();
 
     // For accessibility (nothing important)
-    document.querySelector('.leaflet-marker-pane > img')?.setAttribute('aria-label', 'Ubicació de la Farmàcia');
-    document.querySelector('.leaflet-control-attribution')?.classList.add('!bg-[#015873]');
-    document.querySelector('.leaflet-control-attribution > a')?.classList.add('!text-white');
-    const leafletPopupClose = document.querySelector('.leaflet-popup-close-button');
+    document
+        .querySelector('.leaflet-marker-pane > img')
+        ?.setAttribute('aria-label', 'Ubicació de la Farmàcia');
+    document
+        .querySelector('.leaflet-control-attribution')
+        ?.classList.add('!bg-[#015873]');
+    document
+        .querySelector('.leaflet-control-attribution > a')
+        ?.classList.add('!text-white');
+    const leafletPopupClose = document.querySelector(
+        '.leaflet-popup-close-button',
+    );
     leafletPopupClose?.removeAttribute('href');
     leafletPopupClose?.classList.add('cursor-pointer');
     console.dir(leafletPopupClose);
@@ -106,7 +114,7 @@ onMounted(async () => {
                     <!-- Map card -->
                     <div class="lg:col-span-3">
                         <div
-                            class="overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-900/5"
+                            class="h-full overflow-hidden rounded-2xl bg-white shadow-xl ring-1 ring-slate-900/5"
                         >
                             <div
                                 id="map"
@@ -210,7 +218,7 @@ onMounted(async () => {
                                 durant l'horari d'atenció.
                             </p>
                             <a
-                                href="tel:+34972500299"
+                                href="tel:+34688466225"
                                 class="mt-4 flex items-center justify-between rounded-lg bg-white/10 px-4 py-3 text-sm font-semibold backdrop-blur-sm transition hover:bg-white hover:text-[#00617E]"
                             >
                                 <span class="flex items-center gap-2">
@@ -219,7 +227,7 @@ onMounted(async () => {
                                         width="16"
                                         height="16"
                                     />
-                                    972 50 02 99
+                                    688 466 225
                                 </span>
                                 <Icon
                                     icon="mdi:arrow-right"
@@ -256,6 +264,45 @@ onMounted(async () => {
                                 />
                                 Carrer Nou, 22 · 17600 Figueres, Girona
                             </div>
+                        </div>
+
+                        <!-- Social Media Card -->
+                        <div
+                            class="flex justify-between overflow-hidden rounded-2xl bg-gradient-to-br from-[#00617E] to-[#004e66] px-24 py-6 text-white shadow-xl"
+                        >
+                            <a
+                                aria-label="fs_facebook"
+                                href="https://www.facebook.com/farmaciasolerfigueres"
+                                class="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm transition-all duration-75 hover:scale-110 hover:bg-white/25"
+                            >
+                                <Icon
+                                    icon="ri:facebook-fill"
+                                    width="25"
+                                    height="25"
+                                />
+                            </a>
+                            <a
+                                aria-label="fs_instagram"
+                                href="https://www.instagram.com/farmaciasolerfigueres"
+                                class="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm transition-all duration-75 hover:scale-110 hover:bg-white/25"
+                            >
+                                <Icon
+                                    icon="ri:instagram-fill"
+                                    width="25"
+                                    height="25"
+                                />
+                            </a>
+                            <a
+                                aria-label="fs_tiktok"
+                                href="https://www.tiktok.com/@farmaciasoler"
+                                class="flex h-10 w-10 items-center justify-center rounded-full bg-white/15 backdrop-blur-sm transition-all duration-75 hover:scale-110 hover:bg-white/25"
+                            >
+                                <Icon
+                                    icon="ri:tiktok-fill"
+                                    width="25"
+                                    height="25"
+                                />
+                            </a>
                         </div>
                     </div>
                 </div>

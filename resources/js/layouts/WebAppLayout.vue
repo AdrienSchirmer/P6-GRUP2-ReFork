@@ -12,7 +12,7 @@ import { Icon } from '@iconify/vue';
     <Footer />
 
     <a
-        href="https://wa.me/34"
+        href="https://wa.me/34688466225"
         target="_blank"
         rel="noopener noreferrer"
         class="fixed right-4 bottom-4 z-50 flex h-15 w-15 items-center justify-center rounded-full bg-[#25D366] shadow-lg transition hover:scale-110 hover:bg-[#1ebe5d]"

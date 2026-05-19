@@ -99,7 +99,7 @@ class ServiceController extends Controller
             'time' => $validated['start_time'],
             'pharmacy' => 'Farmàcia Soler',
             'address' => 'Carrer Nou, 22, 17600 Figueres, Girona',
-            'phone' => '972 50 02 99',
+            'phone' => '688 466 225',
         ];
 
         $activeEmails = Email::where('active', 1)->pluck('email')->toArray();
@@ -172,7 +172,7 @@ class ServiceController extends Controller
             'email' => $validated['email'],
             'pharmacy' => 'Farmàcia Soler',
             'address' => 'Carrer Nou, 22, 17600 Figueres, Girona',
-            'phone' => '972 50 02 99',
+            'phone' => '688 466 225',
         ];
 
         $pdf = Pdf::loadView('pdf.appointment', $data)

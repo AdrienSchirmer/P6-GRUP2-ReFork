@@ -24,7 +24,7 @@ class admin_pharmacyguards_controller extends Controller
             );
 
         if ($request->filled('search')) {
-            $query->where('pharmacies.name', 'like', '%'.$request->search.'%');
+            $query->where('pharmacies.name', 'like', '%' . $request->search . '%');
         }
 
         if ($request->filled('date_from')) {
@@ -94,7 +94,7 @@ class admin_pharmacyguards_controller extends Controller
         ]);
 
         return to_route('pharmacyguards.index')
-            ->with('message', 'Guàrdia creada correctament.');
+            ->with('success', 'Guàrdia creada correctament.');
     }
 
     /**
@@ -131,6 +131,6 @@ class admin_pharmacyguards_controller extends Controller
             ->delete();
 
         return to_route('pharmacyguards.index')
-            ->with('message', 'Guàrdia eliminada correctament.');
+            ->with('success', 'Guàrdia eliminada correctament.');
     }
 }
