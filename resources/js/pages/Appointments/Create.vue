@@ -979,8 +979,13 @@ onUnmounted(() => {
 
                                 <p
                                     v-if="form.errors.start_time"
-                                    class="mt-2 text-xs text-rose-600"
+                                    class="mt-2 flex items-center gap-1 text-xs text-rose-600"
                                 >
+                                    <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <circle cx="12" cy="12" r="10" />
+                                        <line x1="12" y1="8" x2="12" y2="12" />
+                                        <line x1="12" y1="16" x2="12.01" y2="16" />
+                                    </svg>
                                     {{ form.errors.start_time }}
                                 </p>
                             </div>
@@ -1024,8 +1029,13 @@ onUnmounted(() => {
                                     />
                                     <p
                                         v-if="form.errors.customer_name"
-                                        class="mt-1.5 text-xs text-rose-600"
+                                        class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                     >
+                                        <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="12" y1="8" x2="12" y2="12" />
+                                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                                        </svg>
                                         {{ form.errors.customer_name }}
                                     </p>
                                 </div>
@@ -1059,8 +1069,13 @@ onUnmounted(() => {
                                         />
                                         <p
                                             v-if="form.errors.customer_phone"
-                                            class="mt-1.5 text-xs text-rose-600"
+                                            class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                         >
+                                            <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <line x1="12" y1="8" x2="12" y2="12" />
+                                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            </svg>
                                             {{ form.errors.customer_phone }}
                                         </p>
                                     </div>
@@ -1089,8 +1104,13 @@ onUnmounted(() => {
                                         />
                                         <p
                                             v-if="form.errors.customer_email"
-                                            class="mt-1.5 text-xs text-rose-600"
+                                            class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                         >
+                                            <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <circle cx="12" cy="12" r="10" />
+                                                <line x1="12" y1="8" x2="12" y2="12" />
+                                                <line x1="12" y1="16" x2="12.01" y2="16" />
+                                            </svg>
                                             {{ form.errors.customer_email }}
                                         </p>
                                     </div>
@@ -1103,14 +1123,15 @@ onUnmounted(() => {
                                         data-language="es"
                                     ></div>
                                     <p
-                                        v-if="
-                                            form.errors['cf-turnstile-response']
-                                        "
-                                        class="mt-1.5 text-xs text-rose-600"
+                                        v-if="form.errors['cf-turnstile-response']"
+                                        class="mt-1.5 flex items-center gap-1 text-xs text-rose-600"
                                     >
-                                        {{
-                                            form.errors['cf-turnstile-response']
-                                        }}
+                                        <svg class="h-3.5 w-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <circle cx="12" cy="12" r="10" />
+                                            <line x1="12" y1="8" x2="12" y2="12" />
+                                            <line x1="12" y1="16" x2="12.01" y2="16" />
+                                        </svg>
+                                        {{ form.errors['cf-turnstile-response'] }}
                                     </p>
                                 </div>
                             </div>
