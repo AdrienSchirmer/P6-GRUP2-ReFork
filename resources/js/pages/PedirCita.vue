@@ -2,7 +2,7 @@
 // ---------------------------------------------------------------------------
 // 1. Imports
 // ---------------------------------------------------------------------------
-import { Head, useForm, usePage, router } from '@inertiajs/vue3';
+import { useForm, usePage, router } from '@inertiajs/vue3';
 import {
     ScanFace,
     Droplet,
