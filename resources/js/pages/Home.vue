@@ -46,19 +46,6 @@ onMounted(async () => {
         pagination: { el: '.hero-swiper-pagination' },
     });
 
-    /// Leaflet
-    address.value = document.getElementById('address');
-    address.value?.setAttribute(
-        'href',
-        'https://www.google.com/maps/search/' +
-            (pharmacy.name.value || 'farmàcia soler') +
-            '/@' +
-            pharmacy.lat.value +
-            ',' +
-            pharmacy.long.value +
-            ',21z',
-    );
-
     // Setup Map
     map.value = L.map('map').setView(
         [pharmacy.lat.value, pharmacy.long.value],
@@ -77,6 +64,11 @@ onMounted(async () => {
         selectedDate.month.value + 1,
         selectedDate.year.value,
     );
+
+    // Leaflet accessibility
+    document.querySelector('.leaflet-marker-pane > img')?.setAttribute('aria-label', 'Ubicació de la Farmàcia');
+    document.querySelector('.leaflet-control-attribution')?.classList.add('!bg-[#015873]');
+    document.querySelector('.leaflet-control-attribution > a')?.classList.add('!text-white');
 });
 
 const pharmacy = {
@@ -147,16 +139,6 @@ async function getPharmacyInfo(day: number, month: number, year: number) {
         pharmacy.lat.value = data.response.latitude;
         pharmacy.long.value = data.response.longitude;
 
-        address.value.setAttribute(
-            'href',
-            'https://www.google.com/maps/search/' +
-                (pharmacy.name.value || 'farmàcia soler') +
-                '/@' +
-                pharmacy.lat.value +
-                ',' +
-                pharmacy.long.value +
-                ',21z',
-        );
         marker.value.setLatLng([pharmacy.lat.value, pharmacy.long.value]);
         map.value.flyTo([pharmacy.lat.value, pharmacy.long.value], 19);
     } else {
@@ -472,21 +454,21 @@ function setNextWeek() {
             <!-- Section header -->
             <div class="mb-8 text-center">
                 <div
-                    class="mb-3 flex items-center justify-center gap-2 text-[#01617F]"
+                    class="mb-3 flex items-center justify-center gap-2 text-[#005b77]"
                 >
                     <Icon icon="mdi:hospital-building" width="22" height="22" />
                     <span
                         class="text-xs font-semibold tracking-widest uppercase"
                     >
-                        Servei 24h
+                        Servei 24h a figueres
                     </span>
                 </div>
                 <h2 class="text-3xl font-bold text-[#124559] md:text-4xl">
                     Farmàcies de guàrdia
                 </h2>
                 <p class="mt-2 text-sm text-[#124559]">
-                    Consulta quina farmàcia està de guàrdia avui i obre-la al
-                    mapa.
+                    Consulta quina farmàcia està de guàrdia avui a Figueres i
+                    obre-la al mapa.
                 </p>
             </div>
             <div
@@ -510,19 +492,18 @@ function setNextWeek() {
                         <div
                             class="mx-auto flex min-w-max items-center justify-center gap-1.5"
                         >
-                            <label>
-                                <button
-                                    @click="setPreviousWeek()"
-                                    class="flex h-14 w-8 cursor-pointer items-center justify-center rounded-lg transition hover:bg-white/10"
-                                >
-                                    <Icon
-                                        icon="iconamoon:player-play"
-                                        class="rotate-180 text-white/70"
-                                        width="20"
-                                        height="20"
-                                    />
-                                </button>
-                            </label>
+                            <button
+                                aria-label="1setmanaabans"
+                                @click="setPreviousWeek()"
+                                class="flex h-14 w-8 cursor-pointer items-center justify-center rounded-lg transition hover:bg-white/10"
+                            >
+                                <Icon
+                                    icon="iconamoon:player-play"
+                                    class="rotate-180 text-white/70"
+                                    width="20"
+                                    height="20"
+                                />
+                            </button>
                             <template v-for="(value, key) in week" :key="key">
                                 <button
                                     @click="
@@ -537,7 +518,7 @@ function setNextWeek() {
                                             value.id.value,
                                             value.num.value,
                                         )
-                                            ? 'bg-white text-[#01617F]'
+                                            ? 'bg-white text-[#005b77]'
                                             : 'text-white hover:bg-white/15'
                                     "
                                     class="flex h-14 w-12 cursor-pointer flex-col items-center justify-center rounded-xl text-center transition"
@@ -553,12 +534,10 @@ function setNextWeek() {
                                 </button>
                             </template>
                             <button
+                                aria-label="1setmanadespres"
                                 @click="setNextWeek()"
                                 class="flex h-14 w-8 cursor-pointer items-center justify-center rounded-lg transition hover:bg-white/10"
                             >
-                                <p class="absolute size-0 opacity-0">
-                                    1 Setmana després
-                                </p>
                                 <Icon
                                     icon="iconamoon:player-play"
                                     class="text-white/70"

@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Email;
+use Illuminate\Support\Facades\DB;
 
 class EmailsSeeder extends Seeder
 {
@@ -12,11 +12,49 @@ class EmailsSeeder extends Seeder
      */
     public function run(): void
     {
-        for ($i = 1; $i <= 5; $i++) {
-            Email::create([
-                'email' => "email{$i}@example.com",
-                'active' => $i === 1 ? 1 : 0,
-            ]);
-        }
+        DB::table('emails')->insert([
+            [
+                'email' => 'brandonalcantara@proton.me',
+                'active' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'email' => 'charfahilyass@gmail.com',
+                'active' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'email' => 'adrienmolina94@gmail.com',
+                'active' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'email' => 'franolivera2005@gmail.com',
+                'active' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'email' => 'sllado1@cendrassos.net',
+                'active' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'email' => 'edprados@cendrassos.net',
+                'active' => 0,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            [
+                'email' => 'sulibaraka1@gmail.com',
+                'active' => 1,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
     }
 }

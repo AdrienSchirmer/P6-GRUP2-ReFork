@@ -427,6 +427,9 @@ async function fetchBookedTimes() {
 // ---------------------------------------------------------------------------
 // 18. Turnstile
 // ---------------------------------------------------------------------------
+
+const turnstileWidgetId = ref<string | null>(null);
+
 function renderTurnstile() {
     const el = document.querySelector('.cf-turnstile') as HTMLElement | null;
     const t = (window as any).turnstile;
@@ -436,7 +439,18 @@ function renderTurnstile() {
     }
 
     el.innerHTML = '';
-    t.render(el, { sitekey: props.turnstileSiteKey, language: 'es' });
+    turnstileWidgetId.value = t.render(el, {
+        sitekey: props.turnstileSiteKey,
+        language: 'es',
+    });
+}
+
+// On error reset the widget so the user can try again without refreshing the page
+function onError() {
+    const t = (window as any).turnstile;
+    if (t && turnstileWidgetId.value) {
+        t.reset(turnstileWidgetId.value);
+    }
 }
 
 // ---------------------------------------------------------------------------
@@ -514,6 +528,8 @@ function submitReservation() {
         },
         onError: () => {
             isSubmitting.value = false;
+            showConfirmModal.value = false;
+            onError();
         },
     });
 }
@@ -1146,12 +1162,10 @@ onUnmounted(() => {
                                             </dd>
                                         </div>
                                     </dl>
-                                    
-                                    
+
                                     <div
-                                        class="border-t border-white/10 px-5 py-4"   
+                                        class="border-t border-white/10 px-5 py-4"
                                     >
-                                    
                                         <button
                                             @click="showConfirmModal = true"
                                             :disabled="
