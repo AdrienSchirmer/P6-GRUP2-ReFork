@@ -7,14 +7,14 @@ use App\Http\Controllers\Admin\admin_users_controller;
 use App\Http\Controllers\Admin\admin_workshops_controller;
 use App\Http\Controllers\Admin\AdminServiceController;
 use App\Http\Controllers\Admin\AssignmentsController as AdminAssignmentsController;
-use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\EmailsController;
+use App\Http\Controllers\Admin\MailController;
 use App\Http\Controllers\Admin\ServiceScheduleController;
+use App\Http\Controllers\AppointmentsController;
 use App\Http\Controllers\AssignmentsController;
 use App\Http\Controllers\Contactans;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\public_workshops_controller;
-use App\Http\Controllers\ServiceController;
 use Illuminate\Support\Facades\Route;
 
 //
@@ -27,11 +27,11 @@ Route::get('/pharmacyguard/{data}', [HomeController::class, 'getpg'])->name('get
 //
 // SERVICES / APPOINTMENTS
 //
-Route::get('/appointments/create', [ServiceController::class, 'index'])->name('pedir-cita');
-Route::post('/appointments', [ServiceController::class, 'store'])->name('appointments.store');
-Route::get('/appointments/pdf', [ServiceController::class, 'downloadPdf'])->name('appointments.pdf');
-Route::get('/appointments/booked-times', [ServiceController::class, 'getBookedTimes']);
-Route::get('/appointments/schedule', [ServiceController::class, 'getSchedule']);
+Route::get('/appointments/create', [AppointmentsController::class, 'index'])->name('appointments.create');
+Route::post('/appointments', [AppointmentsController::class, 'store'])->name('appointments.store');
+Route::get('/appointments/pdf', [AppointmentsController::class, 'downloadPdf'])->name('appointments.pdf');
+Route::get('/appointments/booked-times', [AppointmentsController::class, 'getBookedTimes']);
+Route::get('/appointments/schedule', [AppointmentsController::class, 'getSchedule']);
 
 //
 // ADMIN ROUTES
@@ -74,4 +74,4 @@ Route::post('/workshops/{workshop}/inscribe', [public_workshops_controller::clas
 //
 Route::get('/contact-us', [Contactans::class, 'index'])->name('contactans');
 
-require __DIR__ . '/settings.php';
+require __DIR__.'/settings.php';

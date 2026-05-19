@@ -76,7 +76,7 @@ import { Link } from '@inertiajs/vue3';
                         </li>
                         <li>
                             <Link
-                                href="/pedir-cita"
+                                href="/appointments/create"
                                 class="transition hover:text-white"
                                 >Demanar cita</Link
                             >
