@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
 class Workshop extends Model
@@ -23,5 +24,9 @@ class Workshop extends Model
             'workshop_date' => 'date',
             'is_active' => 'boolean',
         ];
+    }
+     public function inscriptions(): HasMany
+    {
+        return $this->hasMany(WorkshopInscription::class);
     }
 }
