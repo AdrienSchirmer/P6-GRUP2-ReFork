@@ -20,6 +20,7 @@ import {
     index as pharmaciesIndex,
     store as pharmaciesStore,
 } from '@/routes/pharmacies';
+import { watch } from 'vue';
 
 interface Pharmacy {
     id: number;
@@ -41,6 +42,13 @@ const breadcrumbs: BreadcrumbItem[] = [
 
 const searchquery = ref<string>('');
 const pharmaciesData = ref<Pharmacy[]>(props.pharmacies);
+
+watch(
+    () => props.pharmacies,
+    (newVal) => {
+        pharmaciesData.value = newVal;
+    },
+);
 
 const filterPharmacies = () => {
     const searchqueryquery = searchquery.value
