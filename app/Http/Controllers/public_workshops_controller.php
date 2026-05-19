@@ -12,8 +12,8 @@ class public_workshops_controller extends Controller
     {
         $workshops = Workshop::query()
             ->select(['id', 'name', 'description', 'photo_path', 'workshop_date', 'start_time', 'end_time', 'max_attendees', 'is_active'])
-            ->orderBy('workshop_date')
-            ->orderBy('start_time')
+            ->orderBy('workshop_date', 'desc')
+            ->orderBy('start_time', 'desc')
             ->get()
             ->map(fn(Workshop $workshop) => [
                 'id' => $workshop->id,

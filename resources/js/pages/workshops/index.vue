@@ -214,8 +214,13 @@ function formatDate(dateStr: string): string {
                                 "
                                 class="ml-auto flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500"
                             >
-                                Acabat
+                                Finalitzat
                             </span>
+                            <span
+                                v-else
+                                class="ml-auto flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs font-semibold text-green-500"
+                                >Properament</span
+                            >
                             <span
                                 v-if="!workshop.is_active"
                                 class="ml-auto flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500"
