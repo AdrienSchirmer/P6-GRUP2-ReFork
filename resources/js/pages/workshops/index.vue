@@ -66,7 +66,10 @@ function formatDate(dateStr: string): string {
 <template>
     <Head>
         <title>Tallers</title>
-        <meta name="description" content="Descobreix els propers tallers i activitats de Farmàcia Soler. Reserva la teva plaça i aprèn sobre salut i benestar." />
+        <meta
+            name="description"
+            content="Descobreix els propers tallers i activitats de Farmàcia Soler. Reserva la teva plaça i aprèn sobre salut i benestar."
+        />
     </Head>
     <WebAppLayout>
         <!-- Hero -->
