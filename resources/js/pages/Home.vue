@@ -478,15 +478,15 @@ function setNextWeek() {
                     <span
                         class="text-xs font-semibold tracking-widest uppercase"
                     >
-                        Servei 24h
+                        Servei 24h a figueres
                     </span>
                 </div>
                 <h2 class="text-3xl font-bold text-[#124559] md:text-4xl">
                     Farmàcies de guàrdia
                 </h2>
                 <p class="mt-2 text-sm text-[#124559]">
-                    Consulta quina farmàcia està de guàrdia avui i obre-la al
-                    mapa.
+                    Consulta quina farmàcia està de guàrdia avui a Figueres i
+                    obre-la al mapa.
                 </p>
             </div>
             <div
