@@ -17,5 +17,6 @@ class WorkshopInscription extends Model
     public function workshop(): BelongsTo
     {
         return $this->belongsTo(Workshop::class);
+        
     }
 }
