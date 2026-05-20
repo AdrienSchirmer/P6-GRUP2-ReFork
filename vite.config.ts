@@ -6,6 +6,11 @@ import laravel from 'laravel-vite-plugin';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
+    test: {
+        environment: 'happy-dom',
+        globals: true,
+        include: ['resources/js/**/*.test.ts', 'resources/js/**/*.test.js'],
+    },
     plugins: [
         laravel({
             input: ['resources/css/app.css', 'resources/js/app.ts'],
