@@ -120,7 +120,7 @@ function formatDate(dateStr: string): string {
         </section>
 
         <!-- Posters grid -->
-        <section class="bg-[#F2FAFF] px-4 py-12 md:px-24">
+        <section class="bg-[#F2FAFF] px-4 py-12 sm:px-8 lg:px-16 xl:px-24">
             <p v-if="searchQuery" class="mb-6 text-sm text-[#335B69]">
                 {{ filteredWorkshops.length }}
                 {{ filteredWorkshops.length === 1 ? 'resultat' : 'resultats' }}
@@ -143,7 +143,9 @@ function formatDate(dateStr: string): string {
                         as="article"
                     >
                         <!-- Poster -->
-                        <div class="relative aspect-[3/4] overflow-hidden bg-white">
+                        <div
+                            class="relative aspect-[3/4] overflow-hidden bg-white"
+                        >
                             <img
                                 v-if="workshop.photo_url"
                                 :src="workshop.photo_url"
@@ -175,7 +177,9 @@ function formatDate(dateStr: string): string {
                             >
                                 {{ workshop.name }}
                             </p>
-                            <div class="flex items-center gap-3">
+                            <div
+                                class="flex flex-wrap items-center gap-x-3 gap-y-1"
+                            >
                                 <span
                                     class="flex items-center gap-1 text-xs text-[#335B69]"
                                 >
@@ -190,6 +194,7 @@ function formatDate(dateStr: string): string {
                                 <span
                                     class="flex items-center gap-1 text-xs text-[#335B69]"
                                 >
+                                    >
                                     <Icon
                                         icon="mdi:clock-outline"
                                         class="text-[#01617F]"
@@ -201,6 +206,7 @@ function formatDate(dateStr: string): string {
                                 <span
                                     class="flex items-center gap-1 text-xs text-[#335B69]"
                                 >
+                                    >
                                     <Icon
                                         icon="mdi:account-group"
                                         class="text-[#01617F]"
@@ -215,13 +221,13 @@ function formatDate(dateStr: string): string {
                                             `${workshop.workshop_date}T${workshop.end_time}`,
                                         ) < new Date()
                                     "
-                                    class="ml-auto flex items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500"
+                                    class="mt-0.5 ml-auto flex w-full items-center gap-1 rounded-full bg-red-50 px-2 py-0.5 text-xs font-semibold text-red-500"
                                 >
                                     Finalitzat
                                 </span>
                                 <span
                                     v-else
-                                    class="ml-auto flex items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs font-semibold text-green-500"
+                                    class="mt-0.5 ml-auto flex w-full items-center gap-1 rounded-full bg-green-50 px-2 py-0.5 text-xs font-semibold text-green-500"
                                     >Properament</span
                                 >
                             </div>
@@ -243,7 +249,11 @@ function formatDate(dateStr: string): string {
                                 width="16"
                                 height="16"
                             />
-                            {{ loading ? 'Carregant...' : 'Carregar més tallers' }}
+                            {{
+                                loading
+                                    ? 'Carregant...'
+                                    : 'Carregar més tallers'
+                            }}
                         </button>
                     </div>
                 </template>
