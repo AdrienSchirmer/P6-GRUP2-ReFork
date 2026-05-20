@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use App\Models\PharmacyGuard;
 
 class admin_pharmacyguards_controller extends Controller
 {
@@ -24,7 +25,7 @@ class admin_pharmacyguards_controller extends Controller
             );
 
         if ($request->filled('search')) {
-            $query->where('pharmacies.name', 'like', '%'.$request->search.'%');
+            $query->where('pharmacies.name', 'like', '%' . $request->search . '%');
         }
 
         if ($request->filled('date_from')) {
@@ -86,15 +87,10 @@ class admin_pharmacyguards_controller extends Controller
             'pharmacy_id' => ['required', 'exists:pharmacies,id'],
         ]);
 
-        DB::table('pharmacy_guards')->insert([
-            'date' => $validated['date'],
-            'pharmacy_id' => $validated['pharmacy_id'],
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        PharmacyGuard::create($validated);
 
         return to_route('pharmacyguards.index')
-            ->with('message', 'Guàrdia creada correctament.');
+            ->with('success', 'Guàrdia creada correctament.');
     }
 
     /**
@@ -131,6 +127,6 @@ class admin_pharmacyguards_controller extends Controller
             ->delete();
 
         return to_route('pharmacyguards.index')
-            ->with('message', 'Guàrdia eliminada correctament.');
+            ->with('success', 'Guàrdia eliminada correctament.');
     }
 }

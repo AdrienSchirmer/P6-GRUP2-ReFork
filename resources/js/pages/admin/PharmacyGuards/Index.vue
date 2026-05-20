@@ -12,6 +12,7 @@ import {
     index as pharmacyguardsIndex,
     store as storePharmacyGuard,
 } from '@/routes/pharmacyguards';
+import { watch } from 'vue';
 
 interface Pharmacy {
     id: number;
@@ -44,6 +45,13 @@ const removeGuard = (guardId: number) => {
 
 const searchquery = ref<string>('');
 const pharmacyguardsData = ref<Guard[]>(props.guards);
+watch(
+    () => props.guards,
+    (newVal) => {
+        pharmacyguardsData.value = newVal;
+    },
+);
+
 const dateFrom = ref<string>('');
 const dateTo = ref<string>('');
 

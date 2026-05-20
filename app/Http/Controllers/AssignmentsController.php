@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Actions\Assignments\CreateAssignmentAction;
 use App\Http\Requests\CreateAssignmentRequest;
 use App\Mail\AssignmentCreated;
+use App\Mail\AssignmentCreatedAdmin;
 use App\Mail\AssignmentListCode;
 use App\Models\assignments as Assignment;
+use App\Models\Email;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
@@ -44,24 +46,27 @@ class AssignmentsController extends Controller
     {
         $validated = $request->validated();
         $assignment = $createAssignment->execute($validated);
+        $activeEmails = Email::where('active', 1)->pluck('email')->toArray();
+
+        $flashKey = 'success';
+        $flashMessage = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
 
         try {
             Mail::to($validated['address'])->send(new AssignmentCreated($validated));
-            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+            if (! empty($activeEmails)) {
+                Mail::to($activeEmails)->send(new AssignmentCreatedAdmin($validated));
+            }
         } catch (\Exception $e) {
-            $message = 'Encàrrec creat correctament! Rebràs un correu de confirmació.';
+            $flashKey = 'error';
+            $flashMessage = 'No hem pogut enviar el correu de confirmació.';
         }
-
-        Inertia::flash([
-            'message' => $message,
-        ]);
 
         return to_route('assignments.create', [
             'name' => $validated['name'] ?? null,
             'address' => $validated['address'] ?? null,
             'phone_number' => $validated['phone_number'] ?? null,
             'description' => $validated['description'] ?? null,
-        ]);
+        ])->with($flashKey, $flashMessage);
     }
 
     /**
@@ -118,7 +123,7 @@ class AssignmentsController extends Controller
             Mail::to($validated['email'])->send(new AssignmentListCode($otp, $otpExpiresInMinutes));
             $message = 'Rebràs el codi al correu.';
         } catch (\Exception $e) {
-            $message = 'Rebràs el codi al correu.';
+            $message = 'Correu no trobat.';
         }
 
         return back()->with('success', $message);

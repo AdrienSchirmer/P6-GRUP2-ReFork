@@ -11,6 +11,7 @@ import {
     UsersRound,
     Shield,
     Pill,
+    Mails,
 } from 'lucide-vue-next';
 import AppLogo from '@/components/AppLogo.vue';
 import NavFooter from '@/components/NavFooter.vue';
@@ -29,27 +30,23 @@ import type { NavItem } from '@/types';
 import { admindashboard as dashboard } from '@/routes';
 import { index as assignmentsIndex } from '@/routes/adminAssignments';
 import { index as mailIndex } from '@/routes/mail';
+import { index as emailIndex } from '@/routes/emails';
 import { index as pharmaciesIndex } from '@/routes/pharmacies';
 import { index as pharmacyguardsIndex } from '@/routes/pharmacyguards';
 import { index as servicesIndex } from '@/routes/services';
 import { index as usersIndex } from '@/routes/users';
 import { index as workshopsIndex } from '@/routes/workshops';
+import { usePage } from '@inertiajs/vue3';
+import { computed } from 'vue';
+
+const page = usePage();
+const isSuperAdmin = page.props.auth.user.role === 'superadmin';
 
 const mainNavItems: NavItem[] = [
     {
         title: 'Inici',
         href: dashboard(),
         icon: LayoutGrid,
-    },
-    {
-        title: 'Usuaris',
-        href: usersIndex(),
-        icon: UsersRound,
-    },
-    {
-        title: 'Mail',
-        href: mailIndex(),
-        icon: Mail,
     },
     {
         title: 'Serveis',
@@ -87,10 +84,32 @@ const footerNavItems: NavItem[] = [
     },
     {
         title: 'Contacte públic',
-        href: '/contactans',
+        href: '/contact-us',
         icon: HeartPulse,
     },
 ];
+
+const superAdminNavItems: NavItem[] = [
+    {
+        title: 'Usuaris',
+        href: usersIndex(),
+        icon: UsersRound,
+    },
+    {
+        title: 'Correus',
+        href: emailIndex(),
+        icon: Mails,
+    },
+    {
+        title: 'Missatges',
+        href: mailIndex(),
+        icon: Mail,
+    },
+];
+
+const visibleNavItems = computed(() =>
+    isSuperAdmin ? [...mainNavItems, ...superAdminNavItems] : mainNavItems,
+);
 </script>
 
 <template>
@@ -114,7 +133,7 @@ const footerNavItems: NavItem[] = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" />
+            <NavMain :items="visibleNavItems" />
         </SidebarContent>
 
         <SidebarFooter class="border-t border-sidebar-border/65 bg-sidebar/90">
