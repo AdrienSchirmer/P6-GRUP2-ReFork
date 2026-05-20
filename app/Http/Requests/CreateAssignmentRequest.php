@@ -24,9 +24,9 @@ class CreateAssignmentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
+            'name' => ['required', 'string', 'max:255', 'regex:/^[\pL\s\'-]+$/u'],
             'address' => 'required|email|max:255',
-            'phone_number' => 'required|integer',
+            'phone_number' => 'required|regex:/^[0-9]{9}$/',
             'description' => 'required|string|max:2000',
             'cf-turnstile-response' => ['required', 'string', new TurnstileRule],
         ];
@@ -38,11 +38,12 @@ class CreateAssignmentRequest extends FormRequest
             'name.required' => 'El nom és obligatori.',
             'name.string' => 'El nom ha de ser text.',
             'name.max' => 'El nom no pot tenir més de 255 caràcters.',
+            'name.regex' => 'El nom només pot contenir lletres, espais, apòstrofs i guions.',
             'address.required' => 'El correu electrònic és obligatori.',
             'address.email' => 'El correu electrònic no és vàlid.',
             'address.max' => 'El correu electrònic no pot tenir més de 255 caràcters.',
             'phone_number.required' => 'El telèfon és obligatori.',
-            'phone_number.integer' => 'El telèfon ha de ser un número.',
+            'phone_number.regex' => 'El telèfon ha de tenir 9 dígits.',
             'description.required' => 'La descripció és obligatòria.',
             'description.string' => 'La descripció ha de ser text.',
             'description.max' => 'La descripció no pot tenir més de 2000 caràcters.',

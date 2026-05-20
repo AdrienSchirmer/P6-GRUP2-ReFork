@@ -34,6 +34,7 @@ class StoreAppointmentRequest extends FormRequest
                 'required',
                 'string',
                 'max:255',
+                'regex:/^[\pL\s\'-]+$/u',
             ],
 
             'customer_phone' => [
@@ -71,6 +72,7 @@ class StoreAppointmentRequest extends FormRequest
             'customer_name.required' => 'El nom és obligatori.',
             'customer_name.string' => 'El nom ha de ser text.',
             'customer_name.max' => 'El nom no pot tenir més de 255 caràcters.',
+            'customer_name.regex' => 'El nom només pot contenir lletres, espais, apòstrofs i guions.',
             'customer_phone.required' => 'El telèfon és obligatori.',
             'customer_phone.regex' => 'El telèfon ha de tenir 9 dígits.',
             'customer_email.required' => 'El correu electrònic és obligatori.',
