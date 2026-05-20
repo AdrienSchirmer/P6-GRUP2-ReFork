@@ -73,8 +73,8 @@ function isActive(path: string): boolean {
                     class="flex min-w-0 shrink items-center self-center"
                 >
                     <img
-                        class="h-auto max-h-8 w-auto self-center sm:max-h-10 md:max-h-11 lg:max-h-12"
-                        src="/storage/FarmaciaSolerLogoLong.jpeg"
+                        class="h-10 w-auto md:h-11 lg:h-12"
+                        src="/storage/FarmaciaSolerLogoLong.webp"
                         alt="Farmacia Soler"
                     />
                 </a>

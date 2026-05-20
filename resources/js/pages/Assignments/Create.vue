@@ -696,8 +696,9 @@ function onDescriptionInput(e: Event) {
                                 class="relative h-36 overflow-hidden bg-gradient-to-br from-[#00617E] to-[#004e66]"
                             >
                                 <img
-                                    src="/storage/vagaro-ckWrZO5sWOQ-unsplash.jpg"
+                                    src="/storage/vagaro-ckWrZO5sWOQ-unsplash.webp"
                                     alt="Farmàcia Soler"
+                                    loading="lazy"
                                     class="absolute inset-0 h-full w-full object-cover opacity-60"
                                 />
                                 <div
