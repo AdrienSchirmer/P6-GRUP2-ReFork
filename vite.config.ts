@@ -9,7 +9,7 @@ export default defineConfig({
     test: {
         environment: 'happy-dom',
         globals: true,
-        include: ['resources/js/**/*.test.ts', 'resources/js/**/*.test.js'],
+        include: ['resources/js/**/*.test.ts', 'resources/js/**/*.test.js', 'tests/Vitest/**/*.test.ts', 'tests/Vitest/**/*.test.js'],
     },
     plugins: [
         laravel({
