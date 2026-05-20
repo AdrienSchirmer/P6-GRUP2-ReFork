@@ -148,6 +148,7 @@ function formatDate(dateStr: string): string {
                                 v-if="workshop.photo_url"
                                 :src="workshop.photo_url"
                                 :alt="workshop.name"
+                                loading="lazy"
                                 class="h-full w-full object-contain transition duration-500 group-hover:scale-[1.02]"
                             />
                             <div

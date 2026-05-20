@@ -399,14 +399,14 @@ function setNextWeek() {
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
                             <img
-                                src="/storage/slider1.jpeg"
+                                src="/storage/slider1.webp"
                                 class="h-64 w-full object-cover object-[center_35%] md:h-130"
                                 alt="Farmàcia Soler"
                             />
                         </div>
                         <div class="swiper-slide">
                             <img
-                                src="/storage/slider2.jpeg"
+                                src="/storage/slider2.webp"
                                 class="h-64 w-full object-cover object-[center_35%] md:h-130"
                                 alt="Farmàcia Soler"
                             />
@@ -430,8 +430,9 @@ function setNextWeek() {
                     class="flex h-110 w-full items-end overflow-hidden md:relative md:h-auto md:w-1/2"
                 >
                     <img
-                        src="/storage/farmaciaSolerStore.jpeg"
+                        src="/storage/farmaciaSolerStore.webp"
                         alt="Farmacia Soler"
+                        loading="lazy"
                         class="h-full w-full rounded-xl object-cover object-bottom md:absolute"
                     />
                 </div>
