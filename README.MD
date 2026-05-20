@@ -111,7 +111,7 @@ pantalla d'èxit.
 |---|---|
 | **Migracions** | `2026_04_10_135414_create_services_table.php`, `…_create_service_schedules_table.php`, `…_create_service_appointments_table.php`, `…_add_icon_to_services_table.php`, `…_create_calendar_exceptions.php` |
 | **FormRequests** | `StoreAppointmentRequest.php` (regex telèfon, Turnstile), `GetBookedTimesRequest.php`, `GetScheduleRequest.php`, `DownloadAppointmentPdfRequest.php`, `StoreServiceRequest.php`, `UpdateServiceRequest.php` |
-| **Controllers** | `ServiceController.php` (públic), `Admin/AdminServiceController.php`, `Admin/ServiceScheduleController.php` |
+| **Controllers** | `AppointmentsController.php` (públic), `Admin/AdminServiceController.php`, `Admin/ServiceScheduleController.php` |
 | **Models** | `Service.php` (hasMany schedules), `ServiceSchedule.php` (belongsTo Service), `ServiceAppointment.php`, `calendar_exceptions.php` |
 | **Vistes** | `resources/js/pages/Appointments/Create.vue`, `admin/Services/{Index,Create,Edit}.vue`, `admin/ServiceSchedules/{Create,Show}.vue` |
 | **Mail + Blade** | `ReservationCreated.php`, `ReservationCreatedAdmin.php` + plantilles a `resources/views/mail/` |
@@ -215,13 +215,14 @@ Pàgina informativa amb formulari de contacte.
 
 ## Endpoints AJAX (resum)
 
-| Endpoint | Mètode | Mòdul | Descripció |
-|---|---|---|---|
-| `/pharmacyguard/{data}` | GET | Home | Farmàcies de guàrdia d'una data |
-| `/appointments/booked-times` | GET | Cites | Hores ja reservades d'un servei en una data |
-| `/appointments/schedule` | GET | Cites | Slots disponibles d'un servei per dia de la setmana |
-| `/admin/pharmacies/filter` | GET | Farmàcies | Filtra el llistat sense recàrrega |
-| `/admin/pharmacyguards/filter` | GET | Guàrdies | Filtra el llistat sense recàrrega |
+| Endpoint | Mètode | Controlador | Funció | Descripció |
+|---|---|---|---|---|
+| `/pharmacyguard/{data}` | GET | `HomeController` | `getpg` | Farmàcies de guàrdia d'una data |
+| `/appointments/booked-times` | GET | `AppointmentsController` | `getBookedTimes` | Hores ja reservades d'un servei en una data |
+| `/appointments/schedule` | GET | `AppointmentsController` | `getSchedule` | Slots disponibles d'un servei per dia de la setmana |
+| `/admin/pharmacies/filter` | GET | `admin_pharmacies_controller` | `filter` | Filtra el llistat de farmàcies sense recàrrega |
+| `/admin/pharmacyguards/filter` | GET | `admin_pharmacyguards_controller` | `filter` | Filtra el llistat de guàrdies sense recàrrega |
+| `/admin/emails` | GET | `EmailsController` | `index` | Filtra correus per estat (actiu/inactiu) |
 
 Tots passen per un FormRequest que filtra les dades d'entrada.
 
