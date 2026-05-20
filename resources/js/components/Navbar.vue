@@ -71,7 +71,7 @@ function isActive(path: string): boolean {
                 <a href="/" class="flex shrink-0 items-center">
                     <img
                         class="h-10 w-auto md:h-11 lg:h-12"
-                        src="/storage/FarmaciaSolerLogoLong.jpeg"
+                        src="/storage/FarmaciaSolerLogoLong.webp"
                         alt="Farmacia Soler"
                     />
                 </a>

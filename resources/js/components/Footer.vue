@@ -11,7 +11,7 @@ import { Link } from '@inertiajs/vue3';
                 <div class="flex flex-col gap-4">
                     <a href="/">
                         <img
-                            src="/storage/FarmaciaSolerLogoTallDark.png"
+                            src="/storage/FarmaciaSolerLogoTallDark.webp"
                             alt="Farmàcia Soler"
                             class="w-32"
                         />
